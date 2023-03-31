@@ -4,7 +4,6 @@ package com.example.Books.Controller;
 import com.example.Books.Model.*;
 //import com.example.Books.Repository.BookRepository;
 import com.example.Books.Service.*;
-//import com.example.Books.Service.StockService;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,6 @@ public class Controller {
 
 
     public Controller(StoreService storeService, BookService bookService, EmployeeService employeeService, StockService stockService, StatService statService) {
-//        this.bookService = new BookService(repository);
-//        this.storeService = new StoreService(storeRepository);
         this.bookService = bookService;
         this.storeService = storeService;
         this.employeeService = employeeService;
@@ -51,11 +48,6 @@ public class Controller {
             return bookService.getBooksWithRatingGreaterThan(rating);
     }
     // end::get-aggregate-root[]
-
-//    @GetMapping("/books/")
-//    List<Book> getBooksWithRatingGreaterThan(@RequestParam("rating_gt") Double rating){
-//        return bookService.getBooksWithRatingGreaterThan(rating);
-//    }
 
 
     @GetMapping("/books/{id}")
