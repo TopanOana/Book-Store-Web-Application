@@ -71,4 +71,7 @@ export class BookDetailsComponent {
       },
       (err)=>console.log(err))
   }
+  goBackToOverview(){
+    this.router.navigateByUrl("books")
+  }
 }

@@ -10,9 +10,10 @@ import {Router} from "@angular/router";
 })
 export class OverviewBooksComponent {
   books: Book[] = []
-  displayedColumns = ['id', 'title', 'author', 'nrPages', 'rating', 'genre']
+  displayedColumns = ['id','title', 'author', 'nrPages', 'rating', 'genre']
 
   rating_gt:number=0;
+
   constructor(private service: ApiService, private router:Router) {
   }
   ngOnInit():void{
@@ -38,6 +39,9 @@ export class OverviewBooksComponent {
         this.books =  books;
       }
     )
-    // this.router.navigateByUrl(`books/filter`)
+  }
+
+  goBackToHome(){
+    this.router.navigateByUrl("")
   }
 }
