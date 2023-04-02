@@ -1,0 +1,19 @@
+button{
+  height: 50px;
+}
+h2{
+  text-align: center;
+}
+
+button:hover{
+  background-color: rebeccapurple;
+  color: white;
+}
+
+.formcomp{
+  display:flex;
+}
+
+.formcomp button{
+  height:56px;
+}

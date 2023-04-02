@@ -44,4 +44,11 @@ export class OverviewBooksComponent {
   goBackToHome(){
     this.router.navigateByUrl("")
   }
+
+  clearFilter() {
+    this.rating_gt=0;
+    this.service.getBooks().subscribe((books:Book[])=>{
+      this.books=books;
+    })
+  }
 }
