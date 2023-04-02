@@ -1,0 +1,15 @@
+<h2>Books</h2>
+
+<table mat-table [dataSource]="books">
+  <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">
+    <th mat-header-cell *matHeaderCellDef>{{column}}</th>
+    <td mat-cell *matCellDef="let book">{{book[column]}}</td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let bookrow; columns: displayedColumns;"
+           (click)="goToBookDetails(bookrow)"></tr>
+</table>
+<button mat-fab extended (click)="goToAddBook()">
+  +
+</button>
+

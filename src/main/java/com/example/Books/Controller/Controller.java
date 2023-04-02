@@ -80,8 +80,10 @@ public class Controller {
         /*
         the delete mapping is for removing a book from the repository
          */
+        System.out.println("plang");
         bookService.deleteBookInRepository(id);
     }
+
 
 
     @GetMapping("/stores")
