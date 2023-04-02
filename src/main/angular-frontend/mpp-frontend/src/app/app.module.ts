@@ -21,7 +21,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     HomeComponent,
     OverviewBooksComponent,
     BookDetailsComponent,
-    AddBookComponent
+    AddBookComponent,
   ],
   imports: [
     BrowserModule,

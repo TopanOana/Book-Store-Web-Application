@@ -32,4 +32,8 @@ export class ApiService {
   addBook(book: AddBookDTO): Observable<Book>{
     return this.http.post(`${this.baseURL}/books`, book) as Observable<Book>
   }
+
+  getBooksFilteredByRating(rating_gt:number):Observable<Book[]>{
+    return this.http.get(`${this.baseURL}/books?rating_gt=${rating_gt}`) as Observable<Book[]>
+  }
 }

@@ -9,7 +9,10 @@
   <tr mat-row *matRowDef="let bookrow; columns: displayedColumns;"
            (click)="goToBookDetails(bookrow)"></tr>
 </table>
-<button mat-fab extended (click)="goToAddBook()">
-  +
-</button>
+<button mat-fab extended (click)="goToAddBook()">+</button>
+
+<input matInput type="number" [(ngModel)]="rating_gt">
+<button mat-raised-button (click)="goToFilterBook()">Filter</button>
+<button mat-raised-button (click)="ngOnInit()">All Books</button>
+
 

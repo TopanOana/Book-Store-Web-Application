@@ -11,6 +11,8 @@ import {Router} from "@angular/router";
 export class OverviewBooksComponent {
   books: Book[] = []
   displayedColumns = ['id', 'title', 'author', 'nrPages', 'rating', 'genre']
+
+  rating_gt:number=0;
   constructor(private service: ApiService, private router:Router) {
   }
   ngOnInit():void{
@@ -27,5 +29,15 @@ export class OverviewBooksComponent {
     console.log(bookrow.id)
     let bookID = bookrow.id
     this.router.navigateByUrl(`books/${bookID}`)
+  }
+
+  goToFilterBook(){
+    console.log(this.rating_gt)
+    this.service.getBooksFilteredByRating(this.rating_gt).subscribe((books:Book[])=>
+      {
+        this.books =  books;
+      }
+    )
+    // this.router.navigateByUrl(`books/filter`)
   }
 }
