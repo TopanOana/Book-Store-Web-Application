@@ -24,9 +24,9 @@ export class ApiService {
     return this.http.put(`${this.baseURL}/books/${bookID}`, book) as Observable<Book>
   }
 
-  removeBook(bookID:number){
+  removeBook(bookID:number): Observable<Book>{
     console.log("remove book service"+bookID)
-    this.http.delete(`${this.baseURL}/books/${bookID}`)
+    return this.http.delete(`${this.baseURL}/books/${bookID}`) as Observable<Book>
   }
 
   addBook(book: AddBookDTO): Observable<Book>{

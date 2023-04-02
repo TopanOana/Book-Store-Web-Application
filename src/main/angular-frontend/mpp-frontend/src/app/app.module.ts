@@ -13,6 +13,7 @@ import { BookDetailsComponent } from './features/books/components/book-details/b
 import { AddBookComponent } from './features/books/components/add-book/add-book.component';
 import {FormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {MatInputModule} from "@angular/material/input";
     MatTableModule,
     MatButtonModule,
     FormsModule,
-    MatInputModule
+    MatInputModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -27,24 +27,24 @@
   <form>
     <mat-form-field>
       <mat-label>Title</mat-label>
-      <input matInput value="{{book.title}}">
+      <input matInput name="title" id="title" value="{{title}}"  [(ngModel)]="title">
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Author</mat-label>
-      <input matInput value="{{book.author}}">
+      <input matInput name="author" id="author" value="{{author}}" [(ngModel)]="author">
     </mat-form-field>
     <mat-form-field>
       <mat-label>NrPages</mat-label>
-      <input matInput value="{{book.nrPages}}">
+      <input matInput name="nrPages" id="nrPages" value="{{nrPages}}"  [(ngModel)]="nrPages">
     </mat-form-field>
     <mat-form-field>
       <mat-label>Rating</mat-label>
-      <input matInput value="{{book.rating}}">
+      <input matInput name="rating" id="rating" value="{{rating}}" [(ngModel)]="rating">
     </mat-form-field>
     <mat-form-field>
       <mat-label>Genre</mat-label>
-      <input matInput value="{{book.genre}}">
+      <input matInput name="genre" id="genre" value="{{genre}}" [(ngModel)]="genre">
     </mat-form-field>
   </form>
   <button mat-fab extended (click)="updateBook()">update</button>
