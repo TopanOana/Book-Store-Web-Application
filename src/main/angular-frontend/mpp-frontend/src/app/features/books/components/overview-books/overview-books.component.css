@@ -2,32 +2,14 @@ th{
   font-weight: bold;
   font-size:17px;
 }
+/*.mat-row:nth-child(2n+1){*/
+/*  background-color: lightpink;*/
+/*}*/
+/*.mat-row:not(:nth-child(4n+1)){*/
+/*  background-color: lightblue;*/
+/*}*/
 
-h2{
-  text-align: center;
-}
-
-table tr:hover {
-  background-color: #280163;
-}
-
-button:hover{
-  background-color: rebeccapurple;
-  color: white;
-}
-
-.top-tier{
-  display:flex;
-  justify-content: left;
-  height:50px;
-  overflow: hidden;
-}
-
-.filter{
-  display:flex;
-  justify-content: left;
-}
-
-.filterbuttons{
-  height:50px;
+.mat-row:hover {
+  background-color: darkslateblue;
+  cursor: pointer;
 }

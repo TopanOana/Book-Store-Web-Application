@@ -1,20 +1,5 @@
 <h2>Books</h2>
-<div class="top-tier">
-  <button mat-fab extended (click)="goBackToHome()"><-</button>
-  <button mat-fab extended (click)="goToAddBook()">+</button>
-
-  <div class="filter">
-    <form>
-      <mat-form-field>
-        <mat-label>rating filter</mat-label>
-        <input matInput name="rating_gt" id="rating_gt" value="{{rating_gt}}" [(ngModel)]="rating_gt">
-      </mat-form-field>
-    </form>
-
-  </div>
-  <button mat-raised-button class="filterbuttons" (click)="goToFilterBook()">Filter</button>
-  <button mat-raised-button class="filterbuttons" (click)="clearFilter()">Clear Filter</button>
-</div>
+<button mat-fab (click)="goBackToHome()"><-</button>
 <table mat-table [dataSource]="books">
 
   <ng-container matColumnDef="id">
@@ -44,13 +29,14 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let bookrow; columns: displayedColumns;"
-      (click)="goToBookDetails(bookrow)" class="row_table"></tr>
-
+           (click)="goToBookDetails(bookrow)"></tr>
 </table>
 
+<button mat-fab extended (click)="goToAddBook()">+</button>
 
-
-
+<input matInput type="number" [(ngModel)]="rating_gt">
+<button mat-raised-button (click)="goToFilterBook()">Filter</button>
+<button mat-raised-button (click)="ngOnInit()">All Books</button>
 
 
 
