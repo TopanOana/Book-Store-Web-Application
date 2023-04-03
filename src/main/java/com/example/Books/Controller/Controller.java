@@ -42,6 +42,7 @@ public class Controller {
         the get mapping is for reading all the books in the repository or
         getting all the books in the repository with a rating greater than the one given
          */
+        System.out.println("reached controller");
         if (rating == null)
             return bookService.getAllBooks();
         else
