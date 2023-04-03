@@ -23,7 +23,7 @@
   </mat-form-field>
   <button mat-raised-button class="filterbuttons" (click)="sortByColumn()">Sort</button>
 </div>
-<table mat-table [dataSource]="books">
+<table mat-table [dataSource]="books" matSort>
 
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef>id</th>

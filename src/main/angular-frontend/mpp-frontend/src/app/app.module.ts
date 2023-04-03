@@ -15,6 +15,7 @@ import {FormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatSelectModule} from "@angular/material/select";
+import {MatSortModule} from "@angular/material/sort";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {MatSelectModule} from "@angular/material/select";
         FormsModule,
         MatInputModule,
         BrowserAnimationsModule,
-        MatSelectModule
+        MatSelectModule,
+        MatSortModule
     ],
   providers: [],
   bootstrap: [AppComponent]
