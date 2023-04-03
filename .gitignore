@@ -40,3 +40,5 @@ booksDB.trace.db
 ### for netlify###
 /src/main/angular-frontend/node_modules
 /src/main/angular-frontend/dist
+# Local Netlify folder
+.netlify
