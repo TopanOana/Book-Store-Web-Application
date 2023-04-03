@@ -23,7 +23,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/features/_redirects"
+              "src/app/_redirects"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/pink-bluegrey.css",
