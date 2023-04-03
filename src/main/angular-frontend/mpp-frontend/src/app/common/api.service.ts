@@ -12,6 +12,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   getBooks(): Observable<Book[]>{
+    console.log(this.baseURL)
     return this.http.get(`${this.baseURL}/books`) as Observable<Book[]>
   }
 
