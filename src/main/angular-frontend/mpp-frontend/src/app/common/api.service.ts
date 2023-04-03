@@ -8,7 +8,7 @@ import {AddBookDTO, Book, BookDetailsDTO} from "../features/books/components/ove
 })
 export class ApiService {
 
-  baseURL='http://localhost:8080';
+  baseURL='http://13.50.241.90:8080';
   constructor(private http: HttpClient) { }
 
   getBooks(): Observable<Book[]>{
