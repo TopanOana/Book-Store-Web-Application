@@ -14,6 +14,14 @@
   </div>
   <button mat-raised-button class="filterbuttons" (click)="goToFilterBook()">Filter</button>
   <button mat-raised-button class="filterbuttons" (click)="clearFilter()">Clear Filter</button>
+  <mat-form-field>
+    <mat-select class="selectCol" [(value)]="selected">
+      <mat-option *ngFor="let column of displayedColumns" [value]="column">
+        {{column}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button class="filterbuttons" (click)="sortByColumn()">Sort</button>
 </div>
 <table mat-table [dataSource]="books">
 
@@ -47,7 +55,6 @@
       (click)="goToBookDetails(bookrow)" class="row_table"></tr>
 
 </table>
-
 
 
 

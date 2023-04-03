@@ -14,6 +14,8 @@ export class OverviewBooksComponent {
 
   rating_gt:number=0;
 
+  selected : string = 'id';
+
   constructor(private service: ApiService, private router:Router) {
   }
   ngOnInit():void{
@@ -50,5 +52,57 @@ export class OverviewBooksComponent {
     this.service.getBooks().subscribe((books:Book[])=>{
       this.books=books;
     })
+  }
+
+  sortByColumn() {
+    console.log(this.selected)
+    switch(this.selected){
+      case 'id':
+        this.books = this.books.sort(function(a,b){
+          return a.id-b.id;
+        });
+        break;
+      case 'title':
+        console.log('here')
+        this.books = this.books.sort(function(a,b){
+          if (a.title<b.title)
+              return -1;
+          else if(a.title>b.title)
+            return 1;
+          return 0;
+        });
+        break;
+      case 'author':
+        this.books.sort(function(a,b){
+          if (a.author<b.author)
+            return -1;
+          else if(a.author>b.author)
+            return 1;
+          return 0;
+        });
+        break;
+      case 'genre':
+        this.books.sort(function(a,b){
+          if (a.genre<b.genre)
+            return -1;
+          else if(a.genre>b.genre)
+            return 1;
+          return 0;
+        });
+        break;
+      case 'nrPages':
+        this.books.sort(function(a,b){
+          return a.nrPages-b.nrPages;
+        });
+        break;
+      case 'rating':
+        this.books.sort(function(a,b){
+          return a.rating-b.rating;
+        });
+        break;
+      default:
+
+    }
+
   }
 }

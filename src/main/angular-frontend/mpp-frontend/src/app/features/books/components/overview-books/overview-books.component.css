@@ -11,6 +11,13 @@ table tr:hover {
   background-color: #280163;
 }
 
+table tr:nth-child(2n+1){
+  background-color: #2f2f2f;
+}
+table tr:nth-child(2n){
+  background-color: #4b4b4b;
+}
+
 button:hover{
   background-color: rebeccapurple;
   color: white;
@@ -29,5 +36,9 @@ button:hover{
 }
 
 .filterbuttons{
+  height:50px;
+}
+
+.selectCol{
   height:50px;
 }
