@@ -36,3 +36,7 @@ build/
 ##Database##
 booksDB.mv.db
 booksDB.trace.db
+
+### for netlify###
+/src/main/angular-frontend/node_modules
+/src/main/angular-frontend/dist
