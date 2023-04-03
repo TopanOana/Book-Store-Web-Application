@@ -1,7 +1,4 @@
 <h2>Books</h2>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 <div class="top-tier">
   <button mat-fab extended (click)="goBackToHome()"><-</button>
   <button mat-fab extended (click)="goToAddBook()">+</button>
@@ -17,24 +14,8 @@
   </div>
   <button mat-raised-button class="filterbuttons" (click)="goToFilterBook()">Filter</button>
   <button mat-raised-button class="filterbuttons" (click)="clearFilter()">Clear Filter</button>
-  <mat-form-field>
-    <mat-select class="selectCol" [(value)]="selected">
-      <mat-option *ngFor="let column of displayedColumns" [value]="column">
-        {{column}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <button mat-raised-button class="filterbuttons" (click)="sortByColumn()">Sort</button>
 </div>
-<table mat-table [dataSource]="books" matSort>
-=======
-=======
->>>>>>> parent of a5a0e41 (last updates on front end for lab)
-=======
->>>>>>> parent of a5a0e41 (last updates on front end for lab)
-<button mat-fab (click)="goBackToHome()"><-</button>
 <table mat-table [dataSource]="books">
->>>>>>> parent of a5a0e41 (last updates on front end for lab)
 
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef>id</th>
@@ -63,21 +44,13 @@
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let bookrow; columns: displayedColumns;"
-           (click)="goToBookDetails(bookrow)"></tr>
+      (click)="goToBookDetails(bookrow)" class="row_table"></tr>
+
 </table>
 
-<button mat-fab extended (click)="goToAddBook()">+</button>
 
-<input matInput type="number" [(ngModel)]="rating_gt">
-<button mat-raised-button (click)="goToFilterBook()">Filter</button>
-<button mat-raised-button (click)="ngOnInit()">All Books</button>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 
->>>>>>> parent of a5a0e41 (last updates on front end for lab)
-=======
 
->>>>>>> parent of a5a0e41 (last updates on front end for lab)
+
 
 

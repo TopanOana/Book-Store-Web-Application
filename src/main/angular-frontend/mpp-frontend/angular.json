@@ -22,12 +22,7 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-<<<<<<< HEAD
-              "src/app/_redirects"
-=======
-              "features/_redirects"
->>>>>>> parent of 6308cb2 (pls bb)
+              "src/assets"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/pink-bluegrey.css",

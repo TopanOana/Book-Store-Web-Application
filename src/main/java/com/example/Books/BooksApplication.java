@@ -15,7 +15,7 @@ public class BooksApplication {
 
 	public static void main(String[] args) {
 		SpringApplication app = new SpringApplication(BooksApplication.class);
-		app.setDefaultProperties(Collections.singletonMap("server.port","80"));
+		app.setDefaultProperties(Collections.singletonMap("server.port","8080"));
 		app.run(args);
 	}
 
@@ -24,7 +24,7 @@ public class BooksApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
+				registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "PUT", "POST", "DELETE", "PATCH", "OPTIONS", "HEAD");
 			}
 		};
 	}
