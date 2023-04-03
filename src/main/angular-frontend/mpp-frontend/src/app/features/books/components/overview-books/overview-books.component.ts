@@ -49,6 +49,7 @@ export class OverviewBooksComponent {
   goBackToHome(){
     this.router.navigateByUrl("")
   }
+<<<<<<< HEAD
 
   clearFilter() {
     this.rating_gt=0;
@@ -124,4 +125,6 @@ export class OverviewBooksComponent {
     }
 
   }
+=======
+>>>>>>> parent of a5a0e41 (last updates on front end for lab)
 }

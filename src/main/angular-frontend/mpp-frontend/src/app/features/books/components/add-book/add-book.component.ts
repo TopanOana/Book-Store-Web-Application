@@ -42,8 +42,4 @@ export class AddBookComponent {
         (err)=>console.log(err))
     }
   }
-
-  goBackToOverview() {
-    this.router.navigateByUrl('books')
-  }
 }
