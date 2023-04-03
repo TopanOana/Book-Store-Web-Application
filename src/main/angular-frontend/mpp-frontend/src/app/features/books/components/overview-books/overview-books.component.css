@@ -11,6 +11,7 @@ th{
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 h2{
   text-align: center;
 }
@@ -54,6 +55,11 @@ button:hover{
 
 .selectCol{
   height:50px;
+=======
+.mat-row:hover {
+  background-color: darkslateblue;
+  cursor: pointer;
+>>>>>>> parent of a5a0e41 (last updates on front end for lab)
 =======
 .mat-row:hover {
   background-color: darkslateblue;
