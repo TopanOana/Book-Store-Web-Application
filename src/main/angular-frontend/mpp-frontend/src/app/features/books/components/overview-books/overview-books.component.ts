@@ -50,6 +50,7 @@ export class OverviewBooksComponent {
     this.router.navigateByUrl("")
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
   clearFilter() {
     this.rating_gt=0;
@@ -125,6 +126,8 @@ export class OverviewBooksComponent {
     }
 
   }
+=======
+>>>>>>> parent of a5a0e41 (last updates on front end for lab)
 =======
 >>>>>>> parent of a5a0e41 (last updates on front end for lab)
 }
