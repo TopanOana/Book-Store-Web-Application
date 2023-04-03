@@ -1,4 +1,10 @@
-/*form{*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*}*/
+button{
+  height:50px;
+}
+h2{
+  text-align: center;
+}
+button:hover{
+  background-color: rebeccapurple;
+  color: white;
+}
