@@ -1,0 +1,37 @@
+<h2> Add employee</h2>
+<button mat-fab (click)="goBackToOverview()"><-</button>
+
+
+<div class="formcomp">
+  <form (submit)="addEmployee()">
+    <mat-form-field>
+      <mat-label>FirstName</mat-label>
+      <input matInput id="firstName" name="firstName" [(ngModel)]="firstName">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>LastName</mat-label>
+      <input matInput id="lastName" name="lastName" [(ngModel)]="lastName">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>PhoneNumber</mat-label>
+      <input matInput id="phoneNumber" name="phoneNumber" [(ngModel)]="phoneNumber">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Salary</mat-label>
+      <input matInput id="salary" name="salary" [(ngModel)]="salary">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>FullTime</mat-label>
+      <input matInput id="fullTime" name="fullTime" [(ngModel)]="fullTime">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Store</mat-label>
+
+    </mat-form-field>
+
+  </form>
+  <button class="mat-raised-button" mat-raised-button type="submit">add</button>
+</div>
+
+
