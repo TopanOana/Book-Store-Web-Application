@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import {Book, BookDetailsDTO} from "../overview-books/Models/books.models";
+import {Book} from "../overview-books/Models/books.models";
 import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {transferArrayItem} from "@angular/cdk/drag-drop";
 
 @Component({
   selector: 'app-book-details',

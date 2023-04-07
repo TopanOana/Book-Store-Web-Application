@@ -1,10 +1,11 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, ChangeDetectorRef} from '@angular/core';
 import {Book} from "./Models/books.models";
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
 import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from "@angular/material/table";
 import {LiveAnnouncer} from '@angular/cdk/a11y';
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-overview-books',
@@ -19,8 +20,12 @@ export class OverviewBooksComponent {
 
   dataSource = new MatTableDataSource();
 
-  @ViewChild(MatSort) matSort = new MatSort();
-
+  @ViewChild(MatSort) set sort(sorter:MatSort) {
+    if (sorter) this.dataSource.sort = sorter;
+  }
+  @ViewChild(MatPaginator) set paginator(pager:MatPaginator) {
+    if (pager) this.dataSource.paginator = pager;
+  }
   constructor(private service: ApiService, private router:Router, private liveAnnouncer : LiveAnnouncer) {
   }
   ngOnInit():void{
@@ -29,7 +34,8 @@ export class OverviewBooksComponent {
     })
   }
   ngAfterViewInit() {
-    this.dataSource.sort = this.matSort;
+    // this.dataSource.sort = this.sort;
+    // this.dataSource.paginator = this.paginator;
   }
 
   goToAddBook(){
