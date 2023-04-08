@@ -84,4 +84,8 @@ public class StoreService {
         }
         return employees;
     }
+
+    public List<Store> getStoresWithNameLike(String input){
+        return this.repository.findStoresByStoreNameContainsIgnoreCase(input);
+    }
 }

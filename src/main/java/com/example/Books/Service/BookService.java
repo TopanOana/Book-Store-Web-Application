@@ -5,6 +5,9 @@ import com.example.Books.Model.Book;
 import com.example.Books.Repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,11 +23,12 @@ public class BookService {
         this.repository=repository;
     }
 
-    public List<Book> getAllBooks(){
+    public Page<Book> getAllBooks(int page, int size){
         /*
         returns all books in the repo
          */
-        return repository.findAll();
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return repository.findAll(pageRequest);
     }
 
 
@@ -69,8 +73,9 @@ public class BookService {
         repository.deleteById(id);
     }
 
-    public List<Book> getBooksWithRatingGreaterThan(double rating){
-        return repository.findAll().stream().filter(book ->{return book.getRating()>=rating;}).collect(Collectors.toList());
+    public Page<Book> getBooksWithRatingGreaterThan(double rating, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return repository.findBooksByRatingGreaterThan(rating, pageRequest);
     }
 
 }

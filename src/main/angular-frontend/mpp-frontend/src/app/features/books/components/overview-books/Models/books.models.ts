@@ -24,3 +24,13 @@ export interface BookDetailsDTO{
   genre: string;
   stores: string[];
 }
+
+
+export interface BookTable{
+  content: Book[];
+  number:number;
+  size:number;
+  totalElements:number;
+  totalPages:number;
+
+}

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
+import {AddEmployeeDTO} from "../overview-employees/Models/employees.models";
 
 @Component({
   selector: 'app-add-employee',
@@ -14,6 +15,7 @@ export class AddEmployeeComponent {
   salary?: number;
   fullTime?: boolean;
   //store?????? please
+  filteredOptions?: any;
 
   constructor(private service:ApiService, private router:Router){
 
@@ -24,6 +26,21 @@ export class AddEmployeeComponent {
 
   addEmployee() {
 
+    if(this.firstName && this.lastName && this.phoneNumber && this.salary && this.fullTime){
+      const employee:AddEmployeeDTO={
+        firstName:this.firstName,
+        lastName:this.lastName,
+        phoneNumber:this.phoneNumber,
+        salary:this.salary,
+        fullTime:this.fullTime
+      }
+      //get the id of the store
+      //service call
+    }
+
+  }
+
+  doTheCompletion() {
 
   }
 }

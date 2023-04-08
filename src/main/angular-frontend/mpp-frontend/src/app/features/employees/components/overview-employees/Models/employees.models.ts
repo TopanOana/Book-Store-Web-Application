@@ -16,3 +16,14 @@ export interface AddEmployeeDTO{
   salary: number;
   fullTime: boolean;
 }
+
+
+export interface StoreDTO{
+  id:number;
+  storeName: string;
+  address:string;
+  contactNumber: string;
+  openingHour: number;
+  closingHour: number;
+
+}

@@ -7,6 +7,7 @@ import com.example.Books.Service.*;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,16 +38,18 @@ public class Controller {
     // Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/books")
-    List<Book> getBooks(@Nullable @RequestParam("rating_gt") Double rating){
+    Page<Book> getBooks(@Nullable @RequestParam("rating_gt") Double rating, @RequestParam int page, @RequestParam int size){
         /*
         the get mapping is for reading all the books in the repository or
         getting all the books in the repository with a rating greater than the one given
          */
         System.out.println("reached controller");
-        if (rating == null)
-            return bookService.getAllBooks();
+        if (rating == null){
+            Page<Book> bookPage = bookService.getAllBooks(page,size);
+            return bookPage;
+        }
         else
-            return bookService.getBooksWithRatingGreaterThan(rating);
+            return bookService.getBooksWithRatingGreaterThan(rating, page, size);
     }
     // end::get-aggregate-root[]
 
@@ -88,11 +91,15 @@ public class Controller {
 
 
     @GetMapping("/stores")
-    List<Store> getAllStores(){
+    List<Store> getAllStores(@Nullable @RequestParam String input){
         /*
         get mapping for reading all the stores in the repository
          */
-        return storeService.getAllStores();
+        if (input==null){
+            return storeService.getAllStores();
+        }
+        else return storeService.getStoresWithNameLike(input);
+
     }
     @GetMapping("/stores/{id}")
     List<Employee> getStoreEmployeesByID(@PathVariable Long id){
@@ -213,6 +220,9 @@ public class Controller {
     List<BookStockDTO> getStatBookStock(){
         return statService.getAllBooksByNumber();
     }
+
+
+
 
 }
 
