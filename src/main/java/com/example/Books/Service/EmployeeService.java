@@ -5,6 +5,8 @@ import com.example.Books.Model.Store;
 import com.example.Books.Repository.EmployeeRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,11 +21,13 @@ public class EmployeeService {
     public EmployeeService(EmployeeRepository employeeRepository){
         this.employeeRepository=employeeRepository;
     }
-    public List<Employee> getAllEmployees(){
+    public Page<Employee> getAllEmployees(int page, int size){
         /*
         returns all the employees in the repository
          */
-        return employeeRepository.findAll().stream().collect(Collectors.toList());
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return employeeRepository.findAll(pageRequest);
+//        return employeeRepository.findAll().stream().collect(Collectors.toList());
     }
 
     public Employee addEmployeeToRepository(@Valid Employee newEmployee){

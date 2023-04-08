@@ -91,14 +91,14 @@ public class Controller {
 
 
     @GetMapping("/stores")
-    List<Store> getAllStores(@Nullable @RequestParam String input){
+    Page<Store> getAllStores(@Nullable @RequestParam String input, @RequestParam int page, @RequestParam int size){
         /*
         get mapping for reading all the stores in the repository
          */
         if (input==null){
-            return storeService.getAllStores();
+            return storeService.getAllStores(page, size);
         }
-        else return storeService.getStoresWithNameLike(input);
+        else return storeService.getStoresWithNameLike(input, page, size);
 
     }
     @GetMapping("/stores/{id}")
@@ -140,8 +140,8 @@ public class Controller {
 
 
     @GetMapping("/employees")
-    List<Employee> getAllEmployees(){
-        return employeeService.getAllEmployees();
+    Page<Employee> getAllEmployees(@RequestParam int page, @RequestParam int size){
+        return employeeService.getAllEmployees(page, size);
     }
 
     @GetMapping("/employees/{id}")

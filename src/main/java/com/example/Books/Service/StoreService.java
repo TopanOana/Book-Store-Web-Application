@@ -6,6 +6,8 @@ import com.example.Books.Model.Stock;
 import com.example.Books.Model.Store;
 import com.example.Books.Repository.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +23,12 @@ public class StoreService {
     }
 
 
-    public List<Store> getAllStores(){
+    public Page<Store> getAllStores(int page, int size){
         /*
         returns all stores in the repo
          */
-        return repository.findAll().stream().collect(Collectors.toList());
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return repository.findAll(pageRequest);
     }
 
     public List<Employee> getStoreEmployeesByID(Long id){
@@ -85,7 +88,8 @@ public class StoreService {
         return employees;
     }
 
-    public List<Store> getStoresWithNameLike(String input){
-        return this.repository.findStoresByStoreNameContainsIgnoreCase(input);
+    public Page<Store> getStoresWithNameLike(String input, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return this.repository.findStoresByStoreNameContainsIgnoreCase(input, pageRequest);
     }
 }
