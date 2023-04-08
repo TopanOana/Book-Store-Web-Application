@@ -1,3 +1,5 @@
+import {Book} from "../../../../books/components/overview-books/Models/books.models";
+
 export interface Employee{
   id: number;
   firstName: string;
@@ -7,6 +9,11 @@ export interface Employee{
   fullTime: boolean;
 }
 
+
+// export interface employeeTable{
+//
+//
+// }
 
 
 export interface AddEmployeeDTO{
@@ -25,5 +32,14 @@ export interface StoreDTO{
   contactNumber: string;
   openingHour: number;
   closingHour: number;
+
+}
+
+export interface EmployeeTable{
+  content: EmployeeTable[];
+  number:number;
+  size:number;
+  totalElements:number;
+  totalPages:number;
 
 }

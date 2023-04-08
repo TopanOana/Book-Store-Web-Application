@@ -4,8 +4,8 @@ import {MatSort, Sort} from "@angular/material/sort";
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
-import {Employee} from "./Models/employees.models";
-import {MatPaginator} from "@angular/material/paginator";
+import {Employee, EmployeeTable} from "./Models/employees.models";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-overview-employees',
@@ -17,6 +17,9 @@ export class OverviewEmployeesComponent {
   displayedColumns = ['id', 'firstName', 'lastName', 'phoneNumber', 'salary', 'fullTime']
 
   dataSource = new MatTableDataSource();
+  totalEmployees: number =0;
+
+  pageSize=5;
 
   @ViewChild(MatSort) set sort(sorter:MatSort) {
     if (sorter) this.dataSource.sort = sorter;
@@ -29,15 +32,20 @@ export class OverviewEmployeesComponent {
   }
 
   ngOnInit():void{
-    this.service.getEmployees().subscribe((employees:Employee[])=>{
-      this.dataSource.data = employees;
-    })
+    this.getEmployeesPaged(0,this.pageSize);
   }
 
   ngAfterViewInit() {
     // this.dataSource.sort = this.matSort;
+    this.dataSource.paginator = this.paginator;
   }
 
+  getEmployeesPaged(page:number, size:number){
+    this.service.getEmployees(page, size).subscribe((data:EmployeeTable)=>{
+      this.dataSource.data = data['content'];
+      this.totalEmployees = data['totalElements'];
+    })
+  }
 
   goBackToHome() {
     this.router.navigateByUrl("")
@@ -60,5 +68,14 @@ export class OverviewEmployeesComponent {
     } else {
       this.liveAnnouncer.announce('Sorting cleared');
     }
+  }
+
+  nextPage(event: PageEvent) {
+    var page = event.pageIndex;
+    var size = this.pageSize;
+    // console.log(size);
+    // console.log(page);
+    console.log(this.dataSource.paginator);
+    this.getEmployeesPaged(page,size);
   }
 }

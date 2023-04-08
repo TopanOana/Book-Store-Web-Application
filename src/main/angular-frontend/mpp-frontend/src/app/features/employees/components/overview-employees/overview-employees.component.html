@@ -36,9 +36,11 @@
     <tr mat-row *matRowDef="let employeerow; columns: displayedColumns;"
         (click)="goToEmployeeDetails(employeerow)"></tr>
   </table>
-  <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]"
+  <mat-paginator pageSize="5"
                  showFirstLastButtons
-                 aria-label="Select page of employees">
+                 aria-label="Select page of books"
+                 [length]="totalEmployees" (page)="nextPage($event)">
+
   </mat-paginator>
 </div>
 

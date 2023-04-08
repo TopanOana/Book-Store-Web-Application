@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {AddBookDTO, Book, BookTable} from "../features/books/components/overview-books/Models/books.models";
-import {Employee, StoreDTO} from "../features/employees/components/overview-employees/Models/employees.models";
+import {Employee, StoreDTO, EmployeeTable} from "../features/employees/components/overview-employees/Models/employees.models";
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +42,8 @@ export class ApiService {
     return this.http.get(`${this.baseURL}/books?rating_gt=${rating_gt}&page=${page}&size=${size}`)
   }
 
-  getEmployees(): Observable<Employee[]>{
-    return this.http.get(`${this.baseURL}/employees`) as Observable<Employee[]>
+  getEmployees(page:number, size:number): Observable<EmployeeTable>{
+    return this.http.get(`${this.baseURL}/employees?page=${page}&size=${size}`) as Observable<EmployeeTable>
   }
 
   getEmployeeDetails(employeeID: number): Observable<Employee>{
@@ -59,7 +59,7 @@ export class ApiService {
     return this.http.delete(`${this.baseURL}/employees/${employee}`) as Observable<Employee>
   }
 
-  getStores(): Observable<StoreDTO>{
-    return this.http.get(`${this.baseURL}/stores`) as Observable<StoreDTO>
-  }
+  // getStores(): Observable<EmployeeTable>{
+  //   return this.http.get(`${this.baseURL}/stores`) as Observable<EmployeeTable>
+  // }
 }
