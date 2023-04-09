@@ -42,3 +42,5 @@ booksDB.trace.db
 /src/main/angular-frontend/dist
 # Local Netlify folder
 .netlify
+
+.env
