@@ -9,7 +9,7 @@ import {Employee, StoreDTO, EmployeeTable} from "../features/employees/component
 })
 export class ApiService {
 
-  baseURL='http://localhost:8080';
+  baseURL='http://16.170.7.181:8080';
   constructor(private http: HttpClient) { }
 
   getBooks(page:number, size:number, rating_gt?:number): Observable<BookTable>{
