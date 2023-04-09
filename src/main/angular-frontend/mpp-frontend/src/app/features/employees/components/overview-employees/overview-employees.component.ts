@@ -37,7 +37,7 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    this.getEmployeesPaged(this.paginator.pageIndex, this.pageSize);
+    this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
   }
 
   getEmployeesPaged(page:number, size:number){
