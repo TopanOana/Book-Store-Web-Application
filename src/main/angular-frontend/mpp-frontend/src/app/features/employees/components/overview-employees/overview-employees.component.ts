@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSort, Sort} from "@angular/material/sort";
 import {ApiService} from "../../../../common/api.service";
@@ -10,34 +10,34 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 @Component({
   selector: 'app-overview-employees',
   templateUrl: './overview-employees.component.html',
-  styleUrls: ['./overview-employees.component.css']
+  styleUrls: ['./overview-employees.component.css'],
+  providers: [MatPaginator, MatSort]
 })
-export class OverviewEmployeesComponent {
+export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
 
   displayedColumns = ['id', 'firstName', 'lastName', 'phoneNumber', 'salary', 'fullTime']
 
   dataSource = new MatTableDataSource();
-  totalEmployees: number =0;
+  totalEmployees: number;
 
   pageSize=5;
 
-  @ViewChild(MatSort) set sort(sorter:MatSort) {
-    if (sorter) this.dataSource.sort = sorter;
-  }
-  @ViewChild(MatPaginator) set paginator(pager:MatPaginator) {
-    if (pager) this.dataSource.paginator = pager;
-  }
 
-  constructor(private service: ApiService, private router:Router, private liveAnnouncer : LiveAnnouncer) {
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  constructor(private service: ApiService, private router: Router, private liveAnnouncer: LiveAnnouncer, paginator: MatPaginator, sort : MatSort) {
+    this.paginator = paginator;
+    this.sort = sort;
+    this.totalEmployees = 0;
   }
 
   ngOnInit():void{
-    this.getEmployeesPaged(0,this.pageSize);
+    // console.log("aiciiii");
   }
 
   ngAfterViewInit() {
-    // this.dataSource.sort = this.matSort;
-    this.dataSource.paginator = this.paginator;
+    this.getEmployeesPaged(this.paginator.pageIndex, this.pageSize);
   }
 
   getEmployeesPaged(page:number, size:number){
@@ -57,7 +57,7 @@ export class OverviewEmployeesComponent {
   }
 
   goToEmployeeDetails(employeerow: Employee){
-    console.log(employeerow.id)
+    // console.log(employeerow.id)
     let employeeID = employeerow.id
     this.router.navigateByUrl(`employees/${employeeID}`)
   }
@@ -71,11 +71,6 @@ export class OverviewEmployeesComponent {
   }
 
   nextPage(event: PageEvent) {
-    var page = event.pageIndex;
-    var size = this.pageSize;
-    // console.log(size);
-    // console.log(page);
-    console.log(this.dataSource.paginator);
-    this.getEmployeesPaged(page,size);
+    this.getEmployeesPaged(this.paginator.pageIndex, this.pageSize);
   }
 }
