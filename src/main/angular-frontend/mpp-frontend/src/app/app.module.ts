@@ -11,7 +11,7 @@ import { HttpClientModule} from "@angular/common/http";
 import {MatButtonModule} from "@angular/material/button";
 import { BookDetailsComponent } from './features/books/components/book-details/book-details.component';
 import { AddBookComponent } from './features/books/components/add-book/add-book.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatSortModule} from "@angular/material/sort";
@@ -44,7 +44,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     BrowserAnimationsModule,
     MatSortModule,
     MatAutocompleteModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -2,14 +2,20 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {AddBookDTO, Book, BookTable} from "../features/books/components/overview-books/Models/books.models";
-import {Employee, StoreDTO, EmployeeTable} from "../features/employees/components/overview-employees/Models/employees.models";
+import {
+  Employee,
+  StoreDTO,
+  EmployeeTable,
+  AddEmployeeDTO, StoreTable
+} from "../features/employees/components/overview-employees/Models/employees.models";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  baseURL='http://16.170.7.181:8080';
+  // baseURL='http://16.170.7.181:8080';
+  baseURL='http://localhost:8080';
   constructor(private http: HttpClient) { }
 
   getBooks(page:number, size:number, rating_gt?:number): Observable<BookTable>{
@@ -38,9 +44,7 @@ export class ApiService {
     return this.http.post(`${this.baseURL}/books`, book) as Observable<Book>
   }
 
-  getBooksFilteredByRating(rating_gt:number, page:number, size:number):Observable<any>{
-    return this.http.get(`${this.baseURL}/books?rating_gt=${rating_gt}&page=${page}&size=${size}`)
-  }
+
 
   getEmployees(page:number, size:number): Observable<EmployeeTable>{
     return this.http.get(`${this.baseURL}/employees?page=${page}&size=${size}`) as Observable<EmployeeTable>
@@ -59,7 +63,14 @@ export class ApiService {
     return this.http.delete(`${this.baseURL}/employees/${employee}`) as Observable<Employee>
   }
 
-  // getStores(): Observable<EmployeeTable>{
-  //   return this.http.get(`${this.baseURL}/stores`) as Observable<EmployeeTable>
-  // }
+  getStores(page:number, size:number, input?:string): Observable<StoreTable>{
+    if (input){
+      return this.http.get(`${this.baseURL}/stores?input=&page=${page}&size=${size}`) as Observable<StoreTable>
+    }
+    return this.http.get(`${this.baseURL}/stores`) as Observable<StoreTable>
+  }
+
+  addEmployee(employee: AddEmployeeDTO, storeID:number): Observable<Employee>{
+    return this.http.post(`${this.baseURL}/employees?storeID=${storeID}`, employee) as Observable<Employee>
+  }
 }

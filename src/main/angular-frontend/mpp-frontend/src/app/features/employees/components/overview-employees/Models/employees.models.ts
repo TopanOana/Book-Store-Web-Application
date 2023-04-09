@@ -1,4 +1,5 @@
 import {Book} from "../../../../books/components/overview-books/Models/books.models";
+import {Observable} from "rxjs";
 
 export interface Employee{
   id: number;
@@ -36,7 +37,16 @@ export interface StoreDTO{
 }
 
 export interface EmployeeTable{
-  content: EmployeeTable[];
+  content: Employee[];
+  number:number;
+  size:number;
+  totalElements:number;
+  totalPages:number;
+
+}
+
+export interface StoreTable{
+  content: StoreDTO[]
   number:number;
   size:number;
   totalElements:number;
