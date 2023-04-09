@@ -71,6 +71,6 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
   }
 
   nextPage(event: PageEvent) {
-    this.getEmployeesPaged(this.paginator.pageIndex, this.pageSize);
+    this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
   }
 }
