@@ -43,4 +43,4 @@ booksDB.trace.db
 # Local Netlify folder
 .netlify
 
-.env
+

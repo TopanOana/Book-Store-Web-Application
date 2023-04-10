@@ -65,7 +65,7 @@ export class ApiService {
 
   getStores(page:number, size:number, input?:string): Observable<StoreTable>{
     if (input){
-      return this.http.get(`${this.baseURL}/stores?input=&page=${page}&size=${size}`) as Observable<StoreTable>
+      return this.http.get(`${this.baseURL}/stores?input=${input}&page=${page}&size=${size}`) as Observable<StoreTable>
     }
     return this.http.get(`${this.baseURL}/stores`) as Observable<StoreTable>
   }
