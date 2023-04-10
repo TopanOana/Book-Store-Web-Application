@@ -14,8 +14,7 @@ import {
 })
 export class ApiService {
 
-  // baseURL='http://16.170.7.181:8080';
-  baseURL='http://localhost:8080';
+  baseURL='http://16.16.91.165:80';
   constructor(private http: HttpClient) { }
 
   getBooks(page:number, size:number, rating_gt?:number): Observable<BookTable>{
