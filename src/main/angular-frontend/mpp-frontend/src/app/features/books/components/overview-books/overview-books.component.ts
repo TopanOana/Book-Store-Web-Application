@@ -35,6 +35,7 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
     this.getBooksPaged(this.paginator.pageIndex, this.paginator.pageSize);
   }
 
@@ -76,6 +77,7 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   }
 
   announceSortChange(sortState: Sort) {
+    console.log("got to sort");
     if (sortState.direction) {
       this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
