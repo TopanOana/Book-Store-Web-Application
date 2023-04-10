@@ -26,6 +26,9 @@ public class Employee {
     @Column
     private boolean fullTime;
 
+    @Column
+    private String description;
+
 //    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name="storeID")
