@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface StoreRepository extends JpaRepository<Store,Long> {
     Page<Store> findStoresByStoreNameContainsIgnoreCase(String input, Pageable pageable);
+
 }

@@ -34,11 +34,11 @@ public class EmployeeService {
         return employeeRepository.save(newEmployee);
     }
 
-    public Store getStoreIDByEmployeeID(Long id){
+    public Employee getStoreIDByEmployeeID(Long id){
         /*
         gets an employee by id
          */
-        return employeeRepository.findById(id).get().getStore();
+        return employeeRepository.findById(id).get();
     }
 
     public Employee updateEmployeeInRepository(Long id, Employee updatedEmployee)

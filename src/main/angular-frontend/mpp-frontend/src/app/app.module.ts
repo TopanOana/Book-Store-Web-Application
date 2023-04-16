@@ -21,6 +21,9 @@ import { EmployeeDetailsComponent } from './features/employees/components/employ
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatIconModule} from "@angular/material/icon";
+import { OverviewStoresComponent } from './features/stores/components/overview-stores/overview-stores.component';
+import { StoreDetailsComponent } from './features/stores/components/store-details/store-details.component';
+import { AddStoreComponent } from './features/stores/components/add-store/add-store.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +35,9 @@ import {MatIconModule} from "@angular/material/icon";
     OverviewEmployeesComponent,
     AddEmployeeComponent,
     EmployeeDetailsComponent,
+    OverviewStoresComponent,
+    StoreDetailsComponent,
+    AddStoreComponent
   ],
     imports: [
         BrowserModule,

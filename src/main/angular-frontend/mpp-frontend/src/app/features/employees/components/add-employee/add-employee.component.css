@@ -15,5 +15,11 @@ button:hover{
 }
 
 .formcomp button{
-  height:56px;
+  /*position: relative;*/
+  /*top:0;*/
+  /*height:70px;*/
+  /*margin-top:-20px;*/
+  height:55px;
+  vertical-align: top;
+
 }

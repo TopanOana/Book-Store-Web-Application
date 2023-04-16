@@ -1,8 +1,8 @@
 <h2>Book details</h2>
 <ng-container *ngIf="book">
   <button mat-fab (click)="goBackToOverview()"><mat-icon>arrow_back</mat-icon></button>
-  <button mat-fab extended (click)="updateBook()">update</button>
-  <button mat-fab extended (click)="deleteBook()">delete</button>
+  <button mat-fab (click)="updateBook()"><mat-icon>update</mat-icon></button>
+  <button mat-fab (click)="deleteBook()"><mat-icon>delete</mat-icon></button>
 
   <form>
     <mat-form-field>

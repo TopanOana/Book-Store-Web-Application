@@ -9,6 +9,9 @@ import {
 } from "./features/employees/components/overview-employees/overview-employees.component";
 import {AddEmployeeComponent} from "./features/employees/components/add-employee/add-employee.component";
 import {EmployeeDetailsComponent} from "./features/employees/components/employee-details/employee-details.component";
+import {OverviewStoresComponent} from "./features/stores/components/overview-stores/overview-stores.component";
+import {AddStoreComponent} from "./features/stores/components/add-store/add-store.component";
+import {StoreDetailsComponent} from "./features/stores/components/store-details/store-details.component";
 
 const routes: Routes = [
   {
@@ -38,6 +41,18 @@ const routes: Routes = [
   {
     path: "employees/:id",
     component: EmployeeDetailsComponent
+  },
+  {
+    path: "stores",
+    component: OverviewStoresComponent
+  },
+  {
+    path: "stores/add",
+    component: AddStoreComponent
+  },
+  {
+    path: "stores/:id",
+    component: StoreDetailsComponent
   }
 ];
 

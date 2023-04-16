@@ -95,19 +95,26 @@ public class Controller {
         /*
         get mapping for reading all the stores in the repository
          */
+        System.out.println("got to stores");
         if (input==null){
             return storeService.getAllStores(page, size);
         }
         else return storeService.getStoresWithNameLike(input, page, size);
 
     }
+//    @GetMapping("/stores/{id}")
+//    List<Employee> getStoreEmployeesByID(@PathVariable Long id){
+//        /*
+//        gets a store with a specific id
+//         */
+//        return storeService.getStoreEmployeesByID(id);
+//    }
     @GetMapping("/stores/{id}")
-    List<Employee> getStoreEmployeesByID(@PathVariable Long id){
-        /*
-        gets a store with a specific id
-         */
-        return storeService.getStoreEmployeesByID(id);
+    Store getStoreByID(@PathVariable Long id){
+        return storeService.getStoreByID(id);
     }
+
+
 
     @PostMapping("/stores")
     Store addStore(@RequestBody @Valid Store newStore){
@@ -145,7 +152,7 @@ public class Controller {
     }
 
     @GetMapping("/employees/{id}")
-    Store getEmployeeStore(@PathVariable Long id){
+    Employee getEmployeeStore(@PathVariable Long id){
         return employeeService.getStoreIDByEmployeeID(id);
     }
 
