@@ -20,6 +20,7 @@ import { AddEmployeeComponent } from './features/employees/components/add-employ
 import { EmployeeDetailsComponent } from './features/employees/components/employee-details/employee-details.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -32,21 +33,22 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     AddEmployeeComponent,
     EmployeeDetailsComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    MatToolbarModule,
-    MatTableModule,
-    MatButtonModule,
-    FormsModule,
-    MatInputModule,
-    BrowserAnimationsModule,
-    MatSortModule,
-    MatAutocompleteModule,
-    MatPaginatorModule,
-    ReactiveFormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        MatToolbarModule,
+        MatTableModule,
+        MatButtonModule,
+        FormsModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+        MatSortModule,
+        MatAutocompleteModule,
+        MatPaginatorModule,
+        ReactiveFormsModule,
+        MatIconModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -1,5 +1,5 @@
 <h2>Add book</h2>
-<button mat-fab (click)="goBackToOverview()"><-</button>
+<button mat-fab (click)="goBackToOverview()"><mat-icon>arrow_back</mat-icon></button>
 
 <div class="formcomp">
   <form (submit)="addBook()">
@@ -25,5 +25,5 @@
       <input matInput id="genre" name="genre" [(ngModel)]="genre">
     </mat-form-field>
   </form>
-  <button class="mat-raised-button" mat-raised-button type="submit">add</button>
+  <button mat-raised-button type="submit"><mat-icon>save</mat-icon></button>
 </div>
