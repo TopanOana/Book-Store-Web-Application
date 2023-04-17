@@ -6,7 +6,7 @@ import {
   Employee,
   StoreDTO,
   EmployeeTable,
-  AddEmployeeDTO, StoreTable
+  AddEmployeeDTO, StoreTable, UpdateEmployeeDTO
 } from "../features/employees/components/overview-employees/Models/employees.models";
 import {AddStoreDTO} from "../features/stores/components/overview-stores/Models/store.models";
 
@@ -56,9 +56,9 @@ export class ApiService {
     return this.http.get(`${this.baseURL}/employees/${employeeID}`) as Observable<Employee>
   }
 
-  // updateEmployee(employee:Employee, employeeID:number): Observable<Employee>{
-  //   return this.http.put(`${this.baseURL}/employees/``)
-  // }
+  updateEmployee(employee: UpdateEmployeeDTO, employeeID: number, storeID: number): Observable<Employee>{
+    return this.http.put(`${this.baseURL}/employees/${employeeID}?storeID=${storeID}`, employee) as Observable<Employee>
+  }
 
   removeEmployee(employee:number): Observable<Employee>{
 

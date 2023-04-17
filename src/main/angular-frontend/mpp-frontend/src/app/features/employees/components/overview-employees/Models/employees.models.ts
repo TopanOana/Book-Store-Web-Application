@@ -12,6 +12,18 @@ export interface Employee{
   store:StoreDTO;
 }
 
+export interface UpdateEmployeeDTO{
+  id: number;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  salary: number;
+  fullTime: boolean;
+  description: string;
+}
+
+
+
 
 // export interface employeeTable{
 //

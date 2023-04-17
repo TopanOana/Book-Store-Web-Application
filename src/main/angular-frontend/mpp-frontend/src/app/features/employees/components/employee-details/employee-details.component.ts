@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
-import {Employee, StoreDTO, StoreTable} from "../overview-employees/Models/employees.models";
+import {Employee, StoreDTO, StoreTable, UpdateEmployeeDTO} from "../overview-employees/Models/employees.models";
 import {FormControl} from "@angular/forms";
 
 @Component({
@@ -45,6 +45,7 @@ export class EmployeeDetailsComponent {
         this.fullTime = employee.fullTime
         this.description = employee.description;
         this.store = employee.store;
+        this.formControl.setValue(this.store);
       })
     })
     this.formControl.valueChanges.subscribe(value => {
@@ -60,13 +61,33 @@ export class EmployeeDetailsComponent {
   }
 
   updateEmployee() {
-  if (this.firstName && this.lastName && this.phoneNumber && this.salary && this.fullTime){
+  if (this.firstName && this.lastName && this.phoneNumber && this.salary && this.fullTime && this.description){
     this.employee!.firstName = this.firstName
     this.employee!.lastName = this.lastName
     this.employee!.phoneNumber = this.phoneNumber
     this.employee!.salary = this.salary
     this.employee!.fullTime = this.fullTime
-    //todo
+    this.employee!.description = this.description
+    const employee:UpdateEmployeeDTO={
+      id:this.employeeID!,
+      firstName:this.firstName,
+      lastName:this.lastName,
+      phoneNumber:this.phoneNumber,
+      salary:this.salary,
+      fullTime:this.fullTime,
+      description:this.description
+    }
+    let storeID
+    if(this.formControl.value){
+      let store = this.formControl.value
+      storeID = store.id;
+    }
+    else{
+      storeID = this.store!.id;
+    }
+    this.service.updateEmployee(employee, this.employeeID!, storeID).subscribe((employee:Employee)=>{
+      this.router.navigateByUrl("employees");
+    }, (err)=>console.log(err))
 
   }
 
@@ -81,4 +102,10 @@ export class EmployeeDetailsComponent {
       },
       (err)=>console.log(err))
   }
+
+  displayStoreName(store: StoreDTO){
+    if (!store) return this.store!.storeName;
+    return store.storeName;
+  }
+
 }

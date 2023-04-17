@@ -33,13 +33,14 @@
     <mat-form-field>
       <mat-label>Store</mat-label>
       <input id="store" name="store"
-             placeholder="{{store!.storeName}}"
+             placeholder="store"
              aria-label="Store"
              matInput
              [formControl]="formControl"
-             [matAutocomplete]="auto">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let store of stores" [value]="store.storeName">{{store.storeName}}</mat-option>
+             [matAutocomplete]="auto"
+             >
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayStoreName">
+        <mat-option *ngFor="let store of stores" [value]="store">{{store.storeName}}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
   </form>
