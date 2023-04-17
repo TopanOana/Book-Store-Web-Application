@@ -8,6 +8,8 @@ export interface Employee{
   phoneNumber: string;
   salary: number;
   fullTime: boolean;
+  description: string;
+  store:StoreDTO;
 }
 
 

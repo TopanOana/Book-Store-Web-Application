@@ -49,6 +49,14 @@ public class Employee {
         return id;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Employee(String firstName, String lastName, String phoneNumber, int salary, boolean fullTime) {
         this.firstName = firstName;
         this.lastName = lastName;

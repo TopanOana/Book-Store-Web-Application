@@ -8,3 +8,7 @@ button:hover{
   background-color: rebeccapurple;
   color: white;
 }
+
+textarea {
+  vertical-align: top;
+}

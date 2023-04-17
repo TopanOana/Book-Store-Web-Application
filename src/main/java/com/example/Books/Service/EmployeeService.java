@@ -50,6 +50,7 @@ public class EmployeeService {
             employee.setSalary(updatedEmployee.getSalary());
             employee.setFullTime(updatedEmployee.isFullTime());
             employee.setStore(updatedEmployee.getStore());
+            employee.setDescription(updatedEmployee.getDescription());
             return employeeRepository.save(employee);
                 }).orElseGet(()->{
                     updatedEmployee.setId(id);

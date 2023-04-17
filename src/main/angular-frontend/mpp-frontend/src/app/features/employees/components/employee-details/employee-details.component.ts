@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
-import {Employee} from "../overview-employees/Models/employees.models";
+import {Employee, StoreDTO, StoreTable} from "../overview-employees/Models/employees.models";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-employee-details',
@@ -20,6 +21,11 @@ export class EmployeeDetailsComponent {
   phoneNumber?: string;
 
   salary?: number;
+  description?: string;
+  formControl = new FormControl();
+
+  store?: StoreDTO;
+  stores?:StoreDTO[];
 
   constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router) {
   }
@@ -37,7 +43,16 @@ export class EmployeeDetailsComponent {
         this.phoneNumber = employee.phoneNumber
         this.salary = employee.salary
         this.fullTime = employee.fullTime
+        this.description = employee.description;
+        this.store = employee.store;
       })
+    })
+    this.formControl.valueChanges.subscribe(value => {
+      if(value.length>=2){
+        this.service.getStores(0,5, value).subscribe((response:StoreTable)=>{
+          this.stores = response['content'];
+        })
+      }
     })
   }
   goBackToOverview() {

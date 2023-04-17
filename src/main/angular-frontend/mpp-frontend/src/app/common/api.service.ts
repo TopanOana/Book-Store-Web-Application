@@ -8,6 +8,7 @@ import {
   EmployeeTable,
   AddEmployeeDTO, StoreTable
 } from "../features/employees/components/overview-employees/Models/employees.models";
+import {AddStoreDTO} from "../features/stores/components/overview-stores/Models/store.models";
 
 @Injectable({
   providedIn: 'root'
@@ -68,10 +69,27 @@ export class ApiService {
     if (input){
       return this.http.get(`${this.baseURL}/stores?input=${input}&page=${page}&size=${size}`) as Observable<StoreTable>
     }
-    return this.http.get(`${this.baseURL}/stores`) as Observable<StoreTable>
+    return this.http.get(`${this.baseURL}/stores?page=${page}&size=${size}`) as Observable<StoreTable>
   }
 
   addEmployee(employee: AddEmployeeDTO, storeID:number): Observable<Employee>{
     return this.http.post(`${this.baseURL}/employees?storeID=${storeID}`, employee) as Observable<Employee>
   }
+
+  addStore(store: AddStoreDTO): Observable<StoreDTO>{
+    return this.http.post(`${this.baseURL}/stores`, store) as Observable<StoreDTO>
+  }
+
+  getStoreDetails(storeID:number): Observable<StoreDTO>{
+    return this.http.get(`${this.baseURL}/stores/${storeID}`) as Observable<StoreDTO>
+  }
+
+  updateStore(storeID:number, store:StoreDTO) : Observable<StoreDTO>{
+    return this.http.put(`${this.baseURL}/stores/${storeID}`, store) as Observable<StoreDTO>
+  }
+
+  deleteStore(storeID:number): Observable<StoreDTO>{
+    return this.http.delete(`${this.baseURL}/stores/${storeID}`) as Observable<StoreDTO>
+  }
+
 }
