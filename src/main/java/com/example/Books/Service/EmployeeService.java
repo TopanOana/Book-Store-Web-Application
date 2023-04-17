@@ -68,4 +68,28 @@ public class EmployeeService {
     }
 
 
+    public Page<Employee> getSortedBy(int page, int size, String column, String order){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        switch (column) {
+            case "firstName" -> {
+                if (order.equals("asc"))
+                    return employeeRepository.findByOrderByFirstNameAsc(pageRequest);
+                else return employeeRepository.findByOrderByFirstNameDesc(pageRequest);
+            }
+            case "lastName" -> {
+                if (order.equals("asc"))
+                    return employeeRepository.findByOrderByLastNameAsc(pageRequest);
+                else return employeeRepository.findByOrderByLastNameDesc(pageRequest);
+            }
+            case "salary" -> {
+                if (order.equals("asc"))
+                    return employeeRepository.findByOrderBySalaryAsc(pageRequest);
+                else return employeeRepository.findByOrderBySalaryDesc(pageRequest);
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
+
 }

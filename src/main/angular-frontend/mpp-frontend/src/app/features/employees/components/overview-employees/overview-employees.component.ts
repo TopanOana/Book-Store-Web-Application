@@ -22,6 +22,9 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
 
   pageSize=5;
 
+  column='';
+  order='';
+
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -41,7 +44,12 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
   }
 
   getEmployeesPaged(page:number, size:number){
-    this.service.getEmployees(page, size).subscribe((data:EmployeeTable)=>{
+    let column, order;
+    if(this.column!='' && this.order!=''){
+      column=this.column;
+      order=this.order;
+    }
+    this.service.getEmployees(page, size,column,order).subscribe((data:EmployeeTable)=>{
       this.dataSource.data = data['content'];
       this.totalEmployees = data['totalElements'];
     })
@@ -64,8 +72,14 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
 
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
+      this.column = sortState.active;
+      this.order = sortState.direction;
+      this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
       this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
+      this.column='';
+      this.order='';
+      this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
       this.liveAnnouncer.announce('Sorting cleared');
     }
   }

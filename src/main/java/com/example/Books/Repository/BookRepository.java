@@ -12,4 +12,15 @@ import org.springframework.stereotype.Repository;
 public interface BookRepository extends JpaRepository<Book,Long>, JpaSpecificationExecutor<Book> {
     Page<Book> findBooksByRatingGreaterThan(Double rating_gt, Pageable pageable);
 
+    Page<Book> findByOrderByTitleAsc(Pageable pageable);
+    Page<Book> findByOrderByTitleDesc(Pageable pageable);
+
+    Page<Book> findByOrderByAuthorAsc(Pageable pageable);
+    Page<Book> findByOrderByAuthorDesc(Pageable pageable);
+
+    Page<Book> findByOrderByNrPagesAsc(Pageable pageable);
+    Page<Book> findByOrderByNrPagesDesc(Pageable pageable);
+
+    Page<Book> findByOrderByRatingAsc(Pageable pageable);
+    Page<Book> findByOrderByRatingDesc(Pageable pageable);
 }

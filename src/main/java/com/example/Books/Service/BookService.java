@@ -78,4 +78,38 @@ public class BookService {
         return repository.findBooksByRatingGreaterThan(rating, pageRequest);
     }
 
+    public Page<Book> getBooksSorted(int page, int size, String column, String order){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        switch (column) {
+            case "title" -> {
+                if (order.equals("asc"))
+                    return repository.findByOrderByTitleAsc(pageRequest);
+                else
+                    return repository.findByOrderByTitleDesc(pageRequest);
+            }
+            case "author" -> {
+                if (order.equals("asc"))
+                    return repository.findByOrderByAuthorAsc(pageRequest);
+                else
+                    return repository.findByOrderByAuthorDesc(pageRequest);
+            }
+            case "nrPages" -> {
+                if (order.equals("asc"))
+                    return repository.findByOrderByNrPagesAsc(pageRequest);
+                else
+                    return repository.findByOrderByNrPagesDesc(pageRequest);
+            }
+            case "rating" -> {
+                if (order.equals("asc"))
+                    return repository.findByOrderByRatingAsc(pageRequest);
+                else
+                    return repository.findByOrderByRatingDesc(pageRequest);
+            }
+            default -> {
+                return null;
+            }
+        }
+    }
+
+
 }

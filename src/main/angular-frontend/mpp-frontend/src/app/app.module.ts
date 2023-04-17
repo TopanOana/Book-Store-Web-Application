@@ -24,6 +24,7 @@ import {MatIconModule} from "@angular/material/icon";
 import { OverviewStoresComponent } from './features/stores/components/overview-stores/overview-stores.component';
 import { StoreDetailsComponent } from './features/stores/components/store-details/store-details.component';
 import { AddStoreComponent } from './features/stores/components/add-store/add-store.component';
+import { BookStockStatisticComponent } from './features/statistics/book-stock-statistic/book-stock-statistic.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { AddStoreComponent } from './features/stores/components/add-store/add-st
     EmployeeDetailsComponent,
     OverviewStoresComponent,
     StoreDetailsComponent,
-    AddStoreComponent
+    AddStoreComponent,
+    BookStockStatisticComponent
   ],
     imports: [
         BrowserModule,

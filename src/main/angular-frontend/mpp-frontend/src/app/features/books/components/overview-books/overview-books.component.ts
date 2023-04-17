@@ -21,6 +21,8 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   dataSource = new MatTableDataSource();
   totalBooks: number;
   pageSize = 5;
+  column ='';
+  order='';
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -40,10 +42,14 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   }
 
   private getBooksPaged(page: number, size: number) {
-    let rating;
+    let rating,column,order;
     if (this.rating_gt > 0)
       rating = this.rating_gt;
-    this.service.getBooks(page, size, rating).subscribe((bookTable: BookTable) => {
+    if(this.column!='' && this.order!=''){
+      column=this.column;
+      order=this.order;
+    }
+    this.service.getBooks(page, size, rating, column, order).subscribe((bookTable: BookTable) => {
       this.dataSource.data = bookTable['content'];
       this.totalBooks = bookTable['totalElements'];
     })
@@ -77,10 +83,18 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   }
 
   announceSortChange(sortState: Sort) {
-    console.log("got to sort");
+    // console.log("got to sort");
+    // console.log(sortState.active)
+    // console.log(sortState.direction)
     if (sortState.direction) {
+      this.column = sortState.active;
+      this.order = sortState.direction;
+      this.getBooksPaged(this.paginator.pageIndex,this.paginator.pageSize);
       this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
+      this.column='';
+      this.order='';
+      this.getBooksPaged(this.paginator.pageIndex,this.paginator.pageSize);
       this.liveAnnouncer.announce('Sorting cleared');
     }
   }

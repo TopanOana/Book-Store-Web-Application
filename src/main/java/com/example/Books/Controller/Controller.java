@@ -38,18 +38,17 @@ public class Controller {
     // Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/books")
-    Page<Book> getBooks(@Nullable @RequestParam("rating_gt") Double rating, @RequestParam int page, @RequestParam int size){
+    Page<Book> getBooks(@Nullable @RequestParam("rating_gt") Double rating, @RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order){
         /*
         the get mapping is for reading all the books in the repository or
         getting all the books in the repository with a rating greater than the one given
          */
-        System.out.println("reached controller");
-        if (rating == null){
-            Page<Book> bookPage = bookService.getAllBooks(page,size);
-            return bookPage;
-        }
-        else
-            return bookService.getBooksWithRatingGreaterThan(rating, page, size);
+
+        if(rating!=null)
+            return bookService.getBooksWithRatingGreaterThan(rating,page,size);
+        if(column!=null && order!=null)
+            return bookService.getBooksSorted(page, size, column, order);
+        return bookService.getAllBooks(page, size);
     }
     // end::get-aggregate-root[]
 
@@ -147,8 +146,12 @@ public class Controller {
 
 
     @GetMapping("/employees")
-    Page<Employee> getAllEmployees(@RequestParam int page, @RequestParam int size){
-        return employeeService.getAllEmployees(page, size);
+    Page<Employee> getAllEmployees(@RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order){
+        if (column!=null && order!=null)
+            return employeeService.getSortedBy(page, size, column, order);
+        else
+            return employeeService.getAllEmployees(page, size);
+
     }
 
     @GetMapping("/employees/{id}")

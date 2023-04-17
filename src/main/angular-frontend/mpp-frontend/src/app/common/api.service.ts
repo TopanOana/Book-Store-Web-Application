@@ -20,12 +20,15 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getBooks(page:number, size:number, rating_gt?:number): Observable<BookTable>{
+  getBooks(page:number, size:number, rating_gt?:number, column?:string, order?:string): Observable<BookTable>{
     if(rating_gt) {
       return this.http.get(`${this.baseURL}/books?rating_gt=${rating_gt}&page=${page}&size=${size}`) as Observable<BookTable>;
     }
     else
-      return this.http.get(`${this.baseURL}/books?page=${page}&size=${size}`) as Observable<BookTable>
+      if(column && order)
+        return this.http.get(`${this.baseURL}/books?page=${page}&size=${size}&column=${column}&order=${order}`) as Observable<BookTable>
+      else
+        return this.http.get(`${this.baseURL}/books?page=${page}&size=${size}`) as Observable<BookTable>
   }
 
   getBookDetails(bookID: number): Observable<Book>{
@@ -48,7 +51,9 @@ export class ApiService {
 
 
 
-  getEmployees(page:number, size:number): Observable<EmployeeTable>{
+  getEmployees(page:number, size:number, column?:string, order?:string): Observable<EmployeeTable>{
+    if (column && order)
+      return this.http.get(`${this.baseURL}/employees?page=${page}&size=${size}&column=${column}&order=${order}`) as Observable<EmployeeTable>
     return this.http.get(`${this.baseURL}/employees?page=${page}&size=${size}`) as Observable<EmployeeTable>
   }
 
