@@ -12,4 +12,10 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<Store,Long> {
     Page<Store> findStoresByStoreNameContainsIgnoreCase(String input, Pageable pageable);
 
+    Page<Store> findByOrderByStoreNameAsc(Pageable pageable);
+    Page<Store> findByOrderByStoreNameDesc(Pageable pageable);
+
+    Page<Store> findByOrderByAddressAsc(Pageable pageable);
+    Page<Store> findByOrderByAddressDesc(Pageable pageable);
+
 }

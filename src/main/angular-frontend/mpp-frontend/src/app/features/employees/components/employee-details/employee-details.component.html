@@ -26,10 +26,7 @@
       <mat-label>FullTime</mat-label>
       <input matInput name="fullTime" id="fullTime" value="{{fullTime}}" [(ngModel)]="fullTime">
     </mat-form-field>
-    <mat-form-field>
-      <mat-label>Description</mat-label>
-      <textarea matInput name="description" id="description" value="{{description}}" [(ngModel)]="description"></textarea>
-    </mat-form-field>
+
     <mat-form-field>
       <mat-label>Store</mat-label>
       <input id="store" name="store"
@@ -42,6 +39,10 @@
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayStoreName">
         <mat-option *ngFor="let store of stores" [value]="store">{{store.storeName}}</mat-option>
       </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea matInput name="description" id="description" value="{{description}}" [(ngModel)]="description"></textarea>
     </mat-form-field>
   </form>
 </ng-container>

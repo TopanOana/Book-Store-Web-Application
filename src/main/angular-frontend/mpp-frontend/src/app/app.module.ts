@@ -25,6 +25,7 @@ import { OverviewStoresComponent } from './features/stores/components/overview-s
 import { StoreDetailsComponent } from './features/stores/components/store-details/store-details.component';
 import { AddStoreComponent } from './features/stores/components/add-store/add-store.component';
 import { BookStockStatisticComponent } from './features/statistics/book-stock-statistic/book-stock-statistic.component';
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { BookStockStatisticComponent } from './features/statistics/book-stock-st
         MatAutocompleteModule,
         MatPaginatorModule,
         ReactiveFormsModule,
-        MatIconModule
+        MatIconModule,
+        MatSelectModule
     ],
   providers: [],
   bootstrap: [AppComponent]

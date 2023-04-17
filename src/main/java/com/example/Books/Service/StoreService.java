@@ -92,4 +92,25 @@ public class StoreService {
         PageRequest pageRequest = PageRequest.of(page, size);
         return this.repository.findStoresByStoreNameContainsIgnoreCase(input, pageRequest);
     }
+
+    public Page<Store> getStoresSorted(int page, int size, String column, String order){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        switch(column){
+            case "storeName"->{
+                if (order.equals("asc"))
+                    return repository.findByOrderByStoreNameAsc(pageRequest);
+                else
+                    return repository.findByOrderByStoreNameDesc(pageRequest);
+            }
+            case "address"->{
+                if (order.equals("asc"))
+                    return repository.findByOrderByAddressAsc(pageRequest);
+                else
+                    return repository.findByOrderByAddressDesc(pageRequest);
+            }
+            default -> {return null;}
+        }
+    }
+
+
 }

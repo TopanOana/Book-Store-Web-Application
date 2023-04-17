@@ -25,7 +25,10 @@
     </mat-form-field>
     <mat-form-field>
       <mat-label>FullTime</mat-label>
-      <input matInput id="fullTime" name="fullTime" [(ngModel)]="fullTime">
+      <mat-select name ="fullTime" id="fullTime" [(ngModel)]="fullTime">
+        <mat-option [value]="true">True</mat-option>
+        <mat-option [value]="false">False</mat-option>
+      </mat-select>
     </mat-form-field>
     <mat-form-field>
       <mat-label>Store</mat-label>

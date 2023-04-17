@@ -21,6 +21,8 @@ export class OverviewStoresComponent {
 
   pageSize=5;
 
+  column='';
+  order='';
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -50,15 +52,26 @@ export class OverviewStoresComponent {
 
 
   getStoresPaged(page:number, size:number){
-    this.service.getStores(page,size).subscribe((data:StoreTable)=>{
+    let column, order,input;
+    if(this.column!='' && this.order!=''){
+      column=this.column;
+      order=this.order;
+    }
+    this.service.getStores(page, size, input, column, order).subscribe((data:StoreTable)=>{
       this.dataSource.data = data['content'];
       this.totalStores = data['totalElements'];
     })
   }
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
+      this.column=sortState.active;
+      this.order=sortState.direction;
+      this.getStoresPaged(this.paginator.pageIndex, this.paginator.pageSize);
       this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
+      this.column='';
+      this.order='';
+      this.getStoresPaged(this.paginator.pageIndex, this.paginator.pageSize);
       this.liveAnnouncer.announce('Sorting cleared');
     }
   }

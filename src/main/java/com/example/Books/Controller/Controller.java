@@ -90,15 +90,17 @@ public class Controller {
 
 
     @GetMapping("/stores")
-    Page<Store> getAllStores(@Nullable @RequestParam String input, @RequestParam int page, @RequestParam int size){
+    Page<Store> getAllStores(@Nullable @RequestParam String input, @RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order){
         /*
         get mapping for reading all the stores in the repository
          */
-        System.out.println("got to stores");
-        if (input==null){
-            return storeService.getAllStores(page, size);
+        if(input!=null)
+            return storeService.getStoresWithNameLike(input, page, size);
+        if(column!=null && order!=null) {
+            System.out.println("got to the sort");
+            return storeService.getStoresSorted(page, size, column, order);
         }
-        else return storeService.getStoresWithNameLike(input, page, size);
+        return storeService.getAllStores(page, size);
 
     }
 //    @GetMapping("/stores/{id}")

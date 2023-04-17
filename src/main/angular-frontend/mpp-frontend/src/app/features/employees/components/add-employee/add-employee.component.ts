@@ -50,7 +50,7 @@ export class AddEmployeeComponent implements OnInit {
     console.log(this.fullTime)
     console.log(this.formControl.value)
     console.log(this.store?.id)
-    if(this.firstName && this.lastName && this.phoneNumber && this.salary && this.fullTime ){
+    if(this.firstName && this.lastName && this.phoneNumber && this.salary && this.fullTime){
 
       const employee:AddEmployeeDTO={
         firstName:this.firstName,

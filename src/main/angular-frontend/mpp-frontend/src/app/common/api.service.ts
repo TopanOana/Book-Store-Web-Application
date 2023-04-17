@@ -70,10 +70,13 @@ export class ApiService {
     return this.http.delete(`${this.baseURL}/employees/${employee}`) as Observable<Employee>
   }
 
-  getStores(page:number, size:number, input?:string): Observable<StoreTable>{
+  getStores(page:number, size:number, input?:string, column?:string, order?:string): Observable<StoreTable>{
     if (input){
       return this.http.get(`${this.baseURL}/stores?input=${input}&page=${page}&size=${size}`) as Observable<StoreTable>
     }
+    if(column && order)
+        return this.http.get(`${this.baseURL}/stores?page=${page}&size=${size}&column=${column}&order=${order}`) as Observable<StoreTable>
+
     return this.http.get(`${this.baseURL}/stores?page=${page}&size=${size}`) as Observable<StoreTable>
   }
 
