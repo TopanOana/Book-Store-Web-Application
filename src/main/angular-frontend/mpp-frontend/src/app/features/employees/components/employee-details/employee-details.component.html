@@ -39,7 +39,7 @@
              [formControl]="formControl"
              [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let store of stores" [value]="store">{{store.storeName}}</mat-option>
+        <mat-option *ngFor="let store of stores" [value]="store.storeName">{{store.storeName}}</mat-option>
       </mat-autocomplete>
     </mat-form-field>
   </form>

@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {AddEmployeeDTO, Employee, StoreDTO, StoreTable} from "../overview-employees/Models/employees.models";
 import {Observable} from "rxjs";
 import {FormControl} from "@angular/forms";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 
 @Component({
   selector: 'app-add-employee',
@@ -50,6 +51,7 @@ export class AddEmployeeComponent implements OnInit {
     console.log(this.formControl.value)
     console.log(this.store?.id)
     if(this.firstName && this.lastName && this.phoneNumber && this.salary && this.fullTime ){
+
       const employee:AddEmployeeDTO={
         firstName:this.firstName,
         lastName:this.lastName,
@@ -58,7 +60,8 @@ export class AddEmployeeComponent implements OnInit {
         fullTime:this.fullTime
       }
       if (this.formControl.value){
-        let storeID = this.formControl.value
+        let store = this.formControl.value
+        let storeID = store.id;
         this.service.addEmployee(employee, storeID).subscribe((employee:Employee)=>{
             this.router.navigateByUrl("employees");
           },
@@ -75,4 +78,14 @@ export class AddEmployeeComponent implements OnInit {
   doTheCompletion() {
 
   }
+
+  onSelectStore($event: MatAutocompleteSelectedEvent) {
+
+  }
+
+  displayStoreName(store: StoreDTO){
+    if (!store) return '';
+    return store.storeName;
+  }
+
 }
