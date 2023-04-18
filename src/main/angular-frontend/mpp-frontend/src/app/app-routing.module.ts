@@ -12,6 +12,13 @@ import {EmployeeDetailsComponent} from "./features/employees/components/employee
 import {OverviewStoresComponent} from "./features/stores/components/overview-stores/overview-stores.component";
 import {AddStoreComponent} from "./features/stores/components/add-store/add-store.component";
 import {StoreDetailsComponent} from "./features/stores/components/store-details/store-details.component";
+import {StatisticPageComponent} from "./features/statistics/components/statistic-page/statistic-page.component";
+import {
+  BookStockStatisticComponent
+} from "./features/statistics/components/book-stock-statistic/book-stock-statistic.component";
+import {
+  StoreStockStatisticComponent
+} from "./features/statistics/components/store-stock-statistic/store-stock-statistic.component";
 
 const routes: Routes = [
   {
@@ -53,6 +60,18 @@ const routes: Routes = [
   {
     path: "stores/:id",
     component: StoreDetailsComponent
+  },
+  {
+    path: "stats",
+    component: StatisticPageComponent
+  },
+  {
+    path: "statistics/bookStockStat",
+    component: BookStockStatisticComponent
+  },
+  {
+    path: "statistics/storeStockStat",
+    component: StoreStockStatisticComponent
   }
 ];
 

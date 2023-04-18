@@ -24,8 +24,13 @@ import {MatIconModule} from "@angular/material/icon";
 import { OverviewStoresComponent } from './features/stores/components/overview-stores/overview-stores.component';
 import { StoreDetailsComponent } from './features/stores/components/store-details/store-details.component';
 import { AddStoreComponent } from './features/stores/components/add-store/add-store.component';
-import { BookStockStatisticComponent } from './features/statistics/book-stock-statistic/book-stock-statistic.component';
 import {MatSelectModule} from "@angular/material/select";
+import { StoreStockStatisticComponent } from './features/statistics/components/store-stock-statistic/store-stock-statistic.component';
+import {
+  BookStockStatisticComponent
+} from "./features/statistics/components/book-stock-statistic/book-stock-statistic.component";
+import {StatisticPageComponent} from "./features/statistics/components/statistic-page/statistic-page.component";
+import {MatMenuModule} from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -40,25 +45,28 @@ import {MatSelectModule} from "@angular/material/select";
     OverviewStoresComponent,
     StoreDetailsComponent,
     AddStoreComponent,
-    BookStockStatisticComponent
+    BookStockStatisticComponent,
+    StatisticPageComponent,
+    StoreStockStatisticComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        MatToolbarModule,
-        MatTableModule,
-        MatButtonModule,
-        FormsModule,
-        MatInputModule,
-        BrowserAnimationsModule,
-        MatSortModule,
-        MatAutocompleteModule,
-        MatPaginatorModule,
-        ReactiveFormsModule,
-        MatIconModule,
-        MatSelectModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    MatToolbarModule,
+    MatTableModule,
+    MatButtonModule,
+    FormsModule,
+    MatInputModule,
+    BrowserAnimationsModule,
+    MatSortModule,
+    MatAutocompleteModule,
+    MatPaginatorModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatSelectModule,
+    MatMenuModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

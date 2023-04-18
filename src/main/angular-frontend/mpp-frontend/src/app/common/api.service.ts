@@ -9,6 +9,7 @@ import {
   AddEmployeeDTO, StoreTable, UpdateEmployeeDTO
 } from "../features/employees/components/overview-employees/Models/employees.models";
 import {AddStoreDTO} from "../features/stores/components/overview-stores/Models/store.models";
+import {BookStockStat, StoreStockStat} from "../features/statistics/components/book-stock-statistic/Model/stat.model";
 
 @Injectable({
   providedIn: 'root'
@@ -100,4 +101,12 @@ export class ApiService {
     return this.http.delete(`${this.baseURL}/stores/${storeID}`) as Observable<StoreDTO>
   }
 
+
+  getBookStockStat(): Observable<BookStockStat[]>{
+    return this.http.get(`${this.baseURL}/stats/books`) as Observable<BookStockStat[]>
+  }
+
+  getStoreStockStat():Observable<StoreStockStat[]>{
+    return this.http.get(`${this.baseURL}/stats/stores`) as Observable<StoreStockStat[]>
+  }
 }
