@@ -47,6 +47,8 @@ export interface StoreDTO{
   contactNumber: string;
   openingHour: number;
   closingHour: number;
+  nrBooks: number;
+  nrEmployees: number;
 
 }
 

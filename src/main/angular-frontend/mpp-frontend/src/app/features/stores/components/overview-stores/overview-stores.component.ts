@@ -14,7 +14,7 @@ import {StoreDTO, StoreTable} from "../../../employees/components/overview-emplo
   providers: [MatPaginator, MatSort]
 })
 export class OverviewStoresComponent {
-  displayedColumns = ['id', 'storeName', 'address', 'contactNumber', 'openingHour', 'closingHour']
+  displayedColumns = ['id', 'storeName', 'address', 'contactNumber', 'openingHour', 'closingHour', 'nrBooks', 'nrEmployees']
 
   dataSource = new MatTableDataSource();
   totalStores: number;

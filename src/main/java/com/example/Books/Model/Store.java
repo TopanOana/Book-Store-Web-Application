@@ -1,5 +1,6 @@
 package com.example.Books.Model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -45,6 +46,16 @@ public class Store {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<Stock> stocks = new ArrayList<>();
+
+    @JsonGetter
+    public int getnrBooks(){
+        return stocks.size();
+    }
+
+    @JsonGetter
+    public int getnrEmployees(){
+        return employees.size();
+    }
 
     public Store(String storeName, String address, String contactNumber, int openingHour, int closingHour) {
         this.storeName = storeName;

@@ -1,5 +1,6 @@
 package com.example.Books.Model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -40,6 +41,11 @@ public class Book {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<Stock> stocks = new ArrayList<>();
+
+    @JsonGetter
+    public int getInStores(){
+        return stocks.size();
+    }
 
     //empty constructor
     public Book() {
