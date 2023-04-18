@@ -31,6 +31,8 @@ import {
 } from "./features/statistics/components/book-stock-statistic/book-stock-statistic.component";
 import {StatisticPageComponent} from "./features/statistics/components/statistic-page/statistic-page.component";
 import {MatMenuModule} from "@angular/material/menu";
+import { UpdateStockComponent } from './features/stocks/components/update-stock/update-stock.component';
+import { AddStockComponent } from './features/stocks/components/add-stock/add-stock.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import {MatMenuModule} from "@angular/material/menu";
     AddStoreComponent,
     BookStockStatisticComponent,
     StatisticPageComponent,
-    StoreStockStatisticComponent
+    StoreStockStatisticComponent,
+    UpdateStockComponent,
+    AddStockComponent
   ],
   imports: [
     BrowserModule,

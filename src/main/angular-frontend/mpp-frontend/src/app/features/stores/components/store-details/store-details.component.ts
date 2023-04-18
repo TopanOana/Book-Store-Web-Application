@@ -75,11 +75,13 @@ export class StoreDetailsComponent {
   }
 
   goToAddStock() {
-
+    this.router.navigateByUrl(`stores/${this.storeID}/add-stock`)
   }
 
   updateStock(id:number) {
-
+    let stockID = id;
+    console.log(stockID)
+    this.router.navigateByUrl(`stores/${this.storeID}/update-stock/${stockID}`)
   }
 
   deleteStock(id:number) {

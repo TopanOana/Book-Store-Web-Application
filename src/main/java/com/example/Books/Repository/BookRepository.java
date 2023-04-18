@@ -23,4 +23,6 @@ public interface BookRepository extends JpaRepository<Book,Long>, JpaSpecificati
 
     Page<Book> findByOrderByRatingAsc(Pageable pageable);
     Page<Book> findByOrderByRatingDesc(Pageable pageable);
+
+    Page<Book> findBooksByTitleContainsIgnoreCase(String input, Pageable pageable);
 }

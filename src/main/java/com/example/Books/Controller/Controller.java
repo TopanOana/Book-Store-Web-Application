@@ -38,7 +38,7 @@ public class Controller {
     // Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/books")
-    Page<Book> getBooks(@Nullable @RequestParam("rating_gt") Double rating, @RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order){
+    Page<Book> getBooks(@Nullable @RequestParam("rating_gt") Double rating, @RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order, @Nullable @RequestParam String input){
         /*
         the get mapping is for reading all the books in the repository or
         getting all the books in the repository with a rating greater than the one given
@@ -48,6 +48,8 @@ public class Controller {
             return bookService.getBooksWithRatingGreaterThan(rating,page,size);
         if(column!=null && order!=null)
             return bookService.getBooksSorted(page, size, column, order);
+        if(input!=null)
+            return bookService.getBooksWithTitleInput(input, page, size);
         return bookService.getAllBooks(page, size);
     }
     // end::get-aggregate-root[]
@@ -231,6 +233,12 @@ public class Controller {
     @GetMapping("/stats/books")
     List<BookStockDTO> getStatBookStock(){
         return statService.getAllBooksByNumber();
+    }
+
+
+    @GetMapping("/stocks/{id}")
+    Stock getStock(@PathVariable Long id){
+        return stockService.getStockByID(id);
     }
 
 

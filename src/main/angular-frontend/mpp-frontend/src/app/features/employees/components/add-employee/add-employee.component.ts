@@ -19,7 +19,7 @@ export class AddEmployeeComponent implements OnInit {
   salary?: number;
   fullTime?: boolean;
 
-  filteredStores?: Observable<StoreDTO[]>;
+  // filteredStores?: Observable<StoreDTO[]>;
   stores?: StoreDTO[];
 
   store?: StoreDTO;

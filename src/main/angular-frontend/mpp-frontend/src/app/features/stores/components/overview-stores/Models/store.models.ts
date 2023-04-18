@@ -17,3 +17,9 @@ export interface StockDTO{
   quantity:number;
 
 }
+
+export interface AddStockDTO{
+  book:Book;
+  quantity:number;
+
+}

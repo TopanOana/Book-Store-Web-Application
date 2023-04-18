@@ -19,6 +19,8 @@ import {
 import {
   StoreStockStatisticComponent
 } from "./features/statistics/components/store-stock-statistic/store-stock-statistic.component";
+import {UpdateStockComponent} from "./features/stocks/components/update-stock/update-stock.component";
+import {AddStockComponent} from "./features/stocks/components/add-stock/add-stock.component";
 
 const routes: Routes = [
   {
@@ -72,6 +74,14 @@ const routes: Routes = [
   {
     path: "statistics/storeStockStat",
     component: StoreStockStatisticComponent
+  },
+  {
+    path: "stores/:id/update-stock/:idS",
+    component: UpdateStockComponent
+  },
+  {
+    path: "stores/:id/add-stock",
+    component: AddStockComponent
   }
 ];
 

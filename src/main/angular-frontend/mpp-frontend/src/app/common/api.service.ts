@@ -8,7 +8,7 @@ import {
   EmployeeTable,
   AddEmployeeDTO, StoreTable, UpdateEmployeeDTO
 } from "../features/employees/components/overview-employees/Models/employees.models";
-import {AddStoreDTO, StockDTO} from "../features/stores/components/overview-stores/Models/store.models";
+import {AddStockDTO, AddStoreDTO, StockDTO} from "../features/stores/components/overview-stores/Models/store.models";
 import {BookStockStat, StoreStockStat} from "../features/statistics/components/book-stock-statistic/Model/stat.model";
 
 @Injectable({
@@ -21,7 +21,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getBooks(page:number, size:number, rating_gt?:number, column?:string, order?:string): Observable<BookTable>{
+  getBooks(page:number, size:number, rating_gt?:number, column?:string, order?:string, input?:string): Observable<BookTable>{
     if(rating_gt) {
       return this.http.get(`${this.baseURL}/books?rating_gt=${rating_gt}&page=${page}&size=${size}`) as Observable<BookTable>;
     }
@@ -29,7 +29,9 @@ export class ApiService {
       if(column && order)
         return this.http.get(`${this.baseURL}/books?page=${page}&size=${size}&column=${column}&order=${order}`) as Observable<BookTable>
       else
-        return this.http.get(`${this.baseURL}/books?page=${page}&size=${size}`) as Observable<BookTable>
+        if(input)
+          return this.http.get(`${this.baseURL}/books?page=${page}&size=${size}&input=${input}`) as Observable<BookTable>
+        else return this.http.get(`${this.baseURL}/books?page=${page}&size=${size}`) as Observable<BookTable>
   }
 
   getBookDetails(bookID: number): Observable<Book>{
@@ -116,4 +118,9 @@ export class ApiService {
   deleteStockFromStore(storeID:number, stockID:number):Observable<StockDTO>{
     return this.http.delete(`${this.baseURL}/stores/${storeID}/stock?stockID=${stockID}`) as Observable<StockDTO>;
   }
+
+  addStockToStore(storeID:number, stock:AddStockDTO):Observable<StockDTO>{
+    return this.http.post(`${this.baseURL}/stores/${storeID}/stock`, stock) as Observable<StockDTO>
+  }
+
 }

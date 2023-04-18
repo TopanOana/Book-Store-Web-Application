@@ -112,4 +112,10 @@ public class BookService {
     }
 
 
+    public Page<Book> getBooksWithTitleInput(String input, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return repository.findBooksByTitleContainsIgnoreCase(input, pageRequest);
+    }
+
+
 }
