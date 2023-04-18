@@ -218,9 +218,8 @@ public class Controller {
         this.stockService.deleteStockInRepository(stockID);
     }
 
-    @PutMapping("/stores/{id}/stock")
-    Stock updateStockInStore(@PathVariable Long id, @RequestBody @Valid Stock stock){
-        Long stockID = storeService.getStoreByID(id).getStocks().stream().filter(stock1 -> {return stock.getBook().equals(stock.getBook());}).map(stock1 -> {return stock1.getId();}).findFirst().get();
+    @PutMapping("/stores/{id}/stock/{stockID}")
+    Stock updateStockInStore(@PathVariable Long id, @RequestBody @Valid Stock stock, @PathVariable Long stockID){
         stock.setStore(storeService.getStoreByID(id));
         return this.stockService.updateStockInRepository(stockID, stock);
     }

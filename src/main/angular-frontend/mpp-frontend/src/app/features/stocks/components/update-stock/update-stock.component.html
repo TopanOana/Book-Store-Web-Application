@@ -1,0 +1,11 @@
+<p>Update Stock</p>
+<ng-container *ngIf="stock">
+  <button mat-fab (click)="goBackToDetails()"><mat-icon>arrow_back</mat-icon></button>
+  <button mat-fab (click)="updateStock()"><mat-icon>update</mat-icon></button>
+
+
+
+  <mat-label>Quantity</mat-label>
+  <input matInput name="quantity" id="quantity" value="{{quantity}}" [ngModel]="quantity">
+
+</ng-container>
