@@ -113,4 +113,7 @@ export class ApiService {
   getStocksFromStore(storeID:number):Observable<StockDTO[]>{
     return this.http.get(`${this.baseURL}/stores/${storeID}/stock`) as Observable<StockDTO[]>
   }
+  deleteStockFromStore(storeID:number, stockID:number):Observable<StockDTO>{
+    return this.http.delete(`${this.baseURL}/stores/${storeID}/stock?stockID=${stockID}`) as Observable<StockDTO>;
+  }
 }

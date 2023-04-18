@@ -46,7 +46,7 @@ export class StoreDetailsComponent {
       });
       this.service.getStocksFromStore(this.storeID!).subscribe((stocks:StockDTO[])=>{
         this.dataSource.data=stocks;
-        console.log(stocks[0].book.title);
+        // console.log(stocks[0].book.title);
       });
     })
 
@@ -83,7 +83,10 @@ export class StoreDetailsComponent {
   }
 
   deleteStock(id:number) {
-
+    this.service.deleteStockFromStore(this.storeID!, id).subscribe((result:StockDTO)=>{
+      console.log("deleted it");
+      this.ngOnInit();
+    })
   }
 
 }
