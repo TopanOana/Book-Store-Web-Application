@@ -28,3 +28,33 @@
     </mat-form-field>
   </form>
 </ng-container>
+
+<div class="stockTable">
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>id</th>
+      <td mat-cell *matCellDef="let i=index" >{{i+1}}</td>
+    </ng-container>
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>title</th>
+      <td mat-cell *matCellDef="let stock">{{stock.book.title}}</td>
+    </ng-container>
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef>quantity</th>
+      <td mat-cell *matCellDef="let stock">{{stock.quantity}}</td>
+    </ng-container>
+    <ng-container matColumnDef="buttons">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let stock">
+        <button mat-mini-fab (click)="updateStock(stock.id)"><mat-icon>update</mat-icon></button>
+        <button mat-mini-fab (click)="deleteStock(stock.id)"><mat-icon>delete</mat-icon></button>
+      </td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let stockrow; columns: displayedColumns;"></tr>
+  </table>
+  <button mat-mini-fab (click)="goToAddStock()"><mat-icon>add</mat-icon></button>
+</div>

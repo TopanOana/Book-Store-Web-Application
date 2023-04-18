@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StoreDTO} from "../../../employees/components/overview-employees/Models/employees.models";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
+import {StockDTO} from "../overview-stores/Models/store.models";
 
 @Component({
   selector: 'app-store-details',
   templateUrl: './store-details.component.html',
-  styleUrls: ['./store-details.component.css']
+  styleUrls: ['./store-details.component.css'],
+  providers: [MatPaginator]
 })
 export class StoreDetailsComponent {
 
@@ -17,7 +21,13 @@ export class StoreDetailsComponent {
   closingHour?: number;
   store?:StoreDTO;
   storeID?:number;
-  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router) {
+  dataSource = new MatTableDataSource();
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  displayedColumns = ['id', 'title', 'quantity', 'buttons'];
+
+  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, paginator:MatPaginator) {
+    this.paginator=paginator;
   }
   goBackToOverview() {
     this.router.navigateByUrl("/stores");
@@ -33,8 +43,13 @@ export class StoreDetailsComponent {
         this.contactNumber=store.contactNumber;
         this.openingHour=store.openingHour;
         this.closingHour= store.closingHour;
-      })
+      });
+      this.service.getStocksFromStore(this.storeID!).subscribe((stocks:StockDTO[])=>{
+        this.dataSource.data=stocks;
+        console.log(stocks[0].book.title);
+      });
     })
+
   }
   updateStore() {
     if (this.storeName && this.address && this.contactNumber && this.openingHour && this.closingHour){
@@ -58,4 +73,17 @@ export class StoreDetailsComponent {
       this.router.navigateByUrl("stores");
     }, (err)=>console.log(err))
   }
+
+  goToAddStock() {
+
+  }
+
+  updateStock(id:number) {
+
+  }
+
+  deleteStock(id:number) {
+
+  }
+
 }
