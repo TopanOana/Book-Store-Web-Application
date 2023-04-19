@@ -221,6 +221,7 @@ public class Controller {
     @PutMapping("/stores/{id}/stock/{stockID}")
     Stock updateStockInStore(@PathVariable Long id, @RequestBody @Valid Stock stock, @PathVariable Long stockID){
         stock.setStore(storeService.getStoreByID(id));
+        System.out.println("here i am ");
         return this.stockService.updateStockInRepository(stockID, stock);
     }
 

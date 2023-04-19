@@ -23,3 +23,10 @@ export interface AddStockDTO{
   quantity:number;
 
 }
+
+export interface UpdateStockDTO{
+  id: number;
+  book:Book;
+  quantity: number;
+
+}
