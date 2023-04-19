@@ -28,3 +28,33 @@
     </mat-form-field>
   </form>
 </ng-container>
+
+
+<div class="stockTable">
+  <table mat-table [dataSource]="dataSource">
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>id</th>
+      <td mat-cell *matCellDef="let i=index" >{{i+1}}</td>
+    </ng-container>
+    <ng-container matColumnDef="storeName">
+      <th mat-header-cell *matHeaderCellDef>storeName</th>
+      <td mat-cell *matCellDef="let stock">{{stock.store.storeName}}</td>
+    </ng-container>
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef>quantity</th>
+      <td mat-cell *matCellDef="let stock">{{stock.quantity}}</td>
+    </ng-container>
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let stockrow; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator aria-label="Select page of stocks"
+                 showFirstLastButtons
+                 [pageSizeOptions]="[5, 10, 20, 50]"
+                 [pageSize]="pageSize"
+                 [length]="totalStocks" (page)="nextPage($event)">
+
+  </mat-paginator>
+</div>

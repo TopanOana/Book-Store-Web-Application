@@ -1,14 +1,18 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {Book} from "../overview-books/Models/books.models";
 import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {StockTable} from "../../../stores/components/overview-stores/Models/store.models";
 
 @Component({
   selector: 'app-book-details',
   templateUrl: './book-details.component.html',
-  styleUrls: ['./book-details.component.css']
+  styleUrls: ['./book-details.component.css'],
+  providers: [MatPaginator]
 })
-export class BookDetailsComponent {
+export class BookDetailsComponent implements OnInit, AfterViewInit{
   bookID?: number;
   book?: Book;
 
@@ -17,7 +21,16 @@ export class BookDetailsComponent {
   nrPages?: number;
   rating?: number;
   genre?: string;
-  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router) {
+
+  dataSource = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  displayedColumns = ['id', 'storeName', 'quantity'];
+  pageSize: number;
+  totalStocks: number;
+  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, paginator:MatPaginator) {
+    this.paginator = paginator;
+    this.pageSize = 0;
+    this.totalStocks =0;
   }
 
   ngOnInit():void{
@@ -35,7 +48,17 @@ export class BookDetailsComponent {
     })
   }
 
+  ngAfterViewInit() {
+    this.getStocksPaged(this.paginator.pageIndex, this.paginator.pageSize)
 
+  }
+
+  getStocksPaged(page:number, size:number){
+    this.service.getStocksFromBook(this.bookID!,page,size).subscribe((result:StockTable)=>{
+      this.dataSource.data = result['content']
+      this.totalStocks = result['totalElements']
+    })
+  }
   updateBook() {
     console.log("update comp")
     console.log(this.book!.title)
@@ -72,5 +95,9 @@ export class BookDetailsComponent {
   }
   goBackToOverview(){
     this.router.navigateByUrl("books")
+  }
+
+  nextPage($event: PageEvent) {
+    this.getStocksPaged(this.paginator.pageIndex, this.paginator.pageSize)
   }
 }

@@ -136,4 +136,8 @@ export class ApiService {
     return this.http.put(`${this.baseURL}/stores/${storeID}/stock/${stockID}`, stock) as Observable<StockDTO>
   }
 
+  getStocksFromBook(bookID:number, page:number, size:number):Observable<StockTable>{
+    return this.http.get(`${this.baseURL}/books/${bookID}/stock?page=${page}&size=${size}`) as Observable<StockTable>
+  }
+
 }
