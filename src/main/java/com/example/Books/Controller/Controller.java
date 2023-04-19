@@ -204,13 +204,16 @@ public class Controller {
     }
 
     @GetMapping("/stores/{id}/stock")
-    List<Stock> getStocksFromStore (@PathVariable Long id){
-        return storeService.getStoreByID(id).getStocks();
+    Page<Stock> getStocksFromStore (@PathVariable Long id, int page, int size){
+//        return storeService.getStoreByID(id).getStocks();
+//        System.out.println("got to controller");
+        return stockService.getStockWithStoreID(id, page, size);
     }
 
     @GetMapping("/books/{id}/stock")
-    List<Stock> getStocksForBooks(@PathVariable Long id){
-        return bookService.getBookByID(id).getStocks();
+    Page<Stock> getStocksForBooks(@PathVariable Long id, int page, int size){
+//        return bookService.getBookByID(id).getStocks();
+        return stockService.getStockWithBookID(id, page, size);
     }
 
     @DeleteMapping("/stores/{id}/stock")

@@ -11,7 +11,7 @@ import {
 import {
   AddStockDTO,
   AddStoreDTO,
-  StockDTO,
+  StockDTO, StockTable,
   UpdateStockDTO
 } from "../features/stores/components/overview-stores/Models/store.models";
 import {BookStockStat, StoreStockStat} from "../features/statistics/components/book-stock-statistic/Model/stat.model";
@@ -117,8 +117,8 @@ export class ApiService {
     return this.http.get(`${this.baseURL}/stats/stores`) as Observable<StoreStockStat[]>
   }
 
-  getStocksFromStore(storeID:number):Observable<StockDTO[]>{
-    return this.http.get(`${this.baseURL}/stores/${storeID}/stock`) as Observable<StockDTO[]>
+  getStocksFromStore(storeID:number, page:number, size:number):Observable<StockTable>{
+    return this.http.get(`${this.baseURL}/stores/${storeID}/stock?page=${page}&size=${size}`) as Observable<StockTable>
   }
   deleteStockFromStore(storeID:number, stockID:number):Observable<StockDTO>{
     return this.http.delete(`${this.baseURL}/stores/${storeID}/stock?stockID=${stockID}`) as Observable<StockDTO>;

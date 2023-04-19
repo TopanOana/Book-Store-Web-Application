@@ -28,5 +28,14 @@ export interface UpdateStockDTO{
   id: number;
   book:Book;
   quantity: number;
+}
+
+export interface StockTable{
+  content: StockDTO[];
+  number:number;
+  size:number;
+  totalElements:number;
+  totalPages:number;
+
 
 }

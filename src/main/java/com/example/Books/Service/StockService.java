@@ -4,6 +4,9 @@ import com.example.Books.Exception.StockNotFoundException;
 import com.example.Books.Model.Stock;
 import com.example.Books.Repository.StockRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,12 +51,17 @@ public class StockService {
         stockRepository.deleteById(id);
     }
 
-    public List<Stock> getStockWithBookID(Long bookID){
-        return stockRepository.findAll().stream().filter(obj -> Objects.equals(obj.getBook().getId(), bookID)).collect(Collectors.toList());
+    public Page<Stock> getStockWithBookID(Long bookID, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        //return stockRepository.findAll().stream().filter(obj -> Objects.equals(obj.getBook().getId(), bookID)).collect(Collectors.toList());
+        return stockRepository.getStocksByBookId(bookID,pageRequest);
     }
 
-    public List<Stock> getStockWithStoreID(Long storeID){
-        return stockRepository.findAll().stream().filter(obj -> Objects.equals(obj.getStore().getId(), storeID)).collect(Collectors.toList());
+    public Page<Stock> getStockWithStoreID(Long storeID, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+//        System.out.println("got to stock service");
+//        return stockRepository.findAll().stream().filter(obj -> Objects.equals(obj.getStore().getId(), storeID)).collect(Collectors.toList());
+        return stockRepository.getStocksByStoreId(storeID,pageRequest);
     }
 
 

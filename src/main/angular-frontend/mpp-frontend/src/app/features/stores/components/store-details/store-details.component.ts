@@ -1,10 +1,10 @@
-import {Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {StoreDTO} from "../../../employees/components/overview-employees/Models/employees.models";
 import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
-import {StockDTO} from "../overview-stores/Models/store.models";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {StockDTO, StockTable} from "../overview-stores/Models/store.models";
 
 @Component({
   selector: 'app-store-details',
@@ -12,7 +12,7 @@ import {StockDTO} from "../overview-stores/Models/store.models";
   styleUrls: ['./store-details.component.css'],
   providers: [MatPaginator]
 })
-export class StoreDetailsComponent {
+export class StoreDetailsComponent implements OnInit, AfterViewInit{
 
   storeName?: string;
   address?: string;
@@ -25,9 +25,13 @@ export class StoreDetailsComponent {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns = ['id', 'title', 'quantity', 'buttons'];
+  pageSize: number;
+  totalStocks: number;
 
   constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, paginator:MatPaginator) {
     this.paginator=paginator;
+    this.pageSize = 5;
+    this.totalStocks = 0;
   }
   goBackToOverview() {
     this.router.navigateByUrl("/stores");
@@ -44,13 +48,18 @@ export class StoreDetailsComponent {
         this.openingHour=store.openingHour;
         this.closingHour= store.closingHour;
       });
-      this.service.getStocksFromStore(this.storeID!).subscribe((stocks:StockDTO[])=>{
-        this.dataSource.data=stocks;
-        // console.log(stocks[0].book.title);
-      });
+      // this.service.getStocksFromStore(this.storeID!).subscribe((stocks:StockDTO[])=>{
+      //   this.dataSource.data=stocks;
+      //   // console.log(stocks[0].book.title);
+      // });
     })
 
   }
+
+  ngAfterViewInit() {
+    this.getStocksPaged(this.paginator.pageIndex,this.paginator.pageSize);
+  }
+
   updateStore() {
     if (this.storeName && this.address && this.contactNumber && this.openingHour && this.closingHour){
       this.store!.storeName = this.storeName;
@@ -91,4 +100,14 @@ export class StoreDetailsComponent {
     })
   }
 
+  getStocksPaged(page:number, size:number){
+    this.service.getStocksFromStore(this.storeID!,page,size).subscribe((result:StockTable)=>{
+      this.dataSource.data = result['content'];
+      this.totalStocks = result['totalElements'];
+    })
+  }
+
+  nextPage($event: PageEvent) {
+    this.getStocksPaged(this.paginator.pageIndex,this.paginator.pageSize);
+  }
 }
