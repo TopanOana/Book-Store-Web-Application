@@ -7,6 +7,20 @@ public class StoreStockDTO implements Comparable<StoreStockDTO>{
     private String address;
     private String contactNumber;
     private int openingHour;
+
+    public StoreStockDTO(Long storeID, String storeName, String address, String contactNumber, int openingHour, int closingHour, int quantity) {
+        this.storeID = storeID;
+        this.quantity = quantity;
+        this.storeName = storeName;
+        this.address = address;
+        this.contactNumber = contactNumber;
+        this.openingHour = openingHour;
+        this.closingHour = closingHour;
+    }
+
+    public StoreStockDTO() {
+    }
+
     private int closingHour;
 
     public Long getStoreID() {

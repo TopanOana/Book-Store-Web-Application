@@ -229,13 +229,14 @@ public class Controller {
     }
 
     @GetMapping("/stats/stores")
-    List<StoreStockDTO> getStatStoreStock(){
-        return statService.getAllStoresByNumberOfBooks();
+    Page<StoreStockDTO> getStatStoreStock(@RequestParam int page, @RequestParam int size){
+//        return statService.getAllStoresByNumberOfBooks();
+        return statService.getStoresSortedByNumberOfBooks(page,size);
     }
 
     @GetMapping("/stats/books")
-    List<BookStockDTO> getStatBookStock(){
-        return statService.getAllBooksByNumber();
+    Page<BookStockDTO> getStatBookStock(@RequestParam int page, @RequestParam int size){
+        return statService.getBooksSortedByStocksQuantity(page, size);
     }
 
 

@@ -9,6 +9,19 @@ public class BookStockDTO implements Comparable<BookStockDTO>{
     private double rating;
     private String genre;
 
+    public BookStockDTO() {
+    }
+
+    public BookStockDTO(Long bookID, String title, String author, int nrPages, double rating, String genre, int quantity) {
+        this.bookID = bookID;
+        this.quantity = quantity;
+        this.title = title;
+        this.author = author;
+        this.nrPages = nrPages;
+        this.rating = rating;
+        this.genre = genre;
+    }
+
     public Long getBookID() {
         return bookID;
     }
