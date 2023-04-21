@@ -1,9 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
-import {StoreStockStat} from "../book-stock-statistic/Model/stat.model";
+import {StoreStockStat, StoreStockTable} from "../book-stock-statistic/Model/stat.model";
 
 @Component({
   selector: 'app-store-stock-statistic',
@@ -25,17 +25,25 @@ export class StoreStockStatisticComponent implements OnInit {
     this.totalStores = 0;
   }
 
-
-  ngOnInit(): void {
-
-    this.service.getStoreStockStat().subscribe((result:StoreStockStat[])=>{
-      this.dataSource.data = result;
-      this.totalStores = result.length;
+  getAllStores(page:number, size:number){
+    this.service.getStoreStockStat(page, size).subscribe((result:StoreStockTable)=>{
+      this.dataSource.data = result['content']
+      this.totalStores = result.totalElements;
     })
   }
+  ngOnInit(): void {
+
+    this.getAllStores(this.paginator.pageIndex, this.paginator.pageSize);
+  }
+
+
 
 
   goBackToHome() {
     this.router.navigateByUrl("");
+  }
+
+  nextPage($event: PageEvent) {
+    this.getAllStores(this.paginator.pageIndex, this.paginator.pageSize);
   }
 }

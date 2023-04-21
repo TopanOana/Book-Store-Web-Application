@@ -20,3 +20,20 @@ export interface StoreStockStat{
   quantity: number;
 
 }
+
+export interface StoreStockTable{
+  content: StoreStockStat[];
+  number:number;
+  size:number;
+  totalElements:number;
+  totalPages:number;
+
+}
+
+export interface BookStockTable{
+  content: BookStockStat[];
+  number:number;
+  size:number;
+  totalElements:number;
+  totalPages:number;
+}

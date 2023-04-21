@@ -45,6 +45,6 @@
                  showFirstLastButtons
                  [pageSizeOptions]="[5, 10, 20, 50]"
                  [pageSize]="pageSize"
-                 [length]="totalBooks">
+                 [length]="totalBooks" (page)="nextPage($event)">
   </mat-paginator>
 </div>

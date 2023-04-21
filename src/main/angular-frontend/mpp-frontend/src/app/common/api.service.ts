@@ -14,7 +14,11 @@ import {
   StockDTO, StockTable,
   UpdateStockDTO
 } from "../features/stores/components/overview-stores/Models/store.models";
-import {BookStockStat, StoreStockStat} from "../features/statistics/components/book-stock-statistic/Model/stat.model";
+import {
+  BookStockStat,
+  BookStockTable,
+  StoreStockStat, StoreStockTable
+} from "../features/statistics/components/book-stock-statistic/Model/stat.model";
 
 @Injectable({
   providedIn: 'root'
@@ -109,12 +113,12 @@ export class ApiService {
   }
 
 
-  getBookStockStat(): Observable<BookStockStat[]>{
-    return this.http.get(`${this.baseURL}/stats/books`) as Observable<BookStockStat[]>
+  getBookStockStat(page: number, size:number): Observable<BookStockTable>{
+    return this.http.get(`${this.baseURL}/stats/books?page=${page}&size=${size}`) as Observable<BookStockTable>
   }
 
-  getStoreStockStat():Observable<StoreStockStat[]>{
-    return this.http.get(`${this.baseURL}/stats/stores`) as Observable<StoreStockStat[]>
+  getStoreStockStat(page: number, size:number):Observable<StoreStockTable>{
+    return this.http.get(`${this.baseURL}/stats/stores?page=${page}&size=${size}`) as Observable<StoreStockTable>
   }
 
   getStocksFromStore(storeID:number, page:number, size:number):Observable<StockTable>{

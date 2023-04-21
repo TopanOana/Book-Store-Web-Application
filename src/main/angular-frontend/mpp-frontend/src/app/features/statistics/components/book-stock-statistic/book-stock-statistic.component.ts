@@ -1,11 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from "@angular/material/paginator";
+import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
 import {LiveAnnouncer} from "@angular/cdk/a11y";
 import {MatSort} from "@angular/material/sort";
-import {BookStockStat} from "./Model/stat.model";
+import {BookStockStat, BookStockTable} from "./Model/stat.model";
 
 @Component({
   selector: 'app-book-stock-statistic',
@@ -27,17 +27,22 @@ export class BookStockStatisticComponent implements OnInit{
     this.totalBooks = 0;
   }
 
-  ngOnInit(): void {
-    this.service.getBookStockStat().subscribe((result:BookStockStat[])=>{
-      this.dataSource.data = result;
-      console.log(result[0]);
-      console.log(this.dataSource.data[0]);
-      this.totalBooks = result.length;
+  getAllBooks(page:number, size:number){
+    this.service.getBookStockStat(page, size).subscribe((result:BookStockTable)=>{
+      this.dataSource.data = result['content'];
+      this.totalBooks = result['totalElements'];
     })
+  }
+  ngOnInit(): void {
+   this.getAllBooks(this.paginator.pageIndex, this.paginator.pageSize)
   }
 
 
   goBackToHome() {
     this.router.navigateByUrl("");
+  }
+
+  nextPage($event: PageEvent) {
+    this.getAllBooks(this.paginator.pageIndex, this.paginator.pageSize);
   }
 }
