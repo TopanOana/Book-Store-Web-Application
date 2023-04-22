@@ -58,5 +58,11 @@ export class UpdateStockComponent implements OnInit {
       })
 
     }
+    else{
+      this.snackBar.open("complete all the fields!",'close',{
+        horizontalPosition:"center",
+        verticalPosition:"top"
+      })
+    }
   }
 }

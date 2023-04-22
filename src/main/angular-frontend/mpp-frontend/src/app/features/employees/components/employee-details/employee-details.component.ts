@@ -97,18 +97,23 @@ export class EmployeeDetailsComponent {
     else{
       storeID = this.store!.id;
     }
-    this.service.updateEmployee(employee, this.employeeID!, storeID).subscribe((employee:Employee)=>{
-      this.router.navigateByUrl("employees");
-    }, (err)=>{
-      console.log(err)
-      this.snackBar.open(err['error']['message'],'close',{
-        horizontalPosition:"center",
-        verticalPosition:"top"
+      this.service.updateEmployee(employee, this.employeeID!, storeID).subscribe((employee:Employee)=>{
+        this.router.navigateByUrl("employees");
+      }, (err)=>{
+        console.log(err)
+        this.snackBar.open(err['error']['message'],'close',{
+          horizontalPosition:"center",
+          verticalPosition:"top"
+        })
       })
+  }
+  else{
+    this.snackBar.open("complete all the fields!",'close',{
+      horizontalPosition:"center",
+      verticalPosition:"top"
     })
 
   }
-
   }
 
   deleteEmployee() {
