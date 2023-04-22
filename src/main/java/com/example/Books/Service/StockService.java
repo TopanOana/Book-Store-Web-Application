@@ -3,6 +3,7 @@ package com.example.Books.Service;
 import com.example.Books.Exception.StockNotFoundException;
 import com.example.Books.Model.Stock;
 import com.example.Books.Repository.StockRepository;
+import com.example.Books.Validation.ValidatorStock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,10 +33,14 @@ public class StockService {
     }
 
     public Stock addStockToRepository(Stock newStock){
+        ValidatorStock validatorStock = new ValidatorStock(stockRepository);
+        validatorStock.validate(newStock);
         return stockRepository.save(newStock);
     }
 
     public Stock updateStockInRepository(Long id, Stock updatedStock){
+        ValidatorStock validatorStock = new ValidatorStock(stockRepository);
+        validatorStock.validate(updatedStock);
         return stockRepository.findById(id).map(stock->{
             stock.setBook(updatedStock.getBook());
             stock.setStore(updatedStock.getStore());

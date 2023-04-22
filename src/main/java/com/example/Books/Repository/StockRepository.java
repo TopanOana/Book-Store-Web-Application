@@ -12,12 +12,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Long> {
 
-//    @PersistenceContext
-//    private EntityManager entityManager;
+
     Page<Stock> getStocksByBookId(Long bookID, Pageable pageable);
 
     Page<Stock> getStocksByStoreId(Long storeID, Pageable pageable);
 
 
+    Stock getStockByBookIdAndStoreId(Long bookID, Long storeID);
 
 }

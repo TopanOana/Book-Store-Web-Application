@@ -109,8 +109,8 @@ public class StatService {
                     return new BookStockDTO(aux_book.getId(), aux_book.getTitle(), aux_book.getAuthor(), aux_book.getNrPages(), aux_book.getRating(), aux_book.getGenre(), (Integer)row.get("quantity") );
                 }).toList();
         CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
-        Root<Book> book_count = countCQ.from(Book.class);
-        countCQ.select(criteriaBuilder.countDistinct(book_count.get("id")));
+        Root<Stock> book_count = countCQ.from(Stock.class);
+        countCQ.select(criteriaBuilder.countDistinct(book_count.get("book").get("id")));
         long total = entityManager.createQuery(countCQ).getSingleResult();
 
         return new PageImpl<>(results, pageable, total);
@@ -131,7 +131,7 @@ public class StatService {
                 .orderBy(criteriaBuilder.desc(criteriaBuilder.sum(criteriaBuilder.coalesce(stocks.get("quantity"),0))));
 
         TypedQuery<Tuple> typedQuery = entityManager.createQuery(storesQuantityCQ);
-        List<StoreStockDTO> results = typedQuery.setFirstResult(pageable.getPageNumber()* pageable.getPageSize())
+        List<StoreStockDTO> results = typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList()
                 .stream()
@@ -143,8 +143,8 @@ public class StatService {
                     return new StoreStockDTO(aux_store.getId(), aux_store.getStoreName(), aux_store.getAddress(), aux_store.getContactNumber(), aux_store.getOpeningHour(), aux_store.getClosingHour(), (Integer)row.get("quantity") );
                 }).toList();
         CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
-        Root<Store> store_count = countCQ.from(Store.class);
-        countCQ.select(criteriaBuilder.countDistinct(store_count.get("id")));
+        Root<Stock> store_count= countCQ.from(Stock.class);
+        countCQ.select(criteriaBuilder.countDistinct(store_count.get("store").get("id")));
         long total = entityManager.createQuery(countCQ).getSingleResult();
 
         return new PageImpl<>(results, pageable, total);

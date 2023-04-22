@@ -3,6 +3,7 @@ package com.example.Books.Service;
 import com.example.Books.Model.Employee;
 import com.example.Books.Model.Store;
 import com.example.Books.Repository.EmployeeRepository;
+import com.example.Books.Validation.ValidatorEmployee;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,7 +31,9 @@ public class EmployeeService {
 //        return employeeRepository.findAll().stream().collect(Collectors.toList());
     }
 
-    public Employee addEmployeeToRepository(@Valid Employee newEmployee){
+    public Employee addEmployeeToRepository(Employee newEmployee){
+        ValidatorEmployee validatorEmployee = new ValidatorEmployee();
+        validatorEmployee.validate(newEmployee);
         return employeeRepository.save(newEmployee);
     }
 
@@ -43,6 +46,8 @@ public class EmployeeService {
 
     public Employee updateEmployeeInRepository(Long id, Employee updatedEmployee)
     {
+        ValidatorEmployee validatorEmployee = new ValidatorEmployee();
+        validatorEmployee.validate(updatedEmployee);
         return employeeRepository.findById(id).map(employee -> {
             employee.setFirstName(updatedEmployee.getFirstName());
             employee.setLastName(updatedEmployee.getLastName());

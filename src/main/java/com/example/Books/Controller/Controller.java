@@ -1,6 +1,7 @@
 package com.example.Books.Controller;
 
 //import com.example.Books.Exception.BookNotFoundException;
+import com.example.Books.Exception.*;
 import com.example.Books.Model.*;
 //import com.example.Books.Repository.BookRepository;
 import com.example.Books.Service.*;
@@ -8,7 +9,9 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,11 +67,17 @@ public class Controller {
     }
 
     @PostMapping("/books")
-    Book addBook(@RequestBody @Valid Book newBook){
+    Book addBook(@RequestBody Book newBook){
         /*
         the post mapping is for adding a new book to the repository
          */
-        return bookService.addBookToRepository(newBook);
+        try{
+            return bookService.addBookToRepository(newBook);
+        }catch(BookValidationException ex)
+        {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+
     }
 
     @PutMapping("/books/{id}")
@@ -120,11 +129,16 @@ public class Controller {
 
 
     @PostMapping("/stores")
-    Store addStore(@RequestBody @Valid Store newStore){
+    Store addStore(@RequestBody Store newStore){
         /*
         post mapping for adding a new store to the repository
          */
-        return storeService.addStoreToRepository(newStore);
+        try{
+            return storeService.addStoreToRepository(newStore);
+        }catch (StoreValidationException ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+
     }
 
 
@@ -165,9 +179,14 @@ public class Controller {
 
 
     @PostMapping("/employees")
-    Employee addEmployee(@RequestBody @Valid Employee employee, @RequestParam("storeID") Long storeID){
-        employee.setStore(storeService.getStoreByID(storeID));
-        return employeeService.addEmployeeToRepository(employee);
+    Employee addEmployee(@RequestBody Employee employee, @RequestParam("storeID") Long storeID){
+        try{
+            employee.setStore(storeService.getStoreByID(storeID));
+            return employeeService.addEmployeeToRepository(employee);
+        }catch(EmployeeValidationException | StoreNotFoundException ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+
     }
 
     @PostMapping("/stores/{id}/employees")
@@ -198,9 +217,15 @@ public class Controller {
     }
 
     @PostMapping("/stores/{id}/stock")
-    Stock addStock(@PathVariable Long id, @RequestBody @Valid Stock stock){
-        stock.setStore(storeService.getStoreByID(id));
-        return this.stockService.addStockToRepository(stock);
+    Stock addStock(@PathVariable Long id, @RequestBody Stock stock){
+        try{
+            stock.setStore(storeService.getStoreByID(id));
+            return this.stockService.addStockToRepository(stock);
+        }catch(StockValidationException | StoreNotFoundException ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+
+
     }
 
     @GetMapping("/stores/{id}/stock")
@@ -222,7 +247,7 @@ public class Controller {
     }
 
     @PutMapping("/stores/{id}/stock/{stockID}")
-    Stock updateStockInStore(@PathVariable Long id, @RequestBody @Valid Stock stock, @PathVariable Long stockID){
+    Stock updateStockInStore(@PathVariable Long id, @RequestBody Stock stock, @PathVariable Long stockID){
         stock.setStore(storeService.getStoreByID(id));
         System.out.println("here i am ");
         return this.stockService.updateStockInRepository(stockID, stock);

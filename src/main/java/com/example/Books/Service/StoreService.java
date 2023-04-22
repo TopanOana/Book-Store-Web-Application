@@ -1,10 +1,12 @@
 package com.example.Books.Service;
 
 import com.example.Books.Exception.StoreNotFoundException;
+import com.example.Books.Exception.StoreValidationException;
 import com.example.Books.Model.Employee;
 import com.example.Books.Model.Stock;
 import com.example.Books.Model.Store;
 import com.example.Books.Repository.StoreRepository;
+import com.example.Books.Validation.ValidatorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,14 +45,18 @@ public class StoreService {
         return repository.findById(id).orElseThrow(() -> new StoreNotFoundException(id));
     }
 
-    public Store addStoreToRepository(Store newStore){
+    public Store addStoreToRepository(Store newStore) throws StoreValidationException {
         /*
         adds a store to the repository
          */
+        ValidatorStore validatorStore = new ValidatorStore();
+        validatorStore.validate(newStore);
         return repository.save(newStore);
     }
 
     public Store updateStoreInRepository(Long id, Store updatedStore){
+        ValidatorStore validatorStore = new ValidatorStore();
+        validatorStore.validate(updatedStore);
         return repository.findById(id).map(store->{
             store.setStoreName(updatedStore.getStoreName());
             store.setAddress(updatedStore.getAddress());

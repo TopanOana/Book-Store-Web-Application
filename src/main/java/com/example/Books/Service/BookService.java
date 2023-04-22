@@ -1,8 +1,10 @@
 package com.example.Books.Service;
 
 import com.example.Books.Exception.BookNotFoundException;
+import com.example.Books.Exception.BookValidationException;
 import com.example.Books.Model.Book;
 import com.example.Books.Repository.BookRepository;
+import com.example.Books.Validation.ValidatorBook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
@@ -39,10 +41,12 @@ public class BookService {
         return repository.findById(id).orElseThrow(()->new BookNotFoundException(id));
     }
 
-    public Book addBookToRepository(Book newBook){
+    public Book addBookToRepository(Book newBook) throws BookValidationException {
         /*
         adds a book to the repository
          */
+        ValidatorBook validatorBook = new ValidatorBook();
+        validatorBook.validate(newBook);
         return repository.save(newBook);
     }
 
@@ -52,6 +56,8 @@ public class BookService {
         updating a book or adding a new one with a specific id
         i just used a lot of setters and getters
          */
+        ValidatorBook validatorBook = new ValidatorBook();
+        validatorBook.validate(updatedBook);
         return repository.findById(id).map(book -> {
             book.setTitle(updatedBook.getTitle());
             book.setAuthor(updatedBook.getAuthor());
