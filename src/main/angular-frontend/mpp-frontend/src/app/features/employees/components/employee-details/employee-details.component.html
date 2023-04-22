@@ -38,7 +38,7 @@
              matInput
              [formControl]="formControl"
              [matAutocomplete]="auto"
-             >
+             (keyup)="callSearchFromBackend()">
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayStoreName">
         <mat-option *ngFor="let store of stores" [value]="store">{{store.storeName}}</mat-option>
       </mat-autocomplete>

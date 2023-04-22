@@ -6,7 +6,8 @@ import jakarta.validation.constraints.Positive;
 @Entity
 @Table(name = "STOCK",
 indexes = {@Index(columnList = "storeID, quantity"),
-@Index(columnList = "bookID, quantity")})
+@Index(columnList = "bookID, quantity")},
+uniqueConstraints = {@UniqueConstraint(columnNames = "bookID, storeID")})
 public class Stock {
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;

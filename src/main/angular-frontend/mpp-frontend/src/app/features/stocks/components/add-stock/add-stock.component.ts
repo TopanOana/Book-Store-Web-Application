@@ -26,14 +26,14 @@ export class AddStockComponent implements OnInit{
   ngOnInit() {
     this.activatedRoute.params.subscribe(params=>{
       this.storeID = params['id'];
-      this.formControl.valueChanges.subscribe(value => {
-        if(value.length>=2){
-          let rat,col,order;
-          this.service.getBooks(0,5,rat,col,order,value).subscribe((response:BookTable)=>{
-            this.books = response['content'];
-          })
-        }
-      })
+      // this.formControl.valueChanges.subscribe(value => {
+      //   if(value.length>=2){
+      //     let rat,col,order;
+      //     this.service.getBooks(0,5,rat,col,order,value).subscribe((response:BookTable)=>{
+      //       this.books = response['content'];
+      //     })
+      //   }
+      // })
     })
   }
 
@@ -72,5 +72,17 @@ export class AddStockComponent implements OnInit{
         verticalPosition:"top"
       })
     }
+  }
+
+  callSearchFromBackend() {
+    if(this.formControl.value.length>2){
+      let rat,col,order;
+      console.log(this.formControl.value);
+      let input = this.formControl.value;
+      this.service.getBooks(0,5,rat,col,order,input).subscribe((response:BookTable)=>{
+        this.books = response['content'];
+      })
+    }
+
   }
 }

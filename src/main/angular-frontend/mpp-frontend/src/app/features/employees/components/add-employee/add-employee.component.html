@@ -37,7 +37,8 @@
              aria-label="Store"
              matInput
              [formControl]="formControl"
-             [matAutocomplete]="auto">
+             [matAutocomplete]="auto"
+              (keyup) ="callSearchFromBackend()">
       <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectStore($event)" [displayWith]="displayStoreName">
         <mat-option *ngFor="let store of stores" [value]="store">{{store.storeName}}</mat-option>
       </mat-autocomplete>

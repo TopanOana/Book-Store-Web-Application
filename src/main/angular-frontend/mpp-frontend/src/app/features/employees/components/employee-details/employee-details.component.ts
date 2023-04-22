@@ -50,13 +50,13 @@ export class EmployeeDetailsComponent {
         this.formControl.setValue(this.store);
       })
     })
-    this.formControl.valueChanges.subscribe(value => {
-      if(value.length>=2){
-        this.service.getStores(0,5, value).subscribe((response:StoreTable)=>{
-          this.stores = response['content'];
-        })
-      }
-    })
+    // this.formControl.valueChanges.subscribe(value => {
+    //   if(value.length>=2){
+    //     this.service.getStores(0,5, value).subscribe((response:StoreTable)=>{
+    //       this.stores = response['content'];
+    //     })
+    //   }
+    // })
   }
   goBackToOverview() {
     this.router.navigateByUrl("employees")
@@ -131,4 +131,9 @@ export class EmployeeDetailsComponent {
     return store.storeName;
   }
 
+  callSearchFromBackend() {
+    this.service.getStores(0,5, this.formControl.value).subscribe((response:StoreTable)=> {
+      this.stores = response['content'];
+    })
+  }
 }

@@ -31,13 +31,11 @@ export class AddEmployeeComponent implements OnInit {
   }
 
   ngOnInit(){
-    this.formControl.valueChanges.subscribe(value => {
-      if(value.length>=2){
-        this.service.getStores(0,5, value).subscribe((response:StoreTable)=>{
-          this.stores = response['content'];
-        })
-      }
-    })
+    // this.formControl.valueChanges.subscribe(value => {
+    //   if(value.length>=2){
+    //
+    //   }
+    // })
   }
   goBackToOverview() {
     this.router.navigateByUrl('employees');
@@ -101,4 +99,9 @@ export class AddEmployeeComponent implements OnInit {
     return store.storeName;
   }
 
+  callSearchFromBackend() {
+    this.service.getStores(0,5, this.formControl.value).subscribe((response:StoreTable)=>{
+      this.stores = response['content'];
+    })
+  }
 }

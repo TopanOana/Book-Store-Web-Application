@@ -12,7 +12,8 @@
              aria-label="Book"
              matInput
              [formControl]="formControl"
-             [matAutocomplete]="auto">
+             [matAutocomplete]="auto"
+              (keyup)="callSearchFromBackend()">
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayBookTitle">
         <mat-option *ngFor="let book of books" [value]="book">{{book.title}}</mat-option>
       </mat-autocomplete>
