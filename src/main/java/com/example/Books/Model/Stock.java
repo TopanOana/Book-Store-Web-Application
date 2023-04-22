@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 @Table(name = "STOCK",
 indexes = {@Index(columnList = "storeID, quantity"),
 @Index(columnList = "bookID, quantity")},
-uniqueConstraints = {@UniqueConstraint(columnNames = "bookID, storeID")})
+uniqueConstraints = {@UniqueConstraint(columnNames = {"bookID" , "storeID"})})
 public class Stock {
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
