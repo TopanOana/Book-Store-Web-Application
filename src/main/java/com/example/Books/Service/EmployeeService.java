@@ -27,7 +27,7 @@ public class EmployeeService {
         returns all the employees in the repository
          */
         PageRequest pageRequest = PageRequest.of(page, size);
-        return employeeRepository.findAllOrderById(pageRequest);
+        return employeeRepository.findAllByOrderById(pageRequest);
 //        return employeeRepository.findAll().stream().collect(Collectors.toList());
     }
 
