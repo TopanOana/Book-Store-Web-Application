@@ -1,6 +1,7 @@
 package com.example.Books.Service;
 
 import com.example.Books.Exception.StockNotFoundException;
+import com.example.Books.Exception.StockValidationException;
 import com.example.Books.Model.Stock;
 import com.example.Books.Repository.StockRepository;
 import com.example.Books.Validation.ValidatorStock;
@@ -39,8 +40,8 @@ public class StockService {
     }
 
     public Stock updateStockInRepository(Long id, Stock updatedStock){
-        ValidatorStock validatorStock = new ValidatorStock(stockRepository);
-        validatorStock.validate(updatedStock);
+        if(updatedStock.getQuantity()<1 || updatedStock.getQuantity()>1000)
+            throw new StockValidationException("stock quantity invalid (quantity<1 || quantity>1000");
         return stockRepository.findById(id).map(stock->{
             stock.setBook(updatedStock.getBook());
             stock.setStore(updatedStock.getStore());
