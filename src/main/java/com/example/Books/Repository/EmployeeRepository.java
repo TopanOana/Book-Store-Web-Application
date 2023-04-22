@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long>{
+
+    Page<Employee> findAllOrderById(Pageable pageable);
     Page<Employee> findByOrderByFirstNameAsc(Pageable pageable);
     Page<Employee> findByOrderByFirstNameDesc(Pageable pageable);
 
