@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 
 @Entity
-@Table(name = "STOCK")
+@Table(name = "STOCK",
+indexes = {@Index(columnList = "storeID, quantity"),
+@Index(columnList = "bookID, quantity")})
 public class Stock {
 
     private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
