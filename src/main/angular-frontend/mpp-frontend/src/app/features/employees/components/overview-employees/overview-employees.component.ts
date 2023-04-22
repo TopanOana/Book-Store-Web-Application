@@ -126,6 +126,7 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
 
   changeItPlease() {
     console.log(this.pageSize);
+    this.pageIndex=0;
     this.getEmployeesPaged(this.pageIndex,this.pageSize);
   }
 }

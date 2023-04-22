@@ -16,25 +16,38 @@ export class StoreStockStatisticComponent implements OnInit, AfterViewInit {
 
   dataSource = new MatTableDataSource();
   totalStores: number;
-  pageSize = 5;
+  pageIndex=0;
+  pageFirst=true;
+  pageLast=false;
+  pageSize=5;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  nrPages=0;
 
-  constructor(private service: ApiService, private router: Router, paginator: MatPaginator) {
-    this.paginator = paginator;
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  constructor(private service: ApiService, private router: Router /*, paginator: MatPaginator*/) {
+    // this.paginator = paginator;
     this.totalStores = 0;
   }
 
   getAllStores(page:number, size:number){
     this.service.getStoreStockStat(page, size).subscribe((result:StoreStockTable)=>{
       this.dataSource.data = result['content']
-      this.totalStores = result.totalElements;
+      this.totalStores = result['totalElements'];
+      this.nrPages = result['totalPages'];
+      if(page>0)
+        this.pageFirst=false;
+      else this.pageFirst=true;
+      if(page==this.nrPages-1)
+        this.pageLast=true;
+      else this.pageLast=false;
+
     })
   }
   ngOnInit(): void {
   }
   ngAfterViewInit() {
-    this.getAllStores(this.paginator.pageIndex, this.paginator.pageSize);
+    this.getAllStores(this.pageIndex, this.pageSize);
   }
 
 
@@ -46,7 +59,31 @@ export class StoreStockStatisticComponent implements OnInit, AfterViewInit {
     this.router.navigateByUrl("");
   }
 
-  nextPage($event: PageEvent) {
-    this.getAllStores(this.paginator.pageIndex, this.paginator.pageSize);
+  // nextPage($event: PageEvent) {
+  //   this.getAllStores(this.paginator.pageIndex, this.paginator.pageSize);
+  // }
+  goToFirstPage() {
+    this.pageIndex=0;
+    this.getAllStores(this.pageIndex, this.pageSize);
+  }
+
+  previousPage() {
+    this.pageIndex-=1;
+    this.getAllStores(this.pageIndex, this.pageSize);
+  }
+
+  nextPage() {
+    this.pageIndex+=1;
+    this.getAllStores(this.pageIndex, this.pageSize);
+  }
+
+  goToLastPage() {
+    this.pageIndex=this.nrPages-1;
+    this.getAllStores(this.pageIndex, this.pageSize);
+  }
+
+  changeItPlease() {
+    this.pageIndex=0;
+    this.getAllStores(this.pageIndex, this.pageSize);
   }
 }

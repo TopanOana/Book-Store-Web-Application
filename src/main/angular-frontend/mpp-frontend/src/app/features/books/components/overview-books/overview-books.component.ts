@@ -21,14 +21,19 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   dataSource = new MatTableDataSource();
   totalBooks: number;
   pageSize = 5;
+  pageIndex = 0;
+  pageFirst =true;
+  pageLast=false;
+  nrPages=0;
   column ='';
   order='';
 
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private service: ApiService, private router: Router, private liveAnnouncer: LiveAnnouncer, paginator: MatPaginator, sort : MatSort) {
-    this.paginator = paginator;
+
+  constructor(private service: ApiService, private router: Router, private liveAnnouncer: LiveAnnouncer,/* paginator: MatPaginator,*/ sort : MatSort) {
+    // this.paginator = paginator;
     this.sort = sort;
     this.totalBooks = 0;
   }
@@ -38,7 +43,7 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
-    this.getBooksPaged(this.paginator.pageIndex, this.paginator.pageSize);
+    this.getBooksPaged(this.pageIndex, this.pageSize);
   }
 
   private getBooksPaged(page: number, size: number) {
@@ -52,12 +57,19 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
     this.service.getBooks(page, size, rating, column, order).subscribe((bookTable: BookTable) => {
       this.dataSource.data = bookTable['content'];
       this.totalBooks = bookTable['totalElements'];
+      this.nrPages = bookTable['totalPages'];
+      if(page==0)
+        this.pageFirst=true;
+      else this.pageFirst=false;
+      if(page==this.nrPages-1)
+        this.pageLast=true;
+      else this.pageLast=false;
     })
   }
 
-  nextPage(event: PageEvent) {
-    this.getBooksPaged(this.paginator.pageIndex, this.paginator.pageSize);
-  }
+  // nextPage(event: PageEvent) {
+  //   this.getBooksPaged(this.pageIndex, this.pageSize);
+  // }
 
   clearFilter() {
     this.rating_gt = 0;
@@ -65,8 +77,9 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   }
 
   goToFilterBook() {
-    this.paginator.firstPage();
-    this.getBooksPaged(this.paginator.pageIndex, this.paginator.pageSize);
+    // this.paginator.firstPage();
+    this.pageIndex=0;
+    this.getBooksPaged(this.pageIndex, this.pageSize);
   }
 
   goToBookDetails(bookrow: Book) {
@@ -89,13 +102,39 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
     if (sortState.direction) {
       this.column = sortState.active;
       this.order = sortState.direction;
-      this.getBooksPaged(this.paginator.pageIndex,this.paginator.pageSize);
+      this.getBooksPaged(this.pageIndex,this.pageSize);
       this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
       this.column='';
       this.order='';
-      this.getBooksPaged(this.paginator.pageIndex,this.paginator.pageSize);
+      this.getBooksPaged(this.pageIndex,this.pageSize);
       this.liveAnnouncer.announce('Sorting cleared');
     }
+  }
+
+  goToFirstPage() {
+      this.pageIndex=0;
+      this.getBooksPaged(this.pageIndex,this.pageSize);
+  }
+
+  previousPage() {
+    this.pageIndex-=1;
+    this.getBooksPaged(this.pageIndex,this.pageSize);
+  }
+
+  nextPage() {
+    this.pageIndex+=1;
+    this.getBooksPaged(this.pageIndex,this.pageSize);
+  }
+
+
+  goToLastPage() {
+    this.pageIndex=this.nrPages-1;
+    this.getBooksPaged(this.pageIndex,this.pageSize);
+  }
+
+  changeItPlease() {
+    this.pageIndex=0;
+    this.getBooksPaged(this.pageIndex,this.pageSize);
   }
 }

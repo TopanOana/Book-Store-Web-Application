@@ -16,12 +16,17 @@ export class BookStockStatisticComponent implements OnInit, AfterViewInit{
   dataSource= new MatTableDataSource();
 
   totalBooks: number;
-  pageSize = 5;
+  pageIndex=0;
+  pageFirst=true;
+  pageLast=false;
+  pageSize=5;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  nrPages=0;
 
-  constructor(private service: ApiService, private router: Router, paginator: MatPaginator) {
-    this.paginator = paginator;
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  constructor(private service: ApiService, private router: Router/*, paginator: MatPaginator*/) {
+    // this.paginator = paginator;
     this.totalBooks = 0;
   }
 
@@ -29,13 +34,20 @@ export class BookStockStatisticComponent implements OnInit, AfterViewInit{
     this.service.getBookStockStat(page, size).subscribe((result:BookStockTable)=>{
       this.dataSource.data = result['content'];
       this.totalBooks = result['totalElements'];
+      this.nrPages = result['totalPages'];
+      if(page>0)
+        this.pageFirst=false;
+      else this.pageFirst=true;
+      if(page==this.nrPages-1)
+        this.pageLast=true;
+      else this.pageLast=false;
     })
   }
   ngOnInit(): void {
 
   }
   ngAfterViewInit() {
-    this.getAllBooks(this.paginator.pageIndex, this.paginator.pageSize)
+    this.getAllBooks(this.pageIndex, this.pageSize)
   }
 
 
@@ -43,7 +55,31 @@ export class BookStockStatisticComponent implements OnInit, AfterViewInit{
     this.router.navigateByUrl("");
   }
 
-  nextPage($event: PageEvent) {
-    this.getAllBooks(this.paginator.pageIndex, this.paginator.pageSize);
+  // nextPage($event: PageEvent) {
+  //   this.getAllBooks(this.paginator.pageIndex, this.paginator.pageSize);
+  // }
+  goToFirstPage() {
+    this.pageIndex=0;
+    this.getAllBooks(this.pageIndex,this.pageSize);
+  }
+
+  previousPage() {
+    this.pageIndex-=1;
+    this.getAllBooks(this.pageIndex,this.pageSize);
+  }
+
+  nextPage() {
+    this.pageIndex+=1;
+    this.getAllBooks(this.pageIndex,this.pageSize);
+  }
+
+  goToLastPage() {
+    this.pageIndex=this.nrPages-1;
+    this.getAllBooks(this.pageIndex,this.pageSize);
+  }
+
+  changeItPlease() {
+    this.pageIndex=0;
+    this.getAllBooks(this.pageIndex,this.pageSize);
   }
 }

@@ -41,10 +41,31 @@
     <tr mat-row *matRowDef="let bookrow; columns: displayedColumns;"></tr>
   </table>
 
-  <mat-paginator aria-label="Select page of books"
-                 showFirstLastButtons
-                 [pageSizeOptions]="[5, 10, 20, 50]"
-                 [pageSize]="pageSize"
-                 [length]="totalBooks" (page)="nextPage($event)">
-  </mat-paginator>
+<!--  <mat-paginator aria-label="Select page of books"-->
+<!--                 showFirstLastButtons-->
+<!--                 [pageSizeOptions]="[5, 10, 20, 50]"-->
+<!--                 [pageSize]="pageSize"-->
+<!--                 [length]="totalBooks" (page)="nextPage($event)">-->
+<!--  </mat-paginator>-->
+  <div class="my_paginator">
+    <div class="paginator_buttons">
+      <button mat-mini-fab (click)="goToFirstPage()" [disabled]="pageFirst"><mat-icon>skip_previous</mat-icon></button>
+      <button mat-mini-fab (click)="previousPage()" [disabled]="pageFirst"><mat-icon>navigate_before</mat-icon></button>
+      <button mat-mini-fab (click)="nextPage()" [disabled]="pageLast"><mat-icon>navigate_next</mat-icon></button>
+      <button mat-mini-fab (click)="goToLastPage()" [disabled]="pageLast"><mat-icon>skip_next</mat-icon></button>
+      <mat-label> Page: {{pageIndex+1}} of {{nrPages}}</mat-label>
+    </div>
+
+    <div class="page_size">
+      <mat-label>Page size: </mat-label>
+      <mat-select id="pageSizeSelect" name="pageSizeSelect" [(ngModel)]="pageSize" (selectionChange)="changeItPlease()">
+        <mat-option [value]="5">5</mat-option>
+        <mat-option [value]="10">10</mat-option>
+        <mat-option [value]="20">20</mat-option>
+        <mat-option [value]="50">50</mat-option>
+      </mat-select>
+    </div>
+
+  </div>
+
 </div>

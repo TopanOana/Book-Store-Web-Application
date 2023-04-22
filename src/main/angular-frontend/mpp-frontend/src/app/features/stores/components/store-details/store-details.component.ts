@@ -24,13 +24,18 @@ export class StoreDetailsComponent implements OnInit, AfterViewInit{
   storeID?:number;
   dataSource = new MatTableDataSource();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
   displayedColumns = ['id', 'title', 'quantity', 'buttons'];
-  pageSize: number;
+  pageIndex=0;
+  pageFirst=true;
+  pageLast=false;
+  pageSize=5;
+
+  nrPages=0;
   totalStocks: number;
 
-  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, paginator:MatPaginator, private snackBar:MatSnackBar) {
-    this.paginator=paginator;
+  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, /*paginator:MatPaginator,*/ private snackBar:MatSnackBar) {
+    // this.paginator=paginator;
     this.pageSize = 5;
     this.totalStocks = 0;
   }
@@ -58,7 +63,7 @@ export class StoreDetailsComponent implements OnInit, AfterViewInit{
   }
 
   ngAfterViewInit() {
-    this.getStocksPaged(this.paginator.pageIndex,this.paginator.pageSize);
+    this.getStocksPaged(this.pageIndex,this.pageSize);
   }
 
   updateStore() {
@@ -114,10 +119,41 @@ export class StoreDetailsComponent implements OnInit, AfterViewInit{
     this.service.getStocksFromStore(this.storeID!,page,size).subscribe((result:StockTable)=>{
       this.dataSource.data = result['content'];
       this.totalStocks = result['totalElements'];
+      this.nrPages = result['totalPages'];
+      if(page>0)
+        this.pageFirst=false;
+      else this.pageFirst=true;
+      if(page==this.nrPages-1)
+        this.pageLast=true;
+      else this.pageLast=false;
     })
   }
 
-  nextPage($event: PageEvent) {
-    this.getStocksPaged(this.paginator.pageIndex,this.paginator.pageSize);
+  // nextPage($event: PageEvent) {
+  //   this.getStocksPaged(this.paginator.pageIndex,this.paginator.pageSize);
+  // }
+  goToFirstPage() {
+    this.pageIndex=0;
+    this.getStocksPaged(this.pageIndex, this.pageSize);
+  }
+
+  previousPage() {
+    this.pageIndex-=1;
+    this.getStocksPaged(this.pageIndex, this.pageSize);
+  }
+
+  nextPage() {
+    this.pageIndex+=1;
+    this.getStocksPaged(this.pageIndex, this.pageSize);
+  }
+
+  goToLastPage() {
+    this.pageIndex=this.nrPages-1;
+    this.getStocksPaged(this.pageIndex, this.pageSize);
+  }
+
+  changeItPlease() {
+    this.pageIndex=0;
+    this.getStocksPaged(this.pageIndex, this.pageSize);
   }
 }
