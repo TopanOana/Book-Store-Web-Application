@@ -2,11 +2,13 @@ import { Component } from '@angular/core';
 import {AddBookDTO, Book} from "../overview-books/Models/books.models";
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-add-book',
   templateUrl: './add-book.component.html',
-  styleUrls: ['./add-book.component.css']
+  styleUrls: ['./add-book.component.css'],
+  providers: [MatSnackBar]
 })
 export class AddBookComponent {
   title?:string
@@ -15,8 +17,7 @@ export class AddBookComponent {
   rating?: number;
   genre?: string;
 
-  constructor(private service:ApiService, private router:Router){
-
+  constructor(private service:ApiService, private router:Router, private snackBar:MatSnackBar){
   }
 
   addBook() {
@@ -39,7 +40,14 @@ export class AddBookComponent {
       {
         this.router.navigateByUrl('books');
       },
-        (err)=>console.log(err))
+        (err)=>{
+        console.log(err)
+          this.snackBar.open(err['error']['message'],'close',{
+            horizontalPosition:"center",
+            verticalPosition:"top"
+          })
+
+        })
     }
   }
 

@@ -3,7 +3,7 @@
 
 <div class="formcomp">
   <form (submit)="addBook()">
-<!--    <div>-->
+
       <mat-form-field>
         <mat-label>Title</mat-label>
         <input matInput id="title" name="title" [(ngModel)]="title">
@@ -24,11 +24,7 @@
         <mat-label>Genre</mat-label>
         <input matInput id="genre" name="genre" [(ngModel)]="genre">
       </mat-form-field>
-<!--    </div>-->
-<!--    <div>-->
       <button mat-raised-button type="submit"><mat-icon>save</mat-icon></button>
-<!--    </div>-->
-
   </form>
 
 </div>

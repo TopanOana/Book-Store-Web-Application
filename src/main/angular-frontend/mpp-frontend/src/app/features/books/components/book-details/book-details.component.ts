@@ -5,12 +5,13 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {StockTable} from "../../../stores/components/overview-stores/Models/store.models";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-book-details',
   templateUrl: './book-details.component.html',
   styleUrls: ['./book-details.component.css'],
-  providers: [MatPaginator]
+  providers: [MatPaginator, MatSnackBar]
 })
 export class BookDetailsComponent implements OnInit, AfterViewInit{
   bookID?: number;
@@ -27,7 +28,7 @@ export class BookDetailsComponent implements OnInit, AfterViewInit{
   displayedColumns = ['id', 'storeName', 'quantity'];
   pageSize: number;
   totalStocks: number;
-  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, paginator:MatPaginator) {
+  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, paginator:MatPaginator, private snackBar:MatSnackBar) {
     this.paginator = paginator;
     this.pageSize = 0;
     this.totalStocks =0;
@@ -76,7 +77,14 @@ export class BookDetailsComponent implements OnInit, AfterViewInit{
           console.log("iesit din update")
           this.router.navigateByUrl('books');
         },
-        (err)=>console.log(err))
+        (err)=>{
+        console.log(err)
+          this.snackBar.open(err['error']['message'],'close',{
+            horizontalPosition:"center",
+            verticalPosition:"top"
+          })
+        }
+      )
     }
     else{
 

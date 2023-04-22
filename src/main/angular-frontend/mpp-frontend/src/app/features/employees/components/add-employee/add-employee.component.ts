@@ -5,12 +5,13 @@ import {AddEmployeeDTO, Employee, StoreDTO, StoreTable} from "../overview-employ
 import {Observable} from "rxjs";
 import {FormControl} from "@angular/forms";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-add-employee',
   templateUrl: './add-employee.component.html',
-  styleUrls: ['./add-employee.component.css']
-  // providers: [FormControl]
+  styleUrls: ['./add-employee.component.css'],
+  providers: [MatSnackBar]
 })
 export class AddEmployeeComponent implements OnInit {
   firstName?: string;
@@ -25,7 +26,7 @@ export class AddEmployeeComponent implements OnInit {
   store?: StoreDTO;
   formControl = new FormControl();
 
-  constructor(private service:ApiService, private router:Router){
+  constructor(private service:ApiService, private router:Router, private snackBar:MatSnackBar){
 
   }
 
@@ -43,13 +44,13 @@ export class AddEmployeeComponent implements OnInit {
   }
 
   addEmployee() {
-    console.log(this.firstName)
-    console.log(this.lastName)
-    console.log(this.phoneNumber)
-    console.log(this.salary)
-    console.log(this.fullTime)
-    console.log(this.formControl.value)
-    console.log(this.store?.id)
+    // console.log(this.firstName)
+    // console.log(this.lastName)
+    // console.log(this.phoneNumber)
+    // console.log(this.salary)
+    // console.log(this.fullTime)
+    // console.log(this.formControl.value)
+    // console.log(this.store?.id)
     if(this.firstName && this.lastName && this.phoneNumber && this.salary && this.fullTime){
 
       const employee:AddEmployeeDTO={
@@ -65,7 +66,13 @@ export class AddEmployeeComponent implements OnInit {
         this.service.addEmployee(employee, storeID).subscribe((employee:Employee)=>{
             this.router.navigateByUrl("employees");
           },
-          (err)=>console.log(err))
+          (err)=>{
+          console.log(err)
+            this.snackBar.open(err['error']['message'],'close',{
+              horizontalPosition:"center",
+              verticalPosition:"top"
+            })
+          })
       }
 
     }

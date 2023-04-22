@@ -5,12 +5,13 @@ import {StoreDTO} from "../../../employees/components/overview-employees/Models/
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {StockDTO, StockTable} from "../overview-stores/Models/store.models";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-store-details',
   templateUrl: './store-details.component.html',
   styleUrls: ['./store-details.component.css'],
-  providers: [MatPaginator]
+  providers: [MatPaginator, MatSnackBar]
 })
 export class StoreDetailsComponent implements OnInit, AfterViewInit{
 
@@ -28,7 +29,7 @@ export class StoreDetailsComponent implements OnInit, AfterViewInit{
   pageSize: number;
   totalStocks: number;
 
-  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, paginator:MatPaginator) {
+  constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, paginator:MatPaginator, private snackBar:MatSnackBar) {
     this.paginator=paginator;
     this.pageSize = 5;
     this.totalStocks = 0;
@@ -70,7 +71,13 @@ export class StoreDetailsComponent implements OnInit, AfterViewInit{
       this.service.updateStore(this.storeID!, this.store!).subscribe((result:StoreDTO)=>{
         this.router.navigateByUrl("stores");
       },
-        (err)=>console.log(err))
+        (err)=>{
+          console.log(err)
+          this.snackBar.open(err['error']['message'],'close',{
+            horizontalPosition:"center",
+            verticalPosition:"top"
+          })
+        })
     }
     else{
 

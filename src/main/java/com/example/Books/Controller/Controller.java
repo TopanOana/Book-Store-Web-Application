@@ -81,12 +81,17 @@ public class Controller {
     }
 
     @PutMapping("/books/{id}")
-    Book updateBook(@RequestBody @Valid Book updatedBook, @PathVariable Long id){
+    Book updateBook(@RequestBody Book updatedBook, @PathVariable Long id){
         /*
         the put mapping is for updating a book or adding a new one with a specific id
         i just used a lot of setters and getters
          */
-        return bookService.updateBookInRepository(id,updatedBook);
+        try{
+            return bookService.updateBookInRepository(id,updatedBook);
+        }catch(BookValidationException ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+
     }
 
     @DeleteMapping("/books/{id}")
@@ -144,13 +149,18 @@ public class Controller {
 
 
     @PutMapping("/stores/{id}")
-    Store updateStore(@RequestBody @Valid Store updatedStore, @PathVariable Long id){
+    Store updateStore(@RequestBody Store updatedStore, @PathVariable Long id){
         /*
         put mapping for updating a store or adding a new store with a specific id
          */
-        if (updatedStore!=null)
-            return storeService.updateStoreInRepository(id,updatedStore);
-        return null;
+        try{
+            if (updatedStore!=null)
+                return storeService.updateStoreInRepository(id,updatedStore);
+            return null;
+        }catch(StoreValidationException ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+
     }
 
 
@@ -200,9 +210,14 @@ public class Controller {
     }
 
     @PutMapping("/employees/{id}")
-    Employee updateEmployee(@RequestBody @Valid Employee newEmployee, @RequestParam("storeID") Long storeID, @PathVariable Long id){
-        newEmployee.setStore(storeService.getStoreByID(storeID));
-        return employeeService.updateEmployeeInRepository(id, newEmployee);
+    Employee updateEmployee(@RequestBody Employee newEmployee, @RequestParam("storeID") Long storeID, @PathVariable Long id){
+        try{
+            newEmployee.setStore(storeService.getStoreByID(storeID));
+            return employeeService.updateEmployeeInRepository(id, newEmployee);
+        }catch(EmployeeValidationException ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(),ex);
+        }
+
     }
 
     @DeleteMapping("/employees/{employeeId}")
@@ -248,9 +263,14 @@ public class Controller {
 
     @PutMapping("/stores/{id}/stock/{stockID}")
     Stock updateStockInStore(@PathVariable Long id, @RequestBody Stock stock, @PathVariable Long stockID){
-        stock.setStore(storeService.getStoreByID(id));
-        System.out.println("here i am ");
-        return this.stockService.updateStockInRepository(stockID, stock);
+        try{
+            stock.setStore(storeService.getStoreByID(id));
+            System.out.println("here i am ");
+            return this.stockService.updateStockInRepository(stockID, stock);
+        }catch(StockValidationException ex){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
+        }
+
     }
 
     @GetMapping("/stats/stores")

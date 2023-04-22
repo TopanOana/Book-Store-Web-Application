@@ -4,11 +4,13 @@ import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Book} from "../../../books/components/overview-books/Models/books.models";
 import {StoreDTO} from "../../../employees/components/overview-employees/Models/employees.models";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-update-stock',
   templateUrl: './update-stock.component.html',
-  styleUrls: ['./update-stock.component.css']
+  styleUrls: ['./update-stock.component.css'],
+  providers: [MatSnackBar]
 })
 export class UpdateStockComponent implements OnInit {
   stock?: StockDTO;
@@ -35,7 +37,7 @@ export class UpdateStockComponent implements OnInit {
     })
   }
 
-  constructor(private service:ApiService, private router:Router, private activatedRoute: ActivatedRoute) {
+  constructor(private service:ApiService, private router:Router, private activatedRoute: ActivatedRoute, private snackBar:MatSnackBar) {
   }
   goBackToDetails() {
     this.router.navigateByUrl(`stores/${this.storeID}`)
@@ -47,6 +49,12 @@ export class UpdateStockComponent implements OnInit {
       this.stock!.quantity = this.quantity;
       this.service.updateStockFromStore(this.storeID!, this.stockID!, this.stock!).subscribe((result)=>{
         this.router.navigateByUrl(`/stores/${this.storeID}`);
+      },(err)=>{
+        console.log(err)
+        this.snackBar.open(err['error']['message'],'close',{
+          horizontalPosition:"center",
+          verticalPosition:"top"
+        })
       })
 
     }

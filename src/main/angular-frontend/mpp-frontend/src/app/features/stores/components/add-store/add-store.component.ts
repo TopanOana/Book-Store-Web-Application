@@ -3,11 +3,13 @@ import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
 import {AddStoreDTO} from "../overview-stores/Models/store.models";
 import {StoreDTO} from "../../../employees/components/overview-employees/Models/employees.models";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-add-store',
   templateUrl: './add-store.component.html',
-  styleUrls: ['./add-store.component.css']
+  styleUrls: ['./add-store.component.css'],
+  providers: [MatSnackBar]
 })
 export class AddStoreComponent {
   storeName?: string;
@@ -16,7 +18,7 @@ export class AddStoreComponent {
   openingHour?: number;
   closingHour?: number;
 
-  constructor(private service:ApiService, private router:Router){
+  constructor(private service:ApiService, private router:Router, private snackBar:MatSnackBar){
 
   }
   goBackToOverview() {
@@ -36,7 +38,13 @@ export class AddStoreComponent {
       this.service.addStore(store).subscribe((result:StoreDTO)=>{
         this.router.navigateByUrl("stores");
       },
-        (err)=>console.log(err))
+        (err)=>{
+        console.log(err)
+          this.snackBar.open(err['error']['message'],'close',{
+            horizontalPosition:"center",
+            verticalPosition:"top"
+          })
+        })
     }
   }
 }

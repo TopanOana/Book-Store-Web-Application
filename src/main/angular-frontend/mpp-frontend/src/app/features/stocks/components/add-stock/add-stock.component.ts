@@ -4,11 +4,13 @@ import {FormControl} from "@angular/forms";
 import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AddStockDTO, StockDTO} from "../../../stores/components/overview-stores/Models/store.models";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-add-stock',
   templateUrl: './add-stock.component.html',
-  styleUrls: ['./add-stock.component.css']
+  styleUrls: ['./add-stock.component.css'],
+  providers: [MatSnackBar]
 })
 export class AddStockComponent implements OnInit{
   quantity?: number;
@@ -17,7 +19,7 @@ export class AddStockComponent implements OnInit{
   books?: Book[];
   formControl = new FormControl();
 
-  constructor(private service:ApiService, private router:Router, private activatedRoute: ActivatedRoute) {
+  constructor(private service:ApiService, private router:Router, private activatedRoute: ActivatedRoute, private snackBar:MatSnackBar) {
   }
 
 
@@ -55,7 +57,13 @@ export class AddStockComponent implements OnInit{
         }
         this.service.addStockToStore(this.storeID, stock).subscribe((result:StockDTO)=>{
           this.router.navigateByUrl(`stores/${this.storeID}`)
-        }, (err)=>console.log(err))
+        }, (err)=>{
+          console.log(err)
+          this.snackBar.open(err['error']['message'],'close',{
+            horizontalPosition:"center",
+            verticalPosition:"top"
+          })
+        })
       }
     }
   }
