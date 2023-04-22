@@ -1,10 +1,8 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
-import {LiveAnnouncer} from "@angular/cdk/a11y";
-import {MatSort} from "@angular/material/sort";
 import {BookStockStat, BookStockTable} from "./Model/stat.model";
 
 @Component({
@@ -13,7 +11,7 @@ import {BookStockStat, BookStockTable} from "./Model/stat.model";
   styleUrls: ['./book-stock-statistic.component.css'],
   providers: [MatPaginator]
 })
-export class BookStockStatisticComponent implements OnInit{
+export class BookStockStatisticComponent implements OnInit, AfterViewInit{
   displayedColumns = ['id', 'title', 'author', 'nrPages', 'rating', 'genre', 'quantity']
   dataSource= new MatTableDataSource();
 
@@ -34,7 +32,10 @@ export class BookStockStatisticComponent implements OnInit{
     })
   }
   ngOnInit(): void {
-   this.getAllBooks(this.paginator.pageIndex, this.paginator.pageSize)
+
+  }
+  ngAfterViewInit() {
+    this.getAllBooks(this.paginator.pageIndex, this.paginator.pageSize)
   }
 
 

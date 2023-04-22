@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, PageEvent} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {ApiService} from "../../../../common/api.service";
@@ -11,7 +11,7 @@ import {StoreStockStat, StoreStockTable} from "../book-stock-statistic/Model/sta
   styleUrls: ['./store-stock-statistic.component.css'],
   providers: [MatPaginator]
 })
-export class StoreStockStatisticComponent implements OnInit {
+export class StoreStockStatisticComponent implements OnInit, AfterViewInit {
   displayedColumns = ['id', 'storeName', 'address', 'contactNumber', 'openingHour', 'closingHour', 'quantity']
 
   dataSource = new MatTableDataSource();
@@ -32,9 +32,12 @@ export class StoreStockStatisticComponent implements OnInit {
     })
   }
   ngOnInit(): void {
-
+  }
+  ngAfterViewInit() {
     this.getAllStores(this.paginator.pageIndex, this.paginator.pageSize);
   }
+
+
 
 
 
