@@ -20,17 +20,22 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
   dataSource = new MatTableDataSource();
   totalEmployees: number;
 
+  pageIndex=0;
+  pageFirst=true;
+  pageLast=false;
   pageSize=5;
+
+  nrPages=0;
 
   column='';
   order='';
 
 
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private service: ApiService, private router: Router, private liveAnnouncer: LiveAnnouncer, paginator: MatPaginator, sort : MatSort) {
-    this.paginator = paginator;
+  constructor(private service: ApiService, private router: Router, private liveAnnouncer: LiveAnnouncer, /*: MatPaginator,*/ sort : MatSort) {
+    // this.paginator = paginator;
     this.sort = sort;
     this.totalEmployees = 0;
   }
@@ -40,7 +45,7 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit() {
-    this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
+    this.getEmployeesPaged(this.pageIndex, this.pageSize);
   }
 
   getEmployeesPaged(page:number, size:number){
@@ -52,6 +57,14 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
     this.service.getEmployees(page, size,column,order).subscribe((data:EmployeeTable)=>{
       this.dataSource.data = data['content'];
       this.totalEmployees = data['totalElements'];
+      this.nrPages = data['totalPages'];
+      if(page>0)
+        this.pageFirst=false;
+      else this.pageFirst=true;
+      if(page==this.nrPages-1)
+        this.pageLast=true;
+      else this.pageLast=false;
+
     })
   }
 
@@ -74,17 +87,45 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
     if (sortState.direction) {
       this.column = sortState.active;
       this.order = sortState.direction;
-      this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
+      this.getEmployeesPaged(this.pageIndex, this.pageSize);
       this.liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
     } else {
       this.column='';
       this.order='';
-      this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
+      this.getEmployeesPaged(this.pageIndex, this.pageSize);
       this.liveAnnouncer.announce('Sorting cleared');
     }
   }
 
-  nextPage(event: PageEvent) {
-    this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
+  // nextPage(event: PageEvent) {
+  //   this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
+  // }
+  previousPage() {
+    if (this.pageIndex!=0){
+        this.pageIndex-=1;
+        this.getEmployeesPaged(this.pageIndex,this.pageSize);
+    }
+  }
+
+  nextPage() {
+    if (this.pageIndex!=this.nrPages-1){
+      this.pageIndex+=1;
+      this.getEmployeesPaged(this.pageIndex,this.pageSize);
+    }
+  }
+
+  goToFirstPage() {
+    this.pageIndex=0;
+    this.getEmployeesPaged(this.pageIndex,this.pageSize);
+  }
+
+  goToLastPage() {
+    this.pageIndex=this.nrPages-1;
+    this.getEmployeesPaged(this.pageIndex,this.pageSize);
+  }
+
+  changeItPlease() {
+    console.log(this.pageSize);
+    this.getEmployeesPaged(this.pageIndex,this.pageSize);
   }
 }

@@ -29,3 +29,19 @@ button:hover{
   height:50px;
   overflow: hidden;
 }
+
+.my_paginator{
+  background-color:dimgrey;
+  color:white;
+  width: available;
+}
+.paginator_buttons{
+  display: inline-block;
+  margin-right: 20px;
+}
+.page_size{
+  display: inline-block;
+  right:0;
+}
+
+
