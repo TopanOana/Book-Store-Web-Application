@@ -30,7 +30,7 @@ public class StoreService {
         returns all stores in the repo
          */
         PageRequest pageRequest = PageRequest.of(page, size);
-        return repository.findAll(pageRequest);
+        return repository.findAllByOrderById(pageRequest);
     }
 
     public List<Employee> getStoreEmployeesByID(Long id){

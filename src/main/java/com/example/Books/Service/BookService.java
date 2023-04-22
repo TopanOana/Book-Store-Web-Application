@@ -30,7 +30,7 @@ public class BookService {
         returns all books in the repo
          */
         PageRequest pageRequest = PageRequest.of(page, size);
-        return repository.findAll(pageRequest);
+        return repository.findAllByOrderById(pageRequest);
     }
 
 

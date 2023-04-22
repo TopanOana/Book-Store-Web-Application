@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store,Long> {
+    Page<Store> findAllByOrderById(Pageable pageable);
     Page<Store> findStoresByStoreNameStartsWithIgnoreCase(String input, Pageable pageable);
 
     Page<Store> findByOrderByStoreNameAsc(Pageable pageable);
