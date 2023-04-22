@@ -96,7 +96,7 @@ public class StoreService {
 
     public Page<Store> getStoresWithNameLike(String input, int page, int size){
         PageRequest pageRequest = PageRequest.of(page, size);
-        return this.repository.findStoresByStoreNameContainsIgnoreCase(input, pageRequest);
+        return this.repository.findStoresByStoreNameStartsWithIgnoreCase(input, pageRequest);
     }
 
     public Page<Store> getStoresSorted(int page, int size, String column, String order){

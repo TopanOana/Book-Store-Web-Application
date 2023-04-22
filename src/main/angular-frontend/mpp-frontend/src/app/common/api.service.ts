@@ -25,8 +25,8 @@ import {
 })
 export class ApiService {
 
-  // baseURL='http://13.48.137.136:80';
-  baseURL='http://localhost:8080'
+  baseURL='http://16.16.127.17:80';
+  // baseURL='http://localhost:8080'
 
   constructor(private http: HttpClient) { }
 
