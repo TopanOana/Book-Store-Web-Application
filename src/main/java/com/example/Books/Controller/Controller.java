@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/api") //only for the server
 public class Controller {
 
 //    @Autowired
