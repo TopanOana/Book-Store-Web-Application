@@ -25,7 +25,7 @@ import {
 })
 export class ApiService {
 
-  baseURL='http://chicken-soup-for-the-books.chickenkiller.com/supaLaPlic/api';
+  baseURL='https://chicken-soup-for-the-books.chickenkiller.com/supaLaPlic/api';
   // baseURL='http://localhost:8080'
 
   constructor(private http: HttpClient) { }
