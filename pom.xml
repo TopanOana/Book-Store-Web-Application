@@ -75,6 +75,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>supaLaPlic</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
