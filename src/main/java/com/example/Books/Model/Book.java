@@ -47,6 +47,12 @@ public class Book {
         return stocks.size();
     }
 
+    @ManyToOne
+    @JoinColumn(name="userID")
+    @JsonIgnore
+    private UserInfo user;
+
+
     //empty constructor
     public Book() {
     }

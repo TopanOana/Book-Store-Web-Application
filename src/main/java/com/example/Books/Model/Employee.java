@@ -34,6 +34,11 @@ public class Employee {
     @JoinColumn(name="storeID")
     private Store store;
 
+    @ManyToOne
+    @JoinColumn(name="userID")
+    @JsonIgnore
+    private UserInfo user;
+
     public Store getStore() {
         return store;
     }

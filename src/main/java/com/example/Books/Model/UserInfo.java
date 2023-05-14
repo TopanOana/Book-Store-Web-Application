@@ -1,5 +1,6 @@
 package com.example.Books.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
@@ -9,13 +10,14 @@ import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name="USERINFO"
-    /*,
+    ,
     uniqueConstraints = {
     @UniqueConstraint(name="usernameUnique", columnNames = "username")}
-    */)
+    )
 
 public class UserInfo {
 
@@ -24,7 +26,6 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @UniqueConstraint(name="usernameUnique", columnNames = "username")
     private String username;
 
     private String password;
@@ -40,6 +41,13 @@ public class UserInfo {
     private boolean isVerified;
 
     private LocalDateTime confirmCodeSend;
+
+//    @OneToMany(mappedBy = "book",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true)
+//    @JsonIgnore
+//    private Set<Book> books;
+
 
     public String getConfirmationCode() {
         return confirmationCode;

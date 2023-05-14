@@ -70,6 +70,10 @@ public class Controller {
     }
     // end::get-aggregate-root[]
 
+    @GetMapping("/books/totest")
+    Page<BookCountDTO> testBook(@RequestParam int page, @RequestParam int size){
+        return bookService.getBooksWithQuantity(page, size);
+    }
 
     @GetMapping("/books/{id}")
     Book getBookByID(@PathVariable Long id){
@@ -327,6 +331,19 @@ public class Controller {
         }
 
     }
+
+    @GetMapping("/users/{username}")
+    public UserInfo getUserProfile(@PathVariable String username){
+        UserInfo result = userService.getUserByUsername(username);
+        if (result != null) {
+            return result;
+        }
+        else
+            throw new UsernameNotFoundException("Bad request: Username not found");
+    }
+
+
+
 
 }
 

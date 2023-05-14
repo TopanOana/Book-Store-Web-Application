@@ -1,12 +1,17 @@
 package com.example.Books.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
+
+import java.util.Set;
 
 @Entity
 @Table(name = "STOCK",
 indexes = {@Index(columnList = "storeID, quantity"),
-@Index(columnList = "bookID, quantity")},
+    @Index(columnList = "bookID, quantity"),
+        @Index(columnList = "storeID"),
+        @Index(columnList = "bookID")},
 uniqueConstraints = {@UniqueConstraint(columnNames = {"bookID" , "storeID"})})
 public class Stock {
 
@@ -27,6 +32,12 @@ public class Stock {
     @Column
     @Positive
     private int quantity;
+
+    @ManyToOne
+    @JoinColumn(name="userID")
+    @JsonIgnore
+    private UserInfo user;
+
 
     public Book getBook() {
         return book;

@@ -41,6 +41,11 @@ public class Store {
             orphanRemoval = true)
     private List<Employee> employees = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name="userID")
+    @JsonIgnore
+    private UserInfo user;
+
     @JsonIgnore
     @OneToMany(mappedBy = "store",
             cascade = CascadeType.ALL,

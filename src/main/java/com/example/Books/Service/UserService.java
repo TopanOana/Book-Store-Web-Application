@@ -48,4 +48,9 @@ public class UserService {
         this.userInfoRepository = userInfoRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
+
+    public UserInfo getUserByUsername(String username){
+        return userInfoRepository.findByUsername(username).get();
+    }
 }
