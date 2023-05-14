@@ -36,12 +36,11 @@ public class BookService {
         this.repository=repository;
     }
 
-    public Page<Book> getAllBooks(int page, int size){
+    public Page<BookCountDTO> getAllBooks(int page, int size){
         /*
         returns all books in the repo
          */
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return repository.findAllByOrderById(pageRequest);
+        return getBooksWithQuantity(page, size);
     }
 
 
@@ -90,91 +89,110 @@ public class BookService {
         repository.deleteById(id);
     }
 
-    public Page<Book> getBooksWithRatingGreaterThan(double rating, int page, int size){
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return repository.findBooksByRatingGreaterThan(rating, pageRequest);
+    public Page<BookCountDTO> getBooksWithRatingGreaterThan(double rating, int page, int size){
+        PageRequest pageable = PageRequest.of(page, size);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
+        Root<Book> books = booksQuantityCQ.from(Book.class);
+        Join<Book, Stock> join1 = books.join("stocks", JoinType.LEFT);
+        booksQuantityCQ.multiselect(
+                books.get("id").alias("id"),
+                books.get("title").alias("title"),
+                books.get("author").alias("author"),
+                books.get("nrPages").alias("nrPages"),
+                books.get("rating").alias("rating"),
+                books.get("genre").alias("genre"),
+                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count")
+        ).groupBy(
+                books.get("id"),
+                books.get("title"),
+                books.get("author"),
+                books.get("nrPages"),
+                books.get("rating"),
+                books.get("genre")
+        ).where(criteriaBuilder.greaterThan(books.get("rating"),rating));
+        TypedQuery<Tuple> typedQuery = entityManager.createQuery(booksQuantityCQ);
+        List<BookCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber()* pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList()
+                .stream()
+                .map(row->{
+                    return new BookCountDTO((Long)row.get("id"), (String)row.get("title"),
+                            (String)row.get("author"),
+                            (int) row.get("nrPages"),
+                            (double)row.get("rating"),
+                            (String)row.get("genre"), (int)row.get("count"));
+                })
+                .collect(Collectors.toList());
+
+        long total = results.size();
+
+        return new PageImpl<>(results, pageable, total);
     }
 
-    public Page<Book> getBooksSorted(int page, int size, String column, String order){
+    public Page<BookCountDTO> getBooksSorted(int page, int size, String column, String order){
         PageRequest pageRequest = PageRequest.of(page, size);
-        switch (column) {
-            case "title" -> {
-                if (order.equals("asc"))
-                    return repository.findByOrderByTitleAsc(pageRequest);
-                else
-                    return repository.findByOrderByTitleDesc(pageRequest);
-            }
-            case "author" -> {
-                if (order.equals("asc"))
-                    return repository.findByOrderByAuthorAsc(pageRequest);
-                else
-                    return repository.findByOrderByAuthorDesc(pageRequest);
-            }
-            case "nrPages" -> {
-                if (order.equals("asc"))
-                    return repository.findByOrderByNrPagesAsc(pageRequest);
-                else
-                    return repository.findByOrderByNrPagesDesc(pageRequest);
-            }
-            case "rating" -> {
-                if (order.equals("asc"))
-                    return repository.findByOrderByRatingAsc(pageRequest);
-                else
-                    return repository.findByOrderByRatingDesc(pageRequest);
-            }
-            default -> {
-                return null;
-            }
-        }
+
+        return findByOrderByColumn(pageRequest,column,order);
     }
 
 
-    public Page<Book> getBooksWithTitleInput(String input, int page, int size){
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return repository.findBooksByTitleStartsWithIgnoreCase(input, pageRequest);
+    public Page<BookCountDTO> getBooksWithTitleInput(String input, int page, int size){
+        PageRequest pageable = PageRequest.of(page, size);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
+        Root<Book> books = booksQuantityCQ.from(Book.class);
+        Join<Book, Stock> join1 = books.join("stocks", JoinType.LEFT);
+        booksQuantityCQ.multiselect(
+                books.get("id").alias("id"),
+                books.get("title").alias("title"),
+                books.get("author").alias("author"),
+                books.get("nrPages").alias("nrPages"),
+                books.get("rating").alias("rating"),
+                books.get("genre").alias("genre"),
+                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count")
+        ).groupBy(
+                books.get("id"),
+                books.get("title"),
+                books.get("author"),
+                books.get("nrPages"),
+                books.get("rating"),
+                books.get("genre")
+        ).where(criteriaBuilder.like(books.get("title"),input+"%"));
+        TypedQuery<Tuple> typedQuery = entityManager.createQuery(booksQuantityCQ);
+        List<BookCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber()* pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList()
+                .stream()
+                .map(row->{
+                    return new BookCountDTO((Long)row.get("id"), (String)row.get("title"),
+                            (String)row.get("author"),
+                            (int) row.get("nrPages"),
+                            (double)row.get("rating"),
+                            (String)row.get("genre"), (int)row.get("count"));
+                })
+                .collect(Collectors.toList());
+
+        long total = results.size();
+
+        return new PageImpl<>(results, pageable, total);
+
     }
 
     public Page<BookCountDTO> getBooksWithQuantity(int page, int size){
         PageRequest pageable = PageRequest.of(page, size);
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-//
-//        CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
-//        Root<Stock> stocks = booksQuantityCQ.from(Stock.class);
-//
-//        booksQuantityCQ.multiselect(
-//                stocks.get("book").get("id").alias("book_id"),
-//                criteriaBuilder.sum(criteriaBuilder.coalesce(stocks.get("quantity"),0)).alias("quantity"))
-//                .groupBy(stocks.get("book").get("id"))
-//                .orderBy(criteriaBuilder.asc(stocks.get("book").get("id")));
-//        TypedQuery<Tuple> typedQuery = entityManager.createQuery(booksQuantityCQ);
-//
-//        List<BookCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber()* pageable.getPageSize())
-//                .setMaxResults(pageable.getPageSize())
-//                .getResultList()
-//                .stream()
-//                .map (row ->{
-//                    CriteriaQuery<Book> criteriaQuery = criteriaBuilder.createQuery(Book.class);
-//                    Root<Book> book = criteriaQuery.from(Book.class);
-//                    criteriaQuery.select(book).where(criteriaBuilder.equal(book.get("id"), row.get("book_id")));
-//                    Book aux_book = entityManager.createQuery(criteriaQuery).getSingleResult();
-//                    return new BookCountDTO(aux_book.getId(), aux_book.getTitle(), aux_book.getAuthor(), aux_book.getNrPages(), aux_book.getRating(), aux_book.getGenre(), (Integer)row.get("quantity") );
-//                }).toList();
-//        CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
-//        Root<Book> book_count = countCQ.from(Book.class);
-//        countCQ.select(criteriaBuilder.countDistinct(book_count.get("id")));
-//        long total = entityManager.createQuery(countCQ).getSingleResult();
-
         CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Book> books = booksQuantityCQ.from(Book.class);
         Join<Book, Stock> join1 = books.join("stocks", JoinType.LEFT);
         booksQuantityCQ.multiselect(
-                books.get("id"),
-                books.get("title"),
-                books.get("author"),
-                books.get("nrPages"),
-                books.get("rating"),
-                books.get("genre"),
-                criteriaBuilder.sum(join1.get("quantity")).alias("count")
+                books.get("id").alias("id"),
+                books.get("title").alias("title"),
+                books.get("author").alias("author"),
+                books.get("nrPages").alias("nrPages"),
+                books.get("rating").alias("rating"),
+                books.get("genre").alias("genre"),
+                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count")
         ).groupBy(
                 books.get("id"),
                 books.get("title"),
@@ -205,49 +223,19 @@ public class BookService {
 
     }
 
-    public Page<BookCountDTO> findByOrderByTitleAsc(PageRequest pageable){
-//        PageRequest pageable = PageRequest.of(page, size);
+    public Page<BookCountDTO> findByOrderByColumn(PageRequest pageable, String column, String order){
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-
-//        CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
-//        Root<Stock> stocks = booksQuantityCQ.from(Stock.class);
-//
-//        booksQuantityCQ.multiselect(
-//                stocks.get("book").get("id").alias("book_id"),
-//                criteriaBuilder.sum(criteriaBuilder.coalesce(stocks.get("quantity"),0)).alias("quantity"))
-//                .orderBy(criteriaBuilder.asc(stocks.get("book").get("title")));
-//        TypedQuery<Tuple> typedQuery = entityManager.createQuery(booksQuantityCQ);
-//
-//        List<BookCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber()* pageable.getPageSize())
-//                .setMaxResults(pageable.getPageSize())
-//                .getResultList()
-//                .stream()
-//                .map (row ->{
-//                    CriteriaQuery<Book> criteriaQuery = criteriaBuilder.createQuery(Book.class);
-//                    Root<Book> book = criteriaQuery.from(Book.class);
-//                    criteriaQuery.select(book).where(criteriaBuilder.equal(book.get("id"), row.get("book_id")));
-//                    Book aux_book = entityManager.createQuery(criteriaQuery).getSingleResult();
-//                    return new BookCountDTO(aux_book.getId(), aux_book.getTitle(), aux_book.getAuthor(), aux_book.getNrPages(), aux_book.getRating(), aux_book.getGenre(), (Integer)row.get("quantity") );
-//                }).toList();
-//        CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
-//        Root<Book> book_count = countCQ.from(Book.class);
-//        countCQ.select(criteriaBuilder.countDistinct(book_count.get("id")));
-//        long total = entityManager.createQuery(countCQ).getSingleResult();
-
-
-
-
         CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Book> books = booksQuantityCQ.from(Book.class);
         Join<Book, Stock> join1 = books.join("stocks", JoinType.LEFT);
         booksQuantityCQ.multiselect(
-                books.get("id"),
-                books.get("title"),
-                books.get("author"),
-                books.get("nrPages"),
-                books.get("rating"),
-                books.get("genre"),
-                criteriaBuilder.sum(join1.get("quantity")).alias("count")
+                books.get("id").alias("id"),
+                books.get("title").alias("title"),
+                books.get("author").alias("author"),
+                books.get("nrPages").alias("nrPages"),
+                books.get("rating").alias("rating"),
+                books.get("genre").alias("genre"),
+                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count")
         ).groupBy(
                 books.get("id"),
                 books.get("title"),
@@ -256,6 +244,10 @@ public class BookService {
                 books.get("rating"),
                 books.get("genre")
         );
+        if(order.equalsIgnoreCase("asc"))
+            booksQuantityCQ.orderBy(criteriaBuilder.asc(books.get(column)));
+        else
+            booksQuantityCQ.orderBy(criteriaBuilder.desc(books.get(column)));
         TypedQuery<Tuple> typedQuery = entityManager.createQuery(booksQuantityCQ);
         List<BookCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber()* pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
@@ -276,7 +268,6 @@ public class BookService {
 
         return new PageImpl<>(results, pageable, total);
     }
-
 
 
 

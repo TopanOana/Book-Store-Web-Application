@@ -54,7 +54,7 @@ public class Controller {
     // Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/books")
-    Page<Book> getBooks(@Nullable @RequestParam("rating_gt") Double rating, @RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order, @Nullable @RequestParam String input){
+    Page<BookCountDTO> getBooks(@Nullable @RequestParam("rating_gt") Double rating, @RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order, @Nullable @RequestParam String input){
         /*
         the get mapping is for reading all the books in the repository or
         getting all the books in the repository with a rating greater than the one given
@@ -123,7 +123,7 @@ public class Controller {
 
 
     @GetMapping("/stores")
-    Page<Store> getAllStores(@Nullable @RequestParam String input, @RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order){
+    Page<StoreCountDTO> getAllStores(@Nullable @RequestParam String input, @RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order){
         /*
         get mapping for reading all the stores in the repository
          */

@@ -2,13 +2,17 @@ package com.example.Books.Service;
 
 import com.example.Books.Exception.StoreNotFoundException;
 import com.example.Books.Exception.StoreValidationException;
-import com.example.Books.Model.Employee;
-import com.example.Books.Model.Stock;
-import com.example.Books.Model.Store;
+import com.example.Books.Model.*;
 import com.example.Books.Repository.StoreRepository;
 import com.example.Books.Validation.ValidatorStore;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -19,18 +23,63 @@ import java.util.stream.Collectors;
 public class StoreService {
     @Autowired
     private StoreRepository repository;
+    @PersistenceContext
+    EntityManager entityManager;
 
     public StoreService(StoreRepository repository){
         this.repository=repository;
     }
 
 
-    public Page<Store> getAllStores(int page, int size){
+    public Page<StoreCountDTO> getAllStores(int page, int size){
         /*
         returns all stores in the repo
          */
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return repository.findAllByOrderById(pageRequest);
+        PageRequest pageable = PageRequest.of(page, size);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Tuple> storesQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
+        Root<Store> stores = storesQuantityCQ.from(Store.class);
+        Join<Store, Stock> join = stores.join("stocks", JoinType.LEFT);
+
+
+        storesQuantityCQ.multiselect(
+                        stores.get("id").alias("id"),
+                        stores.get("storeName").alias("storeName"),
+                        stores.get("address").alias("address"),
+                        stores.get("contactNumber").alias("contactNumber"),
+                        stores.get("openingHour").alias("openingHour"),
+                        stores.get("closingHour").alias("closingHour"),
+                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count")
+                )
+                .groupBy(
+                        stores.get("id"),
+                        stores.get("storeName"),
+                        stores.get("address"),
+                        stores.get("contactNumber"),
+                        stores.get("openingHour"),
+                        stores.get("closingHour")
+                );
+        TypedQuery<Tuple> typedQuery = entityManager.createQuery(storesQuantityCQ);
+        List<StoreCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList()
+                .stream()
+                .map (row ->{
+                    return new StoreCountDTO((Long)row.get("id"),
+                            (String)row.get("storeName"),
+                            (String)row.get("address"),
+                            (String)row.get("contactNumber"),
+                            (int)row.get("openingHour"),
+                            (int)row.get("closingHour"), (int)row.get("count") );
+                }).toList();
+        CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
+        Root<Store> store_count= countCQ.from(Store.class);
+        countCQ.select(criteriaBuilder.countDistinct(store_count.get("id")));
+        long total = entityManager.createQuery(countCQ).getSingleResult();
+
+        return new PageImpl<>(results, pageable, total);
+
     }
 
     public List<Employee> getStoreEmployeesByID(Long id){
@@ -94,28 +143,100 @@ public class StoreService {
         return employees;
     }
 
-    public Page<Store> getStoresWithNameLike(String input, int page, int size){
+    public Page<StoreCountDTO> getStoresWithNameLike(String input, int page, int size){
         PageRequest pageRequest = PageRequest.of(page, size);
-        return this.repository.findStoresByStoreNameStartsWithIgnoreCase(input, pageRequest);
+        PageRequest pageable = PageRequest.of(page, size);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Tuple> storesQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
+        Root<Store> stores = storesQuantityCQ.from(Store.class);
+        Join<Store, Stock> join = stores.join("stocks", JoinType.LEFT);
+
+
+        storesQuantityCQ.multiselect(
+                        stores.get("id").alias("id"),
+                        stores.get("storeName").alias("storeName"),
+                        stores.get("address").alias("address"),
+                        stores.get("contactNumber").alias("contactNumber"),
+                        stores.get("openingHour").alias("openingHour"),
+                        stores.get("closingHour").alias("closingHour"),
+                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count")
+                )
+                .groupBy(
+                        stores.get("id"),
+                        stores.get("storeName"),
+                        stores.get("address"),
+                        stores.get("contactNumber"),
+                        stores.get("openingHour"),
+                        stores.get("closingHour")
+                )
+                .where(criteriaBuilder.like(stores.get("storeName"), input+"%"));
+        TypedQuery<Tuple> typedQuery = entityManager.createQuery(storesQuantityCQ);
+        List<StoreCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList()
+                .stream()
+                .map (row ->{
+                    return new StoreCountDTO((Long)row.get("id"),
+                            (String)row.get("storeName"),
+                            (String)row.get("address"),
+                            (String)row.get("contactNumber"),
+                            (int)row.get("openingHour"),
+                            (int)row.get("closingHour"), (int)row.get("count") );
+                }).toList();
+        long total = results.size();
+
+        return new PageImpl<>(results, pageable, total);
     }
 
-    public Page<Store> getStoresSorted(int page, int size, String column, String order){
-        PageRequest pageRequest = PageRequest.of(page, size);
-        switch(column){
-            case "storeName"->{
-                if (order.equals("asc"))
-                    return repository.findByOrderByStoreNameAsc(pageRequest);
-                else
-                    return repository.findByOrderByStoreNameDesc(pageRequest);
-            }
-            case "address"->{
-                if (order.equals("asc"))
-                    return repository.findByOrderByAddressAsc(pageRequest);
-                else
-                    return repository.findByOrderByAddressDesc(pageRequest);
-            }
-            default -> {return null;}
-        }
+    public Page<StoreCountDTO> getStoresSorted(int page, int size, String column, String order){
+        PageRequest pageable = PageRequest.of(page, size);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Tuple> storesQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
+        Root<Store> stores = storesQuantityCQ.from(Store.class);
+        Join<Store, Stock> join = stores.join("stocks", JoinType.LEFT);
+
+
+        storesQuantityCQ.multiselect(
+                        stores.get("id").alias("id"),
+                        stores.get("storeName").alias("storeName"),
+                        stores.get("address").alias("address"),
+                        stores.get("contactNumber").alias("contactNumber"),
+                        stores.get("openingHour").alias("openingHour"),
+                        stores.get("closingHour").alias("closingHour"),
+                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count")
+                )
+                .groupBy(
+                        stores.get("id"),
+                        stores.get("storeName"),
+                        stores.get("address"),
+                        stores.get("contactNumber"),
+                        stores.get("openingHour"),
+                        stores.get("closingHour")
+                );
+        if(order.equalsIgnoreCase("asc"))
+            storesQuantityCQ.orderBy(criteriaBuilder.asc(stores.get(column)));
+        else storesQuantityCQ.orderBy(criteriaBuilder.desc(stores.get(column)));
+        TypedQuery<Tuple> typedQuery = entityManager.createQuery(storesQuantityCQ);
+        List<StoreCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList()
+                .stream()
+                .map (row ->{
+                    return new StoreCountDTO((Long)row.get("id"),
+                            (String)row.get("storeName"),
+                            (String)row.get("address"),
+                            (String)row.get("contactNumber"),
+                            (int)row.get("openingHour"),
+                            (int)row.get("closingHour"), (int)row.get("count") );
+                }).toList();
+        CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
+        Root<Store> store_count= countCQ.from(Store.class);
+        countCQ.select(criteriaBuilder.countDistinct(store_count.get("id")));
+        long total = entityManager.createQuery(countCQ).getSingleResult();
+
+        return new PageImpl<>(results, pageable, total);
     }
 
 
