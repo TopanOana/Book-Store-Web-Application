@@ -1,4 +1,4 @@
-package com.example.Books.Model;
+package com.example.Books.Model.DTO;
 
 public class BookCountDTO {
     private Long bookID;
@@ -8,8 +8,9 @@ public class BookCountDTO {
     private double rating;
     private String genre;
     private int count;
+    private String username;
 
-    public BookCountDTO(Long bookID, String title, String author, int nrPages, double rating, String genre, int count) {
+    public BookCountDTO(Long bookID, String title, String author, int nrPages, double rating, String genre, int count, String username) {
         this.bookID = bookID;
         this.title = title;
         this.author = author;
@@ -17,6 +18,7 @@ public class BookCountDTO {
         this.rating = rating;
         this.genre = genre;
         this.count = count;
+        this.username = username;
     }
 
     public Long getBookID() {
@@ -73,5 +75,13 @@ public class BookCountDTO {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

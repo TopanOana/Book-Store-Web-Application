@@ -2,10 +2,8 @@ package com.example.Books.Service;
 
 import com.example.Books.Exception.BookNotFoundException;
 import com.example.Books.Exception.BookValidationException;
-import com.example.Books.Model.Book;
-import com.example.Books.Model.BookCountDTO;
-import com.example.Books.Model.BookStockDTO;
-import com.example.Books.Model.Stock;
+import com.example.Books.Model.*;
+import com.example.Books.Model.DTO.BookCountDTO;
 import com.example.Books.Repository.BookRepository;
 import com.example.Books.Validation.ValidatorBook;
 import jakarta.persistence.EntityManager;
@@ -14,11 +12,9 @@ import jakarta.persistence.Tuple;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -95,6 +91,7 @@ public class BookService {
         CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Book> books = booksQuantityCQ.from(Book.class);
         Join<Book, Stock> join1 = books.join("stocks", JoinType.LEFT);
+        Join<Book, UserInfo> join2 = books.join("user", JoinType.INNER);
         booksQuantityCQ.multiselect(
                 books.get("id").alias("id"),
                 books.get("title").alias("title"),
@@ -102,14 +99,16 @@ public class BookService {
                 books.get("nrPages").alias("nrPages"),
                 books.get("rating").alias("rating"),
                 books.get("genre").alias("genre"),
-                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count")
+                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count"),
+                join2.get("username").alias("username")
         ).groupBy(
                 books.get("id"),
                 books.get("title"),
                 books.get("author"),
                 books.get("nrPages"),
                 books.get("rating"),
-                books.get("genre")
+                books.get("genre"),
+                join2.get("username")
         ).where(criteriaBuilder.greaterThan(books.get("rating"),rating));
         TypedQuery<Tuple> typedQuery = entityManager.createQuery(booksQuantityCQ);
         List<BookCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber()* pageable.getPageSize())
@@ -121,7 +120,8 @@ public class BookService {
                             (String)row.get("author"),
                             (int) row.get("nrPages"),
                             (double)row.get("rating"),
-                            (String)row.get("genre"), (int)row.get("count"));
+                            (String)row.get("genre"), (int)row.get("count"),
+                            (String) row.get("username"));
                 })
                 .collect(Collectors.toList());
 
@@ -143,6 +143,7 @@ public class BookService {
         CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Book> books = booksQuantityCQ.from(Book.class);
         Join<Book, Stock> join1 = books.join("stocks", JoinType.LEFT);
+        Join<Book, UserInfo> join2 = books.join("user", JoinType.INNER);
         booksQuantityCQ.multiselect(
                 books.get("id").alias("id"),
                 books.get("title").alias("title"),
@@ -150,14 +151,16 @@ public class BookService {
                 books.get("nrPages").alias("nrPages"),
                 books.get("rating").alias("rating"),
                 books.get("genre").alias("genre"),
-                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count")
+                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count"),
+                join2.get("username").alias("username")
         ).groupBy(
                 books.get("id"),
                 books.get("title"),
                 books.get("author"),
                 books.get("nrPages"),
                 books.get("rating"),
-                books.get("genre")
+                books.get("genre"),
+                join2.get("username")
         ).where(criteriaBuilder.like(books.get("title"),input+"%"));
         TypedQuery<Tuple> typedQuery = entityManager.createQuery(booksQuantityCQ);
         List<BookCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber()* pageable.getPageSize())
@@ -169,7 +172,8 @@ public class BookService {
                             (String)row.get("author"),
                             (int) row.get("nrPages"),
                             (double)row.get("rating"),
-                            (String)row.get("genre"), (int)row.get("count"));
+                            (String)row.get("genre"), (int)row.get("count"),
+                            (String) row.get("username"));
                 })
                 .collect(Collectors.toList());
 
@@ -185,6 +189,7 @@ public class BookService {
         CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Book> books = booksQuantityCQ.from(Book.class);
         Join<Book, Stock> join1 = books.join("stocks", JoinType.LEFT);
+        Join<Book, UserInfo> join2 = books.join("user", JoinType.INNER);
         booksQuantityCQ.multiselect(
                 books.get("id").alias("id"),
                 books.get("title").alias("title"),
@@ -192,14 +197,16 @@ public class BookService {
                 books.get("nrPages").alias("nrPages"),
                 books.get("rating").alias("rating"),
                 books.get("genre").alias("genre"),
-                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count")
+                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count"),
+                join2.get("username").alias("username")
         ).groupBy(
                 books.get("id"),
                 books.get("title"),
                 books.get("author"),
                 books.get("nrPages"),
                 books.get("rating"),
-                books.get("genre")
+                books.get("genre"),
+                join2.get("username")
         );
         TypedQuery<Tuple> typedQuery = entityManager.createQuery(booksQuantityCQ);
         List<BookCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber()* pageable.getPageSize())
@@ -211,7 +218,8 @@ public class BookService {
                             (String)row.get("author"),
                             (int) row.get("nrPages"),
                             (double)row.get("rating"),
-                            (String)row.get("genre"), (int)row.get("count"));
+                            (String)row.get("genre"), (int)row.get("count"),
+                            (String)row.get("username"));
                 })
                 .collect(Collectors.toList());
         CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
@@ -228,6 +236,7 @@ public class BookService {
         CriteriaQuery<Tuple> booksQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Book> books = booksQuantityCQ.from(Book.class);
         Join<Book, Stock> join1 = books.join("stocks", JoinType.LEFT);
+        Join<Book, UserInfo> join2 = books.join("user", JoinType.INNER);
         booksQuantityCQ.multiselect(
                 books.get("id").alias("id"),
                 books.get("title").alias("title"),
@@ -235,14 +244,16 @@ public class BookService {
                 books.get("nrPages").alias("nrPages"),
                 books.get("rating").alias("rating"),
                 books.get("genre").alias("genre"),
-                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count")
+                criteriaBuilder.coalesce(criteriaBuilder.sum(join1.get("quantity")), 0).alias("count"),
+                join2.get("username").alias("username")
         ).groupBy(
                 books.get("id"),
                 books.get("title"),
                 books.get("author"),
                 books.get("nrPages"),
                 books.get("rating"),
-                books.get("genre")
+                books.get("genre"),
+                join2.get("username")
         );
         if(order.equalsIgnoreCase("asc"))
             booksQuantityCQ.orderBy(criteriaBuilder.asc(books.get(column)));
@@ -258,7 +269,8 @@ public class BookService {
                             (String)row.get("author"),
                             (int) row.get("nrPages"),
                             (double)row.get("rating"),
-                            (String)row.get("genre"), (int)row.get("count"));
+                            (String)row.get("genre"), (int)row.get("count"),
+                            (String)row.get("username"));
                 })
                 .collect(Collectors.toList());
         CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
@@ -267,6 +279,13 @@ public class BookService {
         long total = entityManager.createQuery(countCQ).getSingleResult();
 
         return new PageImpl<>(results, pageable, total);
+    }
+
+    public Book toUser(Long bookId, UserInfo userInfo){
+        Book book = repository.findById(bookId).get();
+        book.setUser(userInfo);
+        repository.save(book);
+        return book;
     }
 
 

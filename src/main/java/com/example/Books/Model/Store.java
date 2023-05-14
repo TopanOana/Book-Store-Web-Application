@@ -52,6 +52,14 @@ public class Store {
             orphanRemoval = true)
     private List<Stock> stocks = new ArrayList<>();
 
+    public UserInfo getUser() {
+        return user;
+    }
+
+    public void setUser(UserInfo user) {
+        this.user = user;
+    }
+
     @JsonGetter
     public int getnrBooks(){
         return stocks.size();

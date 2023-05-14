@@ -1,15 +1,25 @@
 package com.example.Books.Service;
 
+import com.example.Books.Model.DTO.BookCountDTO;
+import com.example.Books.Model.DTO.EmployeeDTO;
 import com.example.Books.Model.Employee;
 import com.example.Books.Model.Store;
+import com.example.Books.Model.UserInfo;
 import com.example.Books.Repository.EmployeeRepository;
 import com.example.Books.Validation.ValidatorEmployee;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,35 +27,76 @@ import java.util.stream.Collectors;
 public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
+    @PersistenceContext
+    EntityManager entityManager;
 
 
-    public EmployeeService(EmployeeRepository employeeRepository){
-        this.employeeRepository=employeeRepository;
+    public EmployeeService(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
     }
-    public Page<Employee> getAllEmployees(int page, int size){
+
+    public Page<EmployeeDTO> getAllEmployees(int page, int size) {
         /*
         returns all the employees in the repository
          */
-        PageRequest pageRequest = PageRequest.of(page, size);
-        return employeeRepository.findAllByOrderById(pageRequest);
-//        return employeeRepository.findAll().stream().collect(Collectors.toList());
+        PageRequest pageable = PageRequest.of(page, size);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> employeesCQ = criteriaBuilder.createQuery(Tuple.class);
+        Root<Employee> employeeRoot = employeesCQ.from(Employee.class);
+        Join<Employee, UserInfo> join = employeeRoot.join("user", JoinType.INNER);
+
+        employeesCQ.multiselect(
+                employeeRoot.get("id").alias("id"),
+                employeeRoot.get("firstName").alias("firstName"),
+                employeeRoot.get("lastName").alias("lastName"),
+                employeeRoot.get("phoneNumber").alias("phoneNumber"),
+                employeeRoot.get("salary").alias("salary"),
+                employeeRoot.get("fullTime").alias("fullTime"),
+                employeeRoot.get("description").alias("description"),
+                join.get("username").alias("username")
+        ).groupBy(
+                employeeRoot.get("id"),
+                employeeRoot.get("firstName"),
+                employeeRoot.get("lastName"),
+                employeeRoot.get("phoneNumber"),
+                employeeRoot.get("salary"),
+                employeeRoot.get("fullTime"),
+                employeeRoot.get("description"),
+                join.get("username")
+        );
+        TypedQuery<Tuple> typedQuery = entityManager.createQuery(employeesCQ);
+        List<EmployeeDTO> results = typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList()
+                .stream()
+                .map(row -> {
+                    return new EmployeeDTO((Long) row.get("id"), (String) row.get("firstName"),
+                            (String) row.get("lastName"),
+                            (String) row.get("phoneNumber"),
+                            (int) row.get("salary"),
+                            (boolean) row.get("fullTime"), (String) row.get("description"),
+                            (String) row.get("username"));
+                })
+                .collect(Collectors.toList());
+        long total = results.size();
+
+        return new PageImpl<>(results, pageable, total);
     }
 
-    public Employee addEmployeeToRepository(Employee newEmployee){
+    public Employee addEmployeeToRepository(Employee newEmployee) {
         ValidatorEmployee validatorEmployee = new ValidatorEmployee();
         validatorEmployee.validate(newEmployee);
         return employeeRepository.save(newEmployee);
     }
 
-    public Employee getStoreIDByEmployeeID(Long id){
+    public Employee getStoreIDByEmployeeID(Long id) {
         /*
         gets an employee by id
          */
         return employeeRepository.findById(id).get();
     }
 
-    public Employee updateEmployeeInRepository(Long id, Employee updatedEmployee)
-    {
+    public Employee updateEmployeeInRepository(Long id, Employee updatedEmployee) {
         ValidatorEmployee validatorEmployee = new ValidatorEmployee();
         validatorEmployee.validate(updatedEmployee);
         return employeeRepository.findById(id).map(employee -> {
@@ -57,44 +108,77 @@ public class EmployeeService {
             employee.setStore(updatedEmployee.getStore());
             employee.setDescription(updatedEmployee.getDescription());
             return employeeRepository.save(employee);
-                }).orElseGet(()->{
-                    updatedEmployee.setId(id);
-                    return employeeRepository.save(updatedEmployee);
+        }).orElseGet(() -> {
+            updatedEmployee.setId(id);
+            return employeeRepository.save(updatedEmployee);
         });
     }
 
-    public void deleteEmployeeInRepository(Long id){
+    public void deleteEmployeeInRepository(Long id) {
         employeeRepository.deleteById(id);
     }
 
 
-    public Employee getEmployeeByID(Long id){
+    public Employee getEmployeeByID(Long id) {
         return this.employeeRepository.findById(id).get();
     }
 
 
-    public Page<Employee> getSortedBy(int page, int size, String column, String order){
+    public Page<EmployeeDTO> getSortedBy(int page, int size, String column, String order) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        switch (column) {
-            case "firstName" -> {
-                if (order.equals("asc"))
-                    return employeeRepository.findByOrderByFirstNameAsc(pageRequest);
-                else return employeeRepository.findByOrderByFirstNameDesc(pageRequest);
-            }
-            case "lastName" -> {
-                if (order.equals("asc"))
-                    return employeeRepository.findByOrderByLastNameAsc(pageRequest);
-                else return employeeRepository.findByOrderByLastNameDesc(pageRequest);
-            }
-            case "salary" -> {
-                if (order.equals("asc"))
-                    return employeeRepository.findByOrderBySalaryAsc(pageRequest);
-                else return employeeRepository.findByOrderBySalaryDesc(pageRequest);
-            }
-            default -> {
-                return null;
-            }
-        }
+        PageRequest pageable = PageRequest.of(page, size);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> employeesCQ = criteriaBuilder.createQuery(Tuple.class);
+        Root<Employee> employeeRoot = employeesCQ.from(Employee.class);
+        Join<Employee, UserInfo> join = employeeRoot.join("user", JoinType.INNER);
+
+        employeesCQ.multiselect(
+                employeeRoot.get("id").alias("id"),
+                employeeRoot.get("firstName").alias("firstName"),
+                employeeRoot.get("lastName").alias("lastName"),
+                employeeRoot.get("phoneNumber").alias("phoneNumber"),
+                employeeRoot.get("salary").alias("salary"),
+                employeeRoot.get("fullTime").alias("fullTime"),
+                employeeRoot.get("description").alias("description"),
+                join.get("username").alias("username")
+        ).groupBy(
+                employeeRoot.get("id"),
+                employeeRoot.get("firstName"),
+                employeeRoot.get("lastName"),
+                employeeRoot.get("phoneNumber"),
+                employeeRoot.get("salary"),
+                employeeRoot.get("fullTime"),
+                employeeRoot.get("description"),
+                join.get("username")
+        );
+        if (order.equalsIgnoreCase("asc"))
+            employeesCQ.orderBy(criteriaBuilder.asc(employeeRoot.get(column)));
+        else employeesCQ.orderBy(criteriaBuilder.desc(employeeRoot.get(column)));
+        TypedQuery<Tuple> typedQuery = entityManager.createQuery(employeesCQ);
+        List<EmployeeDTO> results = typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultList()
+                .stream()
+                .map(row -> {
+                    return new EmployeeDTO((Long) row.get("id"), (String) row.get("firstName"),
+                            (String) row.get("lastName"),
+                            (String) row.get("phoneNumber"),
+                            (int) row.get("salary"),
+                            (boolean) row.get("fullTime"), (String) row.get("description"),
+                            (String) row.get("username"));
+                })
+                .collect(Collectors.toList());
+        long total = results.size();
+
+        return new PageImpl<>(results, pageable, total);
     }
 
+    public Employee toUser(Long employeeID, UserInfo userInfo){
+        Employee employee = employeeRepository.findById(employeeID).get();
+        employee.setUser(userInfo);
+        employeeRepository.save(employee);
+        return employee;
+    }
 }
+
+

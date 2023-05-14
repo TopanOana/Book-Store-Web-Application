@@ -2,11 +2,21 @@ package com.example.Books.Service;
 
 import com.example.Books.Exception.StockNotFoundException;
 import com.example.Books.Exception.StockValidationException;
+import com.example.Books.Model.Book;
+import com.example.Books.Model.DTO.StockDTO;
 import com.example.Books.Model.Stock;
+import com.example.Books.Model.Store;
+import com.example.Books.Model.UserInfo;
 import com.example.Books.Repository.StockRepository;
 import com.example.Books.Validation.ValidatorStock;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +30,8 @@ public class StockService {
 
     @Autowired
     private StockRepository stockRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public StockService(StockRepository stockRepository){
         this.stockRepository=stockRepository;
@@ -57,17 +69,93 @@ public class StockService {
         stockRepository.deleteById(id);
     }
 
-    public Page<Stock> getStockWithBookID(Long bookID, int page, int size){
+    public Page<StockDTO> getStockWithBookID(Long bookID, int page, int size){
         PageRequest pageRequest = PageRequest.of(page, size);
-        //return stockRepository.findAll().stream().filter(obj -> Objects.equals(obj.getBook().getId(), bookID)).collect(Collectors.toList());
-        return stockRepository.getStocksByBookId(bookID,pageRequest);
-    }
-
-    public Page<Stock> getStockWithStoreID(Long storeID, int page, int size){
-        PageRequest pageRequest = PageRequest.of(page, size);
+        PageRequest pageable = PageRequest.of(page, size);
 //        System.out.println("got to stock service");
 //        return stockRepository.findAll().stream().filter(obj -> Objects.equals(obj.getStore().getId(), storeID)).collect(Collectors.toList());
-        return stockRepository.getStocksByStoreId(storeID,pageRequest);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> stocksStoreCQ = criteriaBuilder.createQuery(Tuple.class);
+        Root<Stock> stockRoot = stocksStoreCQ.from(Stock.class);
+
+        Join<Stock, UserInfo> join = stockRoot.join("user", JoinType.INNER);
+
+        stocksStoreCQ.multiselect(
+                stockRoot.get("id").alias("id"),
+                stockRoot.get("store").alias("store"),
+                stockRoot.get("book").alias("book"),
+                stockRoot.get("quantity").alias("quantity"),
+                join.get("username").alias("username")
+        ).groupBy(
+                stockRoot.get("id"),
+                stockRoot.get("store"),
+                stockRoot.get("book"),
+                stockRoot.get("quantity"),
+                join.get("username")
+        ).where(criteriaBuilder.equal(stockRoot.get("book").get("id"),bookID));
+        TypedQuery<Tuple> typedQuery = entityManager.createQuery(stocksStoreCQ);
+        List<StockDTO> results = typedQuery.setFirstResult(page*size)
+                .setMaxResults(size)
+                .getResultList()
+                .stream()
+                .map(row->{
+                    return new StockDTO((Long)row.get("id"),
+                            (Store)row.get("store"),
+                            (Book)row.get("book"),
+                            (int)row.get("quantity"),
+                            (String)row.get("username"));
+                }).collect(Collectors.toList());
+        long total = results.size();
+
+        return new PageImpl<>(results, pageable, total);
+    }
+
+    public Page<StockDTO> getStockWithStoreID(Long storeID, int page, int size){
+        PageRequest pageable = PageRequest.of(page, size);
+//        System.out.println("got to stock service");
+//        return stockRepository.findAll().stream().filter(obj -> Objects.equals(obj.getStore().getId(), storeID)).collect(Collectors.toList());
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Tuple> stocksStoreCQ = criteriaBuilder.createQuery(Tuple.class);
+        Root<Stock> stockRoot = stocksStoreCQ.from(Stock.class);
+
+        Join<Stock, UserInfo> join = stockRoot.join("user", JoinType.INNER);
+
+        stocksStoreCQ.multiselect(
+                stockRoot.get("id").alias("id"),
+                stockRoot.get("store").alias("store"),
+                stockRoot.get("book").alias("book"),
+                stockRoot.get("quantity").alias("quantity"),
+                join.get("username").alias("username")
+        ).groupBy(
+                stockRoot.get("id"),
+                stockRoot.get("store"),
+                stockRoot.get("book"),
+                stockRoot.get("quantity"),
+                join.get("username")
+        ).where(criteriaBuilder.equal(stockRoot.get("store").get("id"),storeID));
+        TypedQuery<Tuple> typedQuery = entityManager.createQuery(stocksStoreCQ);
+        List<StockDTO> results = typedQuery.setFirstResult(page*size)
+                .setMaxResults(size)
+                .getResultList()
+                .stream()
+                .map(row->{
+                    return new StockDTO((Long)row.get("id"),
+                            (Store)row.get("store"),
+                            (Book)row.get("book"),
+                            (int)row.get("quantity"),
+                            (String)row.get("username"));
+                }).collect(Collectors.toList());
+        long total = results.size();
+
+        return new PageImpl<>(results, pageable, total);
+
+    }
+
+    public Stock toUser(Long stockID, UserInfo userInfo){
+        Stock stock = stockRepository.findById(stockID).get();
+        stock.setUser(userInfo);
+        stockRepository.save(stock);
+        return stock;
     }
 
 

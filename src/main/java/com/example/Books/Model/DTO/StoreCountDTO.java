@@ -1,14 +1,15 @@
-package com.example.Books.Model;
+package com.example.Books.Model.DTO;
 
-public class StoreStockDTO implements Comparable<StoreStockDTO>{
+public class StoreCountDTO {
     private Long storeID;
     private int quantity;
     private String storeName;
     private String address;
     private String contactNumber;
     private int openingHour;
+    private String username;
 
-    public StoreStockDTO(Long storeID, String storeName, String address, String contactNumber, int openingHour, int closingHour, int quantity) {
+    public StoreCountDTO(Long storeID, String storeName, String address, String contactNumber, int openingHour, int closingHour, int quantity, String username) {
         this.storeID = storeID;
         this.quantity = quantity;
         this.storeName = storeName;
@@ -16,9 +17,18 @@ public class StoreStockDTO implements Comparable<StoreStockDTO>{
         this.contactNumber = contactNumber;
         this.openingHour = openingHour;
         this.closingHour = closingHour;
+        this.username = username;
     }
 
-    public StoreStockDTO() {
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public StoreCountDTO() {
     }
 
     private int closingHour;
@@ -79,8 +89,4 @@ public class StoreStockDTO implements Comparable<StoreStockDTO>{
         this.closingHour = closingHour;
     }
 
-    @Override
-    public int compareTo(StoreStockDTO other){
-        return (-1)*(this.getQuantity()-other.getQuantity());
-    }
 }

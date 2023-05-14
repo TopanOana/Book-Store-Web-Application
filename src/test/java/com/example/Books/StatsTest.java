@@ -1,6 +1,8 @@
 package com.example.Books;
 
 import com.example.Books.Model.*;
+import com.example.Books.Model.DTO.BookStockDTO;
+import com.example.Books.Model.DTO.StoreStockDTO;
 import com.example.Books.Repository.BookRepository;
 import com.example.Books.Repository.StoreRepository;
 import com.example.Books.Service.StatService;

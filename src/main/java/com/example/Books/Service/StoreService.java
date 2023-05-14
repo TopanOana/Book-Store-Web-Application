@@ -3,6 +3,7 @@ package com.example.Books.Service;
 import com.example.Books.Exception.StoreNotFoundException;
 import com.example.Books.Exception.StoreValidationException;
 import com.example.Books.Model.*;
+import com.example.Books.Model.DTO.StoreCountDTO;
 import com.example.Books.Repository.StoreRepository;
 import com.example.Books.Validation.ValidatorStore;
 import jakarta.persistence.EntityManager;
@@ -41,6 +42,7 @@ public class StoreService {
         CriteriaQuery<Tuple> storesQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Store> stores = storesQuantityCQ.from(Store.class);
         Join<Store, Stock> join = stores.join("stocks", JoinType.LEFT);
+        Join<Store, UserInfo> join1 = stores.join("user", JoinType.INNER);
 
 
         storesQuantityCQ.multiselect(
@@ -50,7 +52,8 @@ public class StoreService {
                         stores.get("contactNumber").alias("contactNumber"),
                         stores.get("openingHour").alias("openingHour"),
                         stores.get("closingHour").alias("closingHour"),
-                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count")
+                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count"),
+                        join1.get("username").alias("username")
                 )
                 .groupBy(
                         stores.get("id"),
@@ -58,7 +61,8 @@ public class StoreService {
                         stores.get("address"),
                         stores.get("contactNumber"),
                         stores.get("openingHour"),
-                        stores.get("closingHour")
+                        stores.get("closingHour"),
+                        join1.get("username")
                 );
         TypedQuery<Tuple> typedQuery = entityManager.createQuery(storesQuantityCQ);
         List<StoreCountDTO> results = typedQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
@@ -71,7 +75,8 @@ public class StoreService {
                             (String)row.get("address"),
                             (String)row.get("contactNumber"),
                             (int)row.get("openingHour"),
-                            (int)row.get("closingHour"), (int)row.get("count") );
+                            (int)row.get("closingHour"), (int)row.get("count"),
+                            (String) row.get("username"));
                 }).toList();
         CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
         Root<Store> store_count= countCQ.from(Store.class);
@@ -151,6 +156,7 @@ public class StoreService {
         CriteriaQuery<Tuple> storesQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Store> stores = storesQuantityCQ.from(Store.class);
         Join<Store, Stock> join = stores.join("stocks", JoinType.LEFT);
+        Join<Store, UserInfo> join1 = stores.join("user", JoinType.INNER);
 
 
         storesQuantityCQ.multiselect(
@@ -160,7 +166,8 @@ public class StoreService {
                         stores.get("contactNumber").alias("contactNumber"),
                         stores.get("openingHour").alias("openingHour"),
                         stores.get("closingHour").alias("closingHour"),
-                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count")
+                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count"),
+                        join1.get("username").alias("username")
                 )
                 .groupBy(
                         stores.get("id"),
@@ -168,7 +175,8 @@ public class StoreService {
                         stores.get("address"),
                         stores.get("contactNumber"),
                         stores.get("openingHour"),
-                        stores.get("closingHour")
+                        stores.get("closingHour"),
+                        join1.get("username")
                 )
                 .where(criteriaBuilder.like(stores.get("storeName"), input+"%"));
         TypedQuery<Tuple> typedQuery = entityManager.createQuery(storesQuantityCQ);
@@ -182,7 +190,8 @@ public class StoreService {
                             (String)row.get("address"),
                             (String)row.get("contactNumber"),
                             (int)row.get("openingHour"),
-                            (int)row.get("closingHour"), (int)row.get("count") );
+                            (int)row.get("closingHour"), (int)row.get("count"),
+                            (String) row.get("username"));
                 }).toList();
         long total = results.size();
 
@@ -196,7 +205,7 @@ public class StoreService {
         CriteriaQuery<Tuple> storesQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Store> stores = storesQuantityCQ.from(Store.class);
         Join<Store, Stock> join = stores.join("stocks", JoinType.LEFT);
-
+        Join<Store, UserInfo> join1 = stores.join("user", JoinType.INNER);
 
         storesQuantityCQ.multiselect(
                         stores.get("id").alias("id"),
@@ -205,7 +214,8 @@ public class StoreService {
                         stores.get("contactNumber").alias("contactNumber"),
                         stores.get("openingHour").alias("openingHour"),
                         stores.get("closingHour").alias("closingHour"),
-                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count")
+                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count"),
+                        join1.get("username").alias("username")
                 )
                 .groupBy(
                         stores.get("id"),
@@ -213,7 +223,8 @@ public class StoreService {
                         stores.get("address"),
                         stores.get("contactNumber"),
                         stores.get("openingHour"),
-                        stores.get("closingHour")
+                        stores.get("closingHour"),
+                        join1.get("username")
                 );
         if(order.equalsIgnoreCase("asc"))
             storesQuantityCQ.orderBy(criteriaBuilder.asc(stores.get(column)));
@@ -229,7 +240,8 @@ public class StoreService {
                             (String)row.get("address"),
                             (String)row.get("contactNumber"),
                             (int)row.get("openingHour"),
-                            (int)row.get("closingHour"), (int)row.get("count") );
+                            (int)row.get("closingHour"), (int)row.get("count"),
+                            (String) row.get("username"));
                 }).toList();
         CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
         Root<Store> store_count= countCQ.from(Store.class);
@@ -237,6 +249,13 @@ public class StoreService {
         long total = entityManager.createQuery(countCQ).getSingleResult();
 
         return new PageImpl<>(results, pageable, total);
+    }
+
+    public Store toUser(Long storeID, UserInfo userInfo){
+        Store store = repository.findById(storeID).get();
+        store.setUser(userInfo);
+        repository.save(store);
+        return store;
     }
 
 

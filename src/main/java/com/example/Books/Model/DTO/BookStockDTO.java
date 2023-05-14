@@ -1,4 +1,4 @@
-package com.example.Books.Model;
+package com.example.Books.Model.DTO;
 
 public class BookStockDTO implements Comparable<BookStockDTO>{
     private Long bookID;

@@ -1,9 +1,11 @@
 package com.example.Books.Service;
 
+import com.example.Books.Model.DTO.UserInfoDTO;
 import com.example.Books.Model.UserInfo;
 import com.example.Books.Repository.UserInfoRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -52,5 +54,19 @@ public class UserService {
 
     public UserInfo getUserByUsername(String username){
         return userInfoRepository.findByUsername(username).get();
+    }
+
+    public UserInfo getUserByID(Long id){
+        return userInfoRepository.findById(id).get();
+    }
+
+    public UserInfoDTO getUserInfoDTO(Long id){
+        UserInfo userInfo = userInfoRepository.findById(id).get();
+        UserInfoDTO userInfoDTO = new UserInfoDTO(userInfo.getUsername(),
+                userInfo.getEmail(),
+                userInfo.getBio(),
+                userInfo.getLocation(),
+                userInfo.getAge());
+        return userInfoDTO;
     }
 }

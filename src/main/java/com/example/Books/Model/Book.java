@@ -42,10 +42,10 @@ public class Book {
             orphanRemoval = true)
     private List<Stock> stocks = new ArrayList<>();
 
-    @JsonGetter
-    public int getInStores(){
-        return stocks.size();
-    }
+//    @JsonGetter
+//    public int getInStores(){
+//        return stocks.size();
+//    }
 
     @ManyToOne
     @JoinColumn(name="userID")
@@ -134,5 +134,13 @@ public class Book {
     public void addStock(Stock stock){
         stock.setBook(this);
         this.stocks.add(stock);
+    }
+
+    public UserInfo getUser() {
+        return user;
+    }
+
+    public void setUser(UserInfo user) {
+        this.user = user;
     }
 }

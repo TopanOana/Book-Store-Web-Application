@@ -4,9 +4,9 @@ package com.example.Books.Controller;
 import com.example.Books.Exception.*;
 import com.example.Books.Model.*;
 //import com.example.Books.Repository.BookRepository;
+import com.example.Books.Model.DTO.*;
 import com.example.Books.Service.*;
 import jakarta.annotation.Nullable;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api") //only for the server
@@ -191,7 +189,7 @@ public class Controller {
 
 
     @GetMapping("/employees")
-    Page<Employee> getAllEmployees(@RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order){
+    Page<EmployeeDTO> getAllEmployees(@RequestParam int page, @RequestParam int size, @Nullable @RequestParam String column, @Nullable @RequestParam String order){
         if (column!=null && order!=null)
             return employeeService.getSortedBy(page, size, column, order);
         else
@@ -261,14 +259,14 @@ public class Controller {
     }
 
     @GetMapping("/stores/{id}/stock")
-    Page<Stock> getStocksFromStore (@PathVariable Long id, int page, int size){
+    Page<StockDTO> getStocksFromStore (@PathVariable Long id, int page, int size){
 //        return storeService.getStoreByID(id).getStocks();
 //        System.out.println("got to controller");
         return stockService.getStockWithStoreID(id, page, size);
     }
 
     @GetMapping("/books/{id}/stock")
-    Page<Stock> getStocksForBooks(@PathVariable Long id, int page, int size){
+    Page<StockDTO> getStocksForBooks(@PathVariable Long id, int page, int size){
 //        return bookService.getBookByID(id).getStocks();
         return stockService.getStockWithBookID(id, page, size);
     }
@@ -332,17 +330,41 @@ public class Controller {
 
     }
 
-    @GetMapping("/users/{username}")
-    public UserInfo getUserProfile(@PathVariable String username){
-        UserInfo result = userService.getUserByUsername(username);
-        if (result != null) {
-            return result;
-        }
-        else
-            throw new UsernameNotFoundException("Bad request: Username not found");
+//    @GetMapping("/users/{username}")
+//    public UserInfo getUserProfile(@PathVariable String username){
+//        UserInfo result = userService.getUserByUsername(username);
+//        if (result != null) {
+//            return result;
+//        }
+//        else
+//            throw new UsernameNotFoundException("Bad request: Username not found");
+//    }
+
+    @PutMapping("/books/{bookID}/{userID}")
+    public Book userToBook(@PathVariable Long bookID, @PathVariable Long userID){
+
+        return bookService.toUser(bookID, userService.getUserByID(userID));
+
+    }
+    @PutMapping("/stores/{storeID}/{userID}")
+    public Store userToStore(@PathVariable Long storeID, @PathVariable Long userID){
+        return storeService.toUser(storeID, userService.getUserByID(userID));
     }
 
+    @PutMapping("/stocks/{stockID}/{userID}")
+    public Stock userToStock(@PathVariable Long stockID, @PathVariable Long userID){
+        return stockService.toUser(stockID, userService.getUserByID(userID));
+    }
 
+    @PutMapping("/employees/{employeeID}/{userID}")
+    public Employee userToEmployee(@PathVariable Long employeeID, @PathVariable Long userID){
+        return employeeService.toUser(employeeID, userService.getUserByID(userID));
+    }
+
+    @GetMapping("/users/{id}")
+    public UserInfoDTO getUserProfile(@PathVariable Long id){
+        return userService.getUserInfoDTO(id);
+    }
 
 
 }

@@ -1,6 +1,8 @@
 package com.example.Books.Service;
 
 import com.example.Books.Model.*;
+import com.example.Books.Model.DTO.BookStockDTO;
+import com.example.Books.Model.DTO.StoreStockDTO;
 import com.example.Books.Repository.BookRepository;
 import com.example.Books.Repository.StoreRepository;
 import jakarta.persistence.EntityManager;
@@ -9,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Tuple;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
