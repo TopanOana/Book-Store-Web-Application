@@ -10,9 +10,14 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,14 +34,21 @@ public class Controller {
     @Autowired private final StockService stockService;
 
     @Autowired private final StatService statService;
+    @Autowired private final UserService userService;
+    @Autowired private final JWTService jwtService;
+
+    @Autowired private  final AuthenticationManager authenticationManager;
 
 
-    public Controller(StoreService storeService, BookService bookService, EmployeeService employeeService, StockService stockService, StatService statService) {
+    public Controller(StoreService storeService, BookService bookService, EmployeeService employeeService, StockService stockService, StatService statService, UserService userService, JWTService jwtService, AuthenticationManager authenticationManager) {
         this.bookService = bookService;
         this.storeService = storeService;
         this.employeeService = employeeService;
         this.stockService = stockService;
         this.statService = statService;
+        this.userService = userService;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     // Aggregate root
@@ -292,7 +304,29 @@ public class Controller {
     }
 
 
+    @PostMapping("/users/register")
+    public String addNewUser(@RequestBody UserInfo userInfo){
+        return userService.addUser(userInfo);
+    }
 
+    @PutMapping("/users/register/verify/{code}")
+    public String verifyUser(@PathVariable String code, @RequestBody UserInfo userInfo){
+        return userService.verifyUser(userInfo,code);
+    }
+
+
+    @PostMapping("/users/authenticate")
+    public String authenticate(@RequestBody AuthenticationRequest authenticationRequest){
+        Authentication authentication =  authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+
+        if (authentication.isAuthenticated()){
+            return jwtService.generateToken(authenticationRequest.getUsername());
+        }
+        else{
+            throw new UsernameNotFoundException("invalid user request");
+        }
+
+    }
 
 }
 
