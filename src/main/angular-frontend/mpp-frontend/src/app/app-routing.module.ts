@@ -21,6 +21,7 @@ import {
 } from "./features/statistics/components/store-stock-statistic/store-stock-statistic.component";
 import {UpdateStockComponent} from "./features/stocks/components/update-stock/update-stock.component";
 import {AddStockComponent} from "./features/stocks/components/add-stock/add-stock.component";
+import {LoginComponent} from "./features/auth/login/login.component";
 
 const routes: Routes = [
   {
@@ -82,6 +83,10 @@ const routes: Routes = [
   {
     path: "stores/:id/add-stock",
     component: AddStockComponent
+  },
+  {
+    path: "login",
+    component: LoginComponent
   }
 ];
 

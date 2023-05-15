@@ -19,14 +19,15 @@ import {
   BookStockTable,
   StoreStockStat, StoreStockTable
 } from "../features/statistics/components/book-stock-statistic/Model/stat.model";
+import {LoginRequest} from "../features/auth/login/LoginRequest";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  baseURL='https://chicken-soup-for-the-books.chickenkiller.com/supaLaPlic/api';
-  // baseURL='http://localhost:8080'
+  // baseURL='https://chicken-soup-for-the-books.chickenkiller.com/supaLaPlic/api';
+  baseURL='http://localhost:8080/api'
 
   constructor(private http: HttpClient) { }
 
@@ -142,6 +143,10 @@ export class ApiService {
 
   getStocksFromBook(bookID:number, page:number, size:number):Observable<StockTable>{
     return this.http.get(`${this.baseURL}/books/${bookID}/stock?page=${page}&size=${size}`) as Observable<StockTable>
+  }
+
+  loginUser(loginRequest:LoginRequest):Observable<any>{
+    return this.http.post(`${this.baseURL}/users/authenticate`, loginRequest, {responseType:'text'}) as Observable<string>;
   }
 
 }
