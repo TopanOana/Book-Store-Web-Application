@@ -34,7 +34,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import { UpdateStockComponent } from './features/stocks/components/update-stock/update-stock.component';
 import { AddStockComponent } from './features/stocks/components/add-stock/add-stock.component';
 import { LoginComponent } from './features/auth/login/login.component';
-import { RegisterComponent } from './app/features/auth/register/register.component';
+import { RegisterComponent } from './features/auth/register/register.component';
 
 @NgModule({
   declarations: [
