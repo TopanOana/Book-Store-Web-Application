@@ -1,18 +1,22 @@
 package com.example.Books.Service;
 
+import com.example.Books.Model.*;
 import com.example.Books.Model.DTO.UserInfoDTO;
-import com.example.Books.Model.UserInfo;
+import com.example.Books.Model.DTO.UserStatDTO;
 import com.example.Books.Repository.UserInfoRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Tuple;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class UserService {
@@ -21,6 +25,9 @@ public class UserService {
     private UserInfoRepository userInfoRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public String addUser(UserInfo userInfo){
         userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
@@ -73,5 +80,47 @@ public class UserService {
 
     public List<UserInfo> gimmeAllDemBoys(){
         return this.userInfoRepository.findAll();
+    }
+
+    public UserStatDTO getUserStats(String username){
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> userBooksCQ = criteriaBuilder.createQuery(Long.class);
+        Root<Book> books = userBooksCQ.from(Book.class);
+        Join<Book, UserInfo> bookUserInfoJoin = books.join("user", JoinType.INNER);
+        userBooksCQ.select(criteriaBuilder.countDistinct(books.get("id")))
+                .where(criteriaBuilder.equal(bookUserInfoJoin.get("username"), username));
+        TypedQuery<Long> booksResult = entityManager.createQuery(userBooksCQ);
+        Long nrBooks = booksResult.getSingleResult();
+
+        CriteriaQuery<Long> userEmployeesCQ = criteriaBuilder.createQuery(Long.class);
+        Root<Employee> employees = userEmployeesCQ.from(Employee.class);
+        Join<Employee, UserInfo> employeeUserInfoJoin = employees.join("user", JoinType.INNER);
+        userEmployeesCQ.select(criteriaBuilder.countDistinct(employees.get("id")))
+                .where(criteriaBuilder.equal(employeeUserInfoJoin.get("username"), username));
+        TypedQuery<Long> employeesResult = entityManager.createQuery(userEmployeesCQ);
+        Long nrEmployees = employeesResult.getSingleResult();
+
+        CriteriaQuery<Long> userStoresCQ = criteriaBuilder.createQuery(Long.class);
+        Root<Store> stores = userStoresCQ.from(Store.class);
+        Join<Store, UserInfo> storesUserJoin = stores.join("user", JoinType.INNER);
+        userStoresCQ.select(criteriaBuilder.countDistinct(stores.get("id")))
+                .where(criteriaBuilder.equal(storesUserJoin.get("username"), username));
+        TypedQuery<Long> storesResult = entityManager.createQuery(userStoresCQ);
+        Long nrStores = storesResult.getSingleResult();
+
+        CriteriaQuery<Long> userStocksCQ = criteriaBuilder.createQuery(Long.class);
+        Root<Stock> stocks = userStocksCQ.from(Stock.class);
+        Join<Stock, UserInfo> stockUserJoin = stocks.join("user", JoinType.INNER);
+        userStocksCQ.select(criteriaBuilder.countDistinct(stocks.get("id")))
+                .where(criteriaBuilder.equal(stockUserJoin.get("username"), username));
+        TypedQuery<Long> stocksResult = entityManager.createQuery(userStocksCQ);
+        Long nrStocks = stocksResult.getSingleResult();
+
+
+        UserStatDTO toReturn = new UserStatDTO(nrBooks,nrEmployees,nrStores,nrStocks);
+
+
+        return toReturn;
+
     }
 }

@@ -9,6 +9,7 @@ export interface Employee{
   salary: number;
   fullTime: boolean;
   description: string;
+  username:string;
   store:StoreDTO;
 }
 
@@ -21,15 +22,6 @@ export interface UpdateEmployeeDTO{
   fullTime: boolean;
   description: string;
 }
-
-
-
-
-// export interface employeeTable{
-//
-//
-// }
-
 
 export interface AddEmployeeDTO{
   firstName: string;

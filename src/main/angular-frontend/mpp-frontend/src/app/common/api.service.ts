@@ -22,6 +22,7 @@ import {
 import {LoginRequest} from "../features/auth/login/LoginRequest";
 import {RegisterDTO} from "../features/auth/register/RegisterDTO";
 import {RegisterComponent} from "../features/auth/register/register.component";
+import {User, UserStat} from "../features/users/user-profile/UserModels";
 
 @Injectable({
   providedIn: 'root'
@@ -158,5 +159,14 @@ export class ApiService {
   verifyUser(registerRequest:RegisterDTO, code:string): Observable<any>{
     return this.http.put(`${this.baseURL}/users/register/verify/${code}`, registerRequest, {responseType:'text'}) as Observable<string>;
   }
+
+  getUser(username:string): Observable<User>{
+    return this.http.get(`${this.baseURL}/users/profile/${username}`) as Observable<User>;
+  }
+
+  getUserStats(username:string):Observable<UserStat>{
+    return this.http.get(`${this.baseURL}/users/stats/${username}`) as Observable<UserStat>;
+  }
+
 
 }

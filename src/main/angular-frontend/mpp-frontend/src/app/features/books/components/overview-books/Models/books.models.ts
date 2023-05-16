@@ -6,6 +6,7 @@ export interface Book{
   rating: number;
   genre: string;
   count: number;
+  username: string;
 }
 
 export interface AddBookDTO{

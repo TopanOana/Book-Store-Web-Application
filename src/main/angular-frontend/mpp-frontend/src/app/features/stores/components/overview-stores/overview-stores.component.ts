@@ -14,7 +14,7 @@ import {StoreDTO, StoreTable} from "../../../employees/components/overview-emplo
   providers: [MatPaginator, MatSort]
 })
 export class OverviewStoresComponent {
-  displayedColumns = ['id', 'storeName', 'address', 'contactNumber', 'openingHour', 'closingHour', 'nrBooks', 'nrEmployees']
+  displayedColumns = ['id', 'storeName', 'address', 'contactNumber', 'openingHour', 'closingHour', 'nrBooks', 'nrEmployees', 'username']
 
   dataSource = new MatTableDataSource();
   totalStores: number;
@@ -28,6 +28,7 @@ export class OverviewStoresComponent {
 
   column='';
   order='';
+
 
   @ViewChild(MatSort) sort: MatSort;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -122,4 +123,10 @@ export class OverviewStoresComponent {
     this.pageIndex=0;
     this.getStoresPaged(this.pageIndex,this.pageSize);
   }
+
+  goToUser(username: string) {
+    this.router.navigateByUrl(`/userprofile/${username}`);
+  }
+
+
 }

@@ -15,7 +15,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 })
 export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
 
-  displayedColumns = ['id', 'firstName', 'lastName', 'phoneNumber', 'salary', 'fullTime']
+  displayedColumns = ['id', 'firstName', 'lastName', 'phoneNumber', 'salary', 'fullTime', 'username']
 
   dataSource = new MatTableDataSource();
   totalEmployees: number;
@@ -128,5 +128,9 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
     console.log(this.pageSize);
     this.pageIndex=0;
     this.getEmployeesPaged(this.pageIndex,this.pageSize);
+  }
+
+  goToUser(username: string ) {
+    this.router.navigateByUrl(`/userprofile/${username}`)
   }
 }

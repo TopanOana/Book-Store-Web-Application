@@ -23,6 +23,7 @@ import {UpdateStockComponent} from "./features/stocks/components/update-stock/up
 import {AddStockComponent} from "./features/stocks/components/add-stock/add-stock.component";
 import {LoginComponent} from "./features/auth/login/login.component";
 import {RegisterComponent} from "./features/auth/register/register.component";
+import {UserProfileComponent} from "./features/users/user-profile/user-profile.component";
 
 const routes: Routes = [
   {
@@ -92,6 +93,10 @@ const routes: Routes = [
   {
     path:"register",
     component:RegisterComponent
+  },
+  {
+    path:"userprofile/:username",
+    component: UserProfileComponent
   }
 ];
 

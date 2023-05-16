@@ -42,11 +42,30 @@ public class UserInfo {
 
     private LocalDateTime confirmCodeSend;
 
-//    @OneToMany(mappedBy = "book",
+//    @OneToMany(mappedBy = "user",
 //            cascade = CascadeType.ALL,
 //            orphanRemoval = true)
 //    @JsonIgnore
 //    private Set<Book> books;
+//    @OneToMany(mappedBy = "user",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true)
+//    @JsonIgnore
+//    private Set<Store> stores;
+//
+//    @OneToMany(mappedBy = "user",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true)
+//    @JsonIgnore
+//    private Set<Stock> stocks;
+//
+//    @OneToMany(mappedBy = "user",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true)
+//    @JsonIgnore
+//    private Set<Employee> employees;
+
+
 
 
     public String getConfirmationCode() {

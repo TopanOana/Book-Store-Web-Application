@@ -15,7 +15,7 @@ import {MatPaginator, PageEvent} from "@angular/material/paginator";
 })
 export class OverviewBooksComponent implements AfterViewInit, OnInit {
   books: Book[] = []
-  displayedColumns = ['id', 'title', 'author', 'nrPages', 'rating', 'genre', 'inStores']
+  displayedColumns = ['id', 'title', 'author', 'nrPages', 'rating', 'genre', 'inStores', 'username']
 
   rating_gt: number = 0;
   dataSource = new MatTableDataSource();
@@ -136,5 +136,9 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   changeItPlease() {
     this.pageIndex=0;
     this.getBooksPaged(this.pageIndex,this.pageSize);
+  }
+
+  toUserProfile(username: string ) {
+      this.router.navigateByUrl(`userprofile/${username}`)
   }
 }

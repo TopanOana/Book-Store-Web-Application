@@ -330,15 +330,15 @@ public class Controller {
 
     }
 
-//    @GetMapping("/users/{username}")
-//    public UserInfo getUserProfile(@PathVariable String username){
-//        UserInfo result = userService.getUserByUsername(username);
-//        if (result != null) {
-//            return result;
-//        }
-//        else
-//            throw new UsernameNotFoundException("Bad request: Username not found");
-//    }
+    @GetMapping("/users/profile/{username}")
+    public UserInfo getUserProfile(@PathVariable String username){
+        UserInfo result = userService.getUserByUsername(username);
+        if (result != null) {
+            return result;
+        }
+        else
+            throw new UsernameNotFoundException("Bad request: Username not found");
+    }
 
     @PutMapping("/books/{bookID}/{userID}")
     public Book userToBook(@PathVariable Long bookID, @PathVariable Long userID){
@@ -369,6 +369,11 @@ public class Controller {
     @GetMapping("/users/gimme")
     public List<UserInfo> getUsersPls(){
         return userService.gimmeAllDemBoys();
+    }
+
+    @GetMapping("/users/stats/{username}")
+    public UserStatDTO getUserStats(@PathVariable String username){
+        return userService.getUserStats(username);
     }
 
 }

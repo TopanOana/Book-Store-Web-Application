@@ -35,6 +35,7 @@ import { UpdateStockComponent } from './features/stocks/components/update-stock/
 import { AddStockComponent } from './features/stocks/components/add-stock/add-stock.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
+import { UserProfileComponent } from './features/users/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { RegisterComponent } from './features/auth/register/register.component';
     UpdateStockComponent,
     AddStockComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
