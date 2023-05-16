@@ -2,22 +2,26 @@ package com.example.Books.Model.DTO;
 
 public class StoreCountDTO {
     private Long storeID;
-    private int quantity;
+
     private String storeName;
     private String address;
     private String contactNumber;
     private int openingHour;
+    private int closingHour;
     private String username;
+    private int nrBooks;
+    private Long nrEmployees;
 
-    public StoreCountDTO(Long storeID, String storeName, String address, String contactNumber, int openingHour, int closingHour, int quantity, String username) {
+    public StoreCountDTO(Long storeID, String storeName, String address, String contactNumber, int openingHour, int closingHour, String username, int nrBooks, Long nrEmployees) {
         this.storeID = storeID;
-        this.quantity = quantity;
         this.storeName = storeName;
         this.address = address;
         this.contactNumber = contactNumber;
         this.openingHour = openingHour;
         this.closingHour = closingHour;
         this.username = username;
+        this.nrBooks = nrBooks;
+        this.nrEmployees = nrEmployees;
     }
 
     public String getUsername() {
@@ -31,7 +35,7 @@ public class StoreCountDTO {
     public StoreCountDTO() {
     }
 
-    private int closingHour;
+
 
     public Long getStoreID() {
         return storeID;
@@ -41,12 +45,20 @@ public class StoreCountDTO {
         this.storeID = storeID;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public int getNrBooks() {
+        return nrBooks;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setNrBooks(int nrBooks) {
+        this.nrBooks = nrBooks;
+    }
+
+    public Long getNrEmployees() {
+        return nrEmployees;
+    }
+
+    public void setNrEmployees(Long nrEmployees) {
+        this.nrEmployees = nrEmployees;
     }
 
     public String getStoreName() {

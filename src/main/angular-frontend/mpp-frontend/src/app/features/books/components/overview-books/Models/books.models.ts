@@ -5,7 +5,7 @@ export interface Book{
   nrPages: number;
   rating: number;
   genre: string;
-  inStores: number;
+  count: number;
 }
 
 export interface AddBookDTO{

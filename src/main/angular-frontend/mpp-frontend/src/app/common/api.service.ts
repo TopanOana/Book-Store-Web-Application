@@ -20,6 +20,8 @@ import {
   StoreStockStat, StoreStockTable
 } from "../features/statistics/components/book-stock-statistic/Model/stat.model";
 import {LoginRequest} from "../features/auth/login/LoginRequest";
+import {RegisterDTO} from "../features/auth/register/RegisterDTO";
+import {RegisterComponent} from "../features/auth/register/register.component";
 
 @Injectable({
   providedIn: 'root'
@@ -147,6 +149,14 @@ export class ApiService {
 
   loginUser(loginRequest:LoginRequest):Observable<any>{
     return this.http.post(`${this.baseURL}/users/authenticate`, loginRequest, {responseType:'text'}) as Observable<string>;
+  }
+
+  registerUser(registerRequest:RegisterDTO):Observable<any>{
+    return this.http.post(`${this.baseURL}/users/register`, registerRequest, {responseType:'text'}) as Observable<string>;
+  }
+
+  verifyUser(registerRequest:RegisterDTO, code:string): Observable<any>{
+    return this.http.put(`${this.baseURL}/users/register/verify/${code}`, registerRequest, {responseType:'text'}) as Observable<string>;
   }
 
 }

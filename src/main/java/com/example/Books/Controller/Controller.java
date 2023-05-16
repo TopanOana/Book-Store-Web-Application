@@ -366,6 +366,10 @@ public class Controller {
         return userService.getUserInfoDTO(id);
     }
 
+    @GetMapping("/users/gimme")
+    public List<UserInfo> getUsersPls(){
+        return userService.gimmeAllDemBoys();
+    }
 
 }
 

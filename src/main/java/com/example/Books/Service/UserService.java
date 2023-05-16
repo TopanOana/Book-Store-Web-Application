@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -68,5 +69,9 @@ public class UserService {
                 userInfo.getLocation(),
                 userInfo.getAge());
         return userInfoDTO;
+    }
+
+    public List<UserInfo> gimmeAllDemBoys(){
+        return this.userInfoRepository.findAll();
     }
 }

@@ -43,7 +43,7 @@ public class StoreService {
         Root<Store> stores = storesQuantityCQ.from(Store.class);
         Join<Store, Stock> join = stores.join("stocks", JoinType.LEFT);
         Join<Store, UserInfo> join1 = stores.join("user", JoinType.INNER);
-
+        Join<Store, Employee> join2 = stores.join("employees", JoinType.LEFT);
 
         storesQuantityCQ.multiselect(
                         stores.get("id").alias("id"),
@@ -52,8 +52,9 @@ public class StoreService {
                         stores.get("contactNumber").alias("contactNumber"),
                         stores.get("openingHour").alias("openingHour"),
                         stores.get("closingHour").alias("closingHour"),
-                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count"),
-                        join1.get("username").alias("username")
+                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("nrBooks"),
+                        join1.get("username").alias("username"),
+                        criteriaBuilder.count(criteriaBuilder.coalesce(join2.get("id"),0)).alias("nrEmployees")
                 )
                 .groupBy(
                         stores.get("id"),
@@ -75,8 +76,10 @@ public class StoreService {
                             (String)row.get("address"),
                             (String)row.get("contactNumber"),
                             (int)row.get("openingHour"),
-                            (int)row.get("closingHour"), (int)row.get("count"),
-                            (String) row.get("username"));
+                            (int)row.get("closingHour"),
+                            (String) row.get("username"),
+                            (int)row.get("nrBooks"),
+                            (Long)row.get("nrEmployees"));
                 }).toList();
         CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
         Root<Store> store_count= countCQ.from(Store.class);
@@ -157,6 +160,7 @@ public class StoreService {
         Root<Store> stores = storesQuantityCQ.from(Store.class);
         Join<Store, Stock> join = stores.join("stocks", JoinType.LEFT);
         Join<Store, UserInfo> join1 = stores.join("user", JoinType.INNER);
+        Join<Store, Employee> join2 = stores.join("employees", JoinType.LEFT);
 
 
         storesQuantityCQ.multiselect(
@@ -166,8 +170,9 @@ public class StoreService {
                         stores.get("contactNumber").alias("contactNumber"),
                         stores.get("openingHour").alias("openingHour"),
                         stores.get("closingHour").alias("closingHour"),
-                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count"),
-                        join1.get("username").alias("username")
+                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("nrBooks"),
+                        join1.get("username").alias("username"),
+                        criteriaBuilder.count(criteriaBuilder.coalesce(join2.get("id"),0)).alias("nrEmployees")
                 )
                 .groupBy(
                         stores.get("id"),
@@ -190,8 +195,10 @@ public class StoreService {
                             (String)row.get("address"),
                             (String)row.get("contactNumber"),
                             (int)row.get("openingHour"),
-                            (int)row.get("closingHour"), (int)row.get("count"),
-                            (String) row.get("username"));
+                            (int)row.get("closingHour"),
+                            (String) row.get("username"),
+                            (int)row.get("nrBooks"),
+                            (Long)row.get("nrEmployees"));
                 }).toList();
         long total = results.size();
 
@@ -205,7 +212,9 @@ public class StoreService {
         CriteriaQuery<Tuple> storesQuantityCQ = criteriaBuilder.createQuery(Tuple.class);
         Root<Store> stores = storesQuantityCQ.from(Store.class);
         Join<Store, Stock> join = stores.join("stocks", JoinType.LEFT);
+
         Join<Store, UserInfo> join1 = stores.join("user", JoinType.INNER);
+        Join<Store, Employee> join2 = stores.join("employees", JoinType.LEFT);
 
         storesQuantityCQ.multiselect(
                         stores.get("id").alias("id"),
@@ -214,8 +223,9 @@ public class StoreService {
                         stores.get("contactNumber").alias("contactNumber"),
                         stores.get("openingHour").alias("openingHour"),
                         stores.get("closingHour").alias("closingHour"),
-                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("count"),
-                        join1.get("username").alias("username")
+                        criteriaBuilder.sum(criteriaBuilder.coalesce(join.get("quantity"),0)).alias("nrBooks"),
+                        join1.get("username").alias("username"),
+                        criteriaBuilder.count(criteriaBuilder.coalesce(join2.get("id"),0)).alias("nrEmployees")
                 )
                 .groupBy(
                         stores.get("id"),
@@ -240,8 +250,10 @@ public class StoreService {
                             (String)row.get("address"),
                             (String)row.get("contactNumber"),
                             (int)row.get("openingHour"),
-                            (int)row.get("closingHour"), (int)row.get("count"),
-                            (String) row.get("username"));
+                            (int)row.get("closingHour"),
+                            (String) row.get("username"),
+                            (int)row.get("nrBooks"),
+                            (Long)row.get("nrEmployees"));
                 }).toList();
         CriteriaQuery<Long> countCQ = criteriaBuilder.createQuery(Long.class);
         Root<Store> store_count= countCQ.from(Store.class);
