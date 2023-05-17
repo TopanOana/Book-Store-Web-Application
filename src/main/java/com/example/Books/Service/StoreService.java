@@ -5,6 +5,7 @@ import com.example.Books.Exception.StoreValidationException;
 import com.example.Books.Model.*;
 import com.example.Books.Model.DTO.StoreCountDTO;
 import com.example.Books.Repository.StoreRepository;
+import com.example.Books.Repository.UserInfoRepository;
 import com.example.Books.Validation.ValidatorStore;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +28,9 @@ import java.util.stream.Collectors;
 public class StoreService {
     @Autowired
     private StoreRepository repository;
+
+    @Autowired
+    private UserInfoRepository userInfoRepository;
     @PersistenceContext
     EntityManager entityManager;
 
@@ -106,32 +113,54 @@ public class StoreService {
         /*
         adds a store to the repository
          */
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        newStore.setUser(userInfo);
         ValidatorStore validatorStore = new ValidatorStore();
         validatorStore.validate(newStore);
         return repository.save(newStore);
     }
 
     public Store updateStoreInRepository(Long id, Store updatedStore){
-        ValidatorStore validatorStore = new ValidatorStore();
-        validatorStore.validate(updatedStore);
-        return repository.findById(id).map(store->{
-            store.setStoreName(updatedStore.getStoreName());
-            store.setAddress(updatedStore.getAddress());
-            store.setContactNumber(updatedStore.getContactNumber());
-            store.setOpeningHour(updatedStore.getOpeningHour());
-            store.setClosingHour(updatedStore.getClosingHour());
-            return repository.save(store);
-        }).orElseGet(() ->{
-            updatedStore.setId(id);
-            return repository.save(updatedStore);
-        });
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        Store storeaux = repository.findById(id).get();
+        if((userInfo.getRoles().equals("ADMIN") || userInfo.getRoles().equals("MODERATOR")) || ((userInfo.getRoles().equals("USER")) && storeaux.getUser().getUsername().equals(username))){
+            ValidatorStore validatorStore = new ValidatorStore();
+            validatorStore.validate(updatedStore);
+            return repository.findById(id).map(store->{
+                store.setStoreName(updatedStore.getStoreName());
+                store.setAddress(updatedStore.getAddress());
+                store.setContactNumber(updatedStore.getContactNumber());
+                store.setOpeningHour(updatedStore.getOpeningHour());
+                store.setClosingHour(updatedStore.getClosingHour());
+                return repository.save(store);
+            }).orElseGet(() ->{
+                updatedStore.setId(id);
+                return repository.save(updatedStore);
+            });
+        }
+        else
+            throw new RuntimeException("bad request: user cannot update store");
+
+
     }
 
     public void deleteStoreByID(Long id){
         /*
         deletes a store in the repository by id
          */
-        repository.deleteById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        Store storeaux = repository.findById(id).get();
+        if((userInfo.getRoles().equals("ADMIN") || userInfo.getRoles().equals("MODERATOR")) || ((userInfo.getRoles().equals("USER")) && storeaux.getUser().getUsername().equals(username))){
+                repository.deleteById(id);
+        }
+        else
+            throw new RuntimeException("bad request: user cannot delete store");
     }
 
 

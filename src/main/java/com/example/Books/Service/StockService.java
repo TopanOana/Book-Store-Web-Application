@@ -8,6 +8,7 @@ import com.example.Books.Model.Stock;
 import com.example.Books.Model.Store;
 import com.example.Books.Model.UserInfo;
 import com.example.Books.Repository.StockRepository;
+import com.example.Books.Repository.UserInfoRepository;
 import com.example.Books.Validation.ValidatorStock;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -19,6 +20,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +33,8 @@ public class StockService {
 
     @Autowired
     private StockRepository stockRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -46,27 +51,50 @@ public class StockService {
     }
 
     public Stock addStockToRepository(Stock newStock){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        newStock.setUser(userInfo);
         ValidatorStock validatorStock = new ValidatorStock(stockRepository);
         validatorStock.validate(newStock);
         return stockRepository.save(newStock);
     }
 
     public Stock updateStockInRepository(Long id, Stock updatedStock){
-        if(updatedStock.getQuantity()<1 || updatedStock.getQuantity()>1000)
-            throw new StockValidationException("stock quantity invalid (quantity<1 || quantity>1000");
-        return stockRepository.findById(id).map(stock->{
-            stock.setBook(updatedStock.getBook());
-            stock.setStore(updatedStock.getStore());
-            stock.setQuantity(updatedStock.getQuantity());
-            return stockRepository.save(stock);
-        }).orElseGet(() -> {
-            updatedStock.setId(id);
-            return stockRepository.save(updatedStock);
-        });
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        Stock stockaux = stockRepository.findById(id).get();
+        if (userInfo.getRoles().equals("ADMIN") || userInfo.getRoles().equals("MODERATOR")
+            || (username.equals(stockaux.getUser().getUsername()))){
+            if(updatedStock.getQuantity()<1 || updatedStock.getQuantity()>1000)
+                throw new StockValidationException("stock quantity invalid (quantity<1 || quantity>1000");
+            return stockRepository.findById(id).map(stock->{
+                stock.setBook(updatedStock.getBook());
+                stock.setStore(updatedStock.getStore());
+                stock.setQuantity(updatedStock.getQuantity());
+                return stockRepository.save(stock);
+            }).orElseGet(() -> {
+                updatedStock.setId(id);
+                return stockRepository.save(updatedStock);
+            });
+        }
+        else
+            throw new RuntimeException("bad request: user cannot update stock");
+
     }
 
     public void deleteStockInRepository(Long id){
-        stockRepository.deleteById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        Stock stockaux = stockRepository.findById(id).get();
+        if (userInfo.getRoles().equals("ADMIN") || userInfo.getRoles().equals("MODERATOR")
+                || (username.equals(stockaux.getUser().getUsername()))) {
+            stockRepository.deleteById(id);
+        }
+        else
+            throw new RuntimeException("bad request: user cannot delete stock");
     }
 
     public Page<StockDTO> getStockWithBookID(Long bookID, int page, int size){

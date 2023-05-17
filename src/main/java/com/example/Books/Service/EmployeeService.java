@@ -6,6 +6,7 @@ import com.example.Books.Model.Employee;
 import com.example.Books.Model.Store;
 import com.example.Books.Model.UserInfo;
 import com.example.Books.Repository.EmployeeRepository;
+import com.example.Books.Repository.UserInfoRepository;
 import com.example.Books.Validation.ValidatorEmployee;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
     @PersistenceContext
     EntityManager entityManager;
 
@@ -84,6 +89,10 @@ public class EmployeeService {
     }
 
     public Employee addEmployeeToRepository(Employee newEmployee) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        newEmployee.setUser(userInfo);
         ValidatorEmployee validatorEmployee = new ValidatorEmployee();
         validatorEmployee.validate(newEmployee);
         return employeeRepository.save(newEmployee);
@@ -97,25 +106,42 @@ public class EmployeeService {
     }
 
     public Employee updateEmployeeInRepository(Long id, Employee updatedEmployee) {
-        ValidatorEmployee validatorEmployee = new ValidatorEmployee();
-        validatorEmployee.validate(updatedEmployee);
-        return employeeRepository.findById(id).map(employee -> {
-            employee.setFirstName(updatedEmployee.getFirstName());
-            employee.setLastName(updatedEmployee.getLastName());
-            employee.setPhoneNumber(updatedEmployee.getPhoneNumber());
-            employee.setSalary(updatedEmployee.getSalary());
-            employee.setFullTime(updatedEmployee.isFullTime());
-            employee.setStore(updatedEmployee.getStore());
-            employee.setDescription(updatedEmployee.getDescription());
-            return employeeRepository.save(employee);
-        }).orElseGet(() -> {
-            updatedEmployee.setId(id);
-            return employeeRepository.save(updatedEmployee);
-        });
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        Employee employeeaux = employeeRepository.findById(id).get();
+        if ((userInfo.getRoles().equals("ADMIN") || userInfo.getRoles().equals("MODERATOR")) || (userInfo.getRoles().equals("USER") && userInfo.getUsername().equals(employeeaux.getUser().getUsername()))){
+            ValidatorEmployee validatorEmployee = new ValidatorEmployee();
+            validatorEmployee.validate(updatedEmployee);
+            return employeeRepository.findById(id).map(employee -> {
+                employee.setFirstName(updatedEmployee.getFirstName());
+                employee.setLastName(updatedEmployee.getLastName());
+                employee.setPhoneNumber(updatedEmployee.getPhoneNumber());
+                employee.setSalary(updatedEmployee.getSalary());
+                employee.setFullTime(updatedEmployee.isFullTime());
+                employee.setStore(updatedEmployee.getStore());
+                employee.setDescription(updatedEmployee.getDescription());
+                return employeeRepository.save(employee);
+            }).orElseGet(() -> {
+                updatedEmployee.setId(id);
+                return employeeRepository.save(updatedEmployee);
+            });
+        }
+        else
+            throw new RuntimeException("bad request: user cannot update employee");
+
     }
 
     public void deleteEmployeeInRepository(Long id) {
-        employeeRepository.deleteById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        Employee employeeaux = employeeRepository.findById(id).get();
+        if ((userInfo.getRoles().equals("ADMIN") || userInfo.getRoles().equals("MODERATOR")) || (userInfo.getRoles().equals("USER") && userInfo.getUsername().equals(employeeaux.getUser().getUsername()))) {
+            employeeRepository.deleteById(id);
+        }
+        else
+            throw new RuntimeException("bad request: user cannot delete employee");
     }
 
 

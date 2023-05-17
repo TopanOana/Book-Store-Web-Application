@@ -157,10 +157,12 @@ public class Controller {
 
 
     @PostMapping("/stores")
-    Store addStore(@RequestBody Store newStore){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    Store addStore(@RequestBody Store newStore, @RequestHeader("Authorization") String authorizationHeader){
         /*
         post mapping for adding a new store to the repository
          */
+        authorizationHeader = authorizationHeader.substring(7);
         try{
             return storeService.addStoreToRepository(newStore);
         }catch (StoreValidationException ex){
@@ -172,10 +174,12 @@ public class Controller {
 
 
     @PutMapping("/stores/{id}")
-    Store updateStore(@RequestBody Store updatedStore, @PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    Store updateStore(@RequestBody Store updatedStore, @PathVariable Long id, @RequestHeader("Authorization") String authorizationHeader){
         /*
         put mapping for updating a store or adding a new store with a specific id
          */
+        authorizationHeader = authorizationHeader.substring(7);
         try{
             if (updatedStore!=null)
                 return storeService.updateStoreInRepository(id,updatedStore);
@@ -188,10 +192,12 @@ public class Controller {
 
 
     @DeleteMapping("/stores/{id}")
-    void deleteStore(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    void deleteStore(@PathVariable Long id, @RequestHeader("Authorization") String authorizationHeader){
         /*
         delete mapping for removing a store from the repository
          */
+        authorizationHeader = authorizationHeader.substring(7);
         storeService.deleteStoreByID(id);
     }
 
@@ -212,7 +218,9 @@ public class Controller {
 
 
     @PostMapping("/employees")
-    Employee addEmployee(@RequestBody Employee employee, @RequestParam("storeID") Long storeID){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    Employee addEmployee(@RequestBody Employee employee, @RequestParam("storeID") Long storeID, @RequestHeader("Authorization") String authorizationHeader){
+        authorizationHeader = authorizationHeader.substring(7);
         try{
             employee.setStore(storeService.getStoreByID(storeID));
             return employeeService.addEmployeeToRepository(employee);
@@ -233,7 +241,9 @@ public class Controller {
     }
 
     @PutMapping("/employees/{id}")
-    Employee updateEmployee(@RequestBody Employee newEmployee, @RequestParam("storeID") Long storeID, @PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    Employee updateEmployee(@RequestBody Employee newEmployee, @RequestParam("storeID") Long storeID, @PathVariable Long id, @RequestHeader("Authorization") String authorizationHeader){
+        authorizationHeader = authorizationHeader.substring(7);
         try{
             newEmployee.setStore(storeService.getStoreByID(storeID));
             return employeeService.updateEmployeeInRepository(id, newEmployee);
@@ -244,7 +254,9 @@ public class Controller {
     }
 
     @DeleteMapping("/employees/{employeeId}")
-    void deleteEmployee(@PathVariable Long employeeId){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    void deleteEmployee(@PathVariable Long employeeId, @RequestHeader("Authorization") String authorizationHeader){
+        authorizationHeader = authorizationHeader.substring(7);
         employeeService.deleteEmployeeInRepository(employeeId);
     }
 
@@ -255,7 +267,9 @@ public class Controller {
     }
 
     @PostMapping("/stores/{id}/stock")
-    Stock addStock(@PathVariable Long id, @RequestBody Stock stock){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    Stock addStock(@PathVariable Long id, @RequestBody Stock stock, @RequestHeader("Authorization") String authorizationHeader){
+        authorizationHeader = authorizationHeader.substring(7);
         try{
             stock.setStore(storeService.getStoreByID(id));
             return this.stockService.addStockToRepository(stock);
@@ -280,12 +294,16 @@ public class Controller {
     }
 
     @DeleteMapping("/stores/{id}/stock")
-    void deleteStockFromStore(@PathVariable Long id, @RequestParam("stockID") Long stockID){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    void deleteStockFromStore(@PathVariable Long id, @RequestParam("stockID") Long stockID, @RequestHeader("Authorization") String authorizationHeader){
+        authorizationHeader = authorizationHeader.substring(7);
         this.stockService.deleteStockInRepository(stockID);
     }
 
     @PutMapping("/stores/{id}/stock/{stockID}")
-    Stock updateStockInStore(@PathVariable Long id, @RequestBody Stock stock, @PathVariable Long stockID){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    Stock updateStockInStore(@PathVariable Long id, @RequestBody Stock stock, @PathVariable Long stockID, @RequestHeader("Authorization") String authorizationHeader){
+        authorizationHeader = authorizationHeader.substring(7);
         try{
             stock.setStore(storeService.getStoreByID(id));
             System.out.println("here i am ");
