@@ -10,6 +10,7 @@ import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -82,7 +83,8 @@ public class Controller {
     }
 
     @PostMapping("/books")
-    Book addBook(@RequestBody Book newBook){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    Book addBook(@RequestBody Book newBook, @RequestHeader("Authorization") String authorizationHeader){
         /*
         the post mapping is for adding a new book to the repository
          */
@@ -96,12 +98,16 @@ public class Controller {
     }
 
     @PutMapping("/books/{id}")
-    Book updateBook(@RequestBody Book updatedBook, @PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    Book updateBook(@RequestBody Book updatedBook, @PathVariable Long id, @RequestHeader("Authorization") String authorizationHeader){
         /*
         the put mapping is for updating a book or adding a new one with a specific id
         i just used a lot of setters and getters
          */
+        authorizationHeader = authorizationHeader.substring(7);
         try{
+            String username = jwtService.extractUsername(authorizationHeader);
+
             return bookService.updateBookInRepository(id,updatedBook);
         }catch(BookValidationException ex){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage(), ex);
@@ -110,11 +116,13 @@ public class Controller {
     }
 
     @DeleteMapping("/books/{id}")
-    void deleteBook(@PathVariable Long id){
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MODERATOR', 'USER')")
+    void deleteBook(@PathVariable Long id,  @RequestHeader("Authorization") String authorizationHeader){
         /*
         the delete mapping is for removing a book from the repository
          */
         System.out.println("plang");
+        authorizationHeader = authorizationHeader.substring(7);
         bookService.deleteBookInRepository(id);
     }
 

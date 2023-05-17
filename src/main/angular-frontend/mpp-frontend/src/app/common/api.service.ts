@@ -21,7 +21,6 @@ import {
 } from "../features/statistics/components/book-stock-statistic/Model/stat.model";
 import {LoginRequest} from "../features/auth/login/LoginRequest";
 import {RegisterDTO} from "../features/auth/register/RegisterDTO";
-import {RegisterComponent} from "../features/auth/register/register.component";
 import {User, UserStat} from "../features/users/user-profile/UserModels";
 
 @Injectable({
@@ -31,6 +30,8 @@ export class ApiService {
 
   // baseURL='https://chicken-soup-for-the-books.chickenkiller.com/supaLaPlic/api';
   baseURL='http://localhost:8080/api'
+
+  token="";
 
   constructor(private http: HttpClient) { }
 

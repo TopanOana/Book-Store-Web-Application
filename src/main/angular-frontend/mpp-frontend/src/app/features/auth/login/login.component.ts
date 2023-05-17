@@ -25,6 +25,7 @@ export class LoginComponent {
         password:this.password
       }
       this.service.loginUser(loginRequest).subscribe((result:string)=>{
+        this.service.token = result;
         this.router.navigateByUrl("");
       }, (err)=>{
         console.log(err)

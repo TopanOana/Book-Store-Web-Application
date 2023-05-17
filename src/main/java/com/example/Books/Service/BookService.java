@@ -5,6 +5,7 @@ import com.example.Books.Exception.BookValidationException;
 import com.example.Books.Model.*;
 import com.example.Books.Model.DTO.BookCountDTO;
 import com.example.Books.Repository.BookRepository;
+import com.example.Books.Repository.UserInfoRepository;
 import com.example.Books.Validation.ValidatorBook;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +27,8 @@ import java.util.stream.Collectors;
 public class BookService {
     @Autowired
     private BookRepository repository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -51,6 +56,12 @@ public class BookService {
         /*
         adds a book to the repository
          */
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo =   userInfoRepository.findByUsername(username).get();
+        newBook.setUser(userInfo);
+
         ValidatorBook validatorBook = new ValidatorBook();
         validatorBook.validate(newBook);
         return repository.save(newBook);
@@ -62,19 +73,29 @@ public class BookService {
         updating a book or adding a new one with a specific id
         i just used a lot of setters and getters
          */
-        ValidatorBook validatorBook = new ValidatorBook();
-        validatorBook.validate(updatedBook);
-        return repository.findById(id).map(book -> {
-            book.setTitle(updatedBook.getTitle());
-            book.setAuthor(updatedBook.getAuthor());
-            book.setNrPages(updatedBook.getNrPages());
-            book.setRating(updatedBook.getRating());
-            book.setGenre(updatedBook.getGenre());
-            return repository.save(book);
-        }).orElseGet(() -> {
-            updatedBook.setId(id);
-            return repository.save(updatedBook);
-        });
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo =   userInfoRepository.findByUsername(username).get();
+        Book bookmmid = repository.findById(id).get();
+        if ((bookmmid.getUser().getUsername().equals(username) && userInfo.getRoles().equals("USER")) || (userInfo.getRoles().equals("ADMIN") || userInfo.getRoles().equals("MODERATOR"))){
+            ValidatorBook validatorBook = new ValidatorBook();
+            validatorBook.validate(updatedBook);
+            return repository.findById(id).map(book -> {
+                book.setTitle(updatedBook.getTitle());
+                book.setAuthor(updatedBook.getAuthor());
+                book.setNrPages(updatedBook.getNrPages());
+                book.setRating(updatedBook.getRating());
+                book.setGenre(updatedBook.getGenre());
+                return repository.save(book);
+            }).orElseGet(() -> {
+                updatedBook.setId(id);
+                return repository.save(updatedBook);
+            });
+        }
+        else
+            throw new RuntimeException("bad request: user not allowed to update");
+
+
     }
 
 
@@ -82,7 +103,15 @@ public class BookService {
         /*
         deletes a book in the repository
          */
-        repository.deleteById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo =   userInfoRepository.findByUsername(username).get();
+        Book bookmmid = repository.findById(id).get();
+        if ((bookmmid.getUser().getUsername().equals(username) && userInfo.getRoles().equals("USER")) || (userInfo.getRoles().equals("ADMIN") || userInfo.getRoles().equals("MODERATOR"))) {
+            repository.deleteById(id);
+        }
+        else
+            throw new RuntimeException("bad request: user not allowed to delete");
     }
 
     public Page<BookCountDTO> getBooksWithRatingGreaterThan(double rating, int page, int size){
