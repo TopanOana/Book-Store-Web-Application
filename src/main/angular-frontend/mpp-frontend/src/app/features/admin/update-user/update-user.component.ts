@@ -12,12 +12,16 @@ export class UpdateUserComponent implements OnInit, AfterViewInit{
   userID= 0;
   roles="";
   options=['USER', 'MODERATOR','ADMIN'];
+  checkAdmin: boolean;
 
   constructor(private service: ApiService, private router: Router, private activatedRoute: ActivatedRoute){
-
+    this.checkAdmin=false;
   }
 
   ngOnInit(): void {
+    this.service.checkAdmin().subscribe((str:string)=>{
+      this.checkAdmin=true;
+    })
     this.activatedRoute.params.subscribe(params=>{
       this.userID = params['id'];
       this.service.getUserById(this.userID).subscribe((user)=>{
