@@ -22,6 +22,7 @@ import {
 import {LoginRequest} from "../features/auth/login/LoginRequest";
 import {RegisterDTO} from "../features/auth/register/RegisterDTO";
 import {User, UserStat} from "../features/users/user-profile/UserModels";
+import {UserDTO, UserTable} from "../features/admin/overview-users/UserModel";
 
 @Injectable({
   providedIn: 'root'
@@ -169,5 +170,20 @@ export class ApiService {
     return this.http.get(`${this.baseURL}/users/stats/${username}`) as Observable<UserStat>;
   }
 
+  checkAdmin():Observable<string>{
+    return this.http.get(`${this.baseURL}/admin/checkRole`, {responseType:'text', headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<string>;
+  }
+
+  getUsersForAdmin(page:number, size:number):Observable<UserTable>{
+    return this.http.get(`${this.baseURL}/users/admin/getAll?page=${page}&size=${size}`, {headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<UserTable>;
+  }
+
+  getUserById(id:number):Observable<UserDTO>{
+    return this.http.get(`${this.baseURL}/users/${id}`) as Observable<UserDTO>;
+  }
+
+  updateUser(id:number, roles:string):Observable<UserDTO>{
+    return this.http.put(`${this.baseURL}/users/admin/update?id=${id}&roles=${roles}`, null,{headers:{'Authorization' : `Bearer ${this.token}`}} ) as Observable<UserDTO>
+  }
 
 }

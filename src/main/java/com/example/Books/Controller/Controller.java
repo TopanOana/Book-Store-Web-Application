@@ -388,8 +388,8 @@ public class Controller {
     }
 
     @GetMapping("/users/{id}")
-    public UserInfoDTO getUserProfile(@PathVariable Long id){
-        return userService.getUserInfoDTO(id);
+    public UserInfo getUserProfile(@PathVariable Long id){
+        return userService.getUserByID(id);
     }
 
     @GetMapping("/users/gimme")
@@ -413,6 +413,13 @@ public class Controller {
     public UserInfo updateRoleForUserByAdmin(@RequestParam Long id, @RequestParam String roles, @RequestHeader("Authorization") String authorizationHeader){
         return userService.updatedUser(roles,id);
     }
+
+    @GetMapping("/admin/checkRole")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String checkForAdminRole(@RequestHeader("Authorization") String authorizationHeader){
+        return "Admin";
+    }
+
 
 }
 

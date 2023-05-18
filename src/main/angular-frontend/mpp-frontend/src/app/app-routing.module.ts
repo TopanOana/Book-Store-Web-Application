@@ -24,6 +24,8 @@ import {AddStockComponent} from "./features/stocks/components/add-stock/add-stoc
 import {LoginComponent} from "./features/auth/login/login.component";
 import {RegisterComponent} from "./features/auth/register/register.component";
 import {UserProfileComponent} from "./features/users/user-profile/user-profile.component";
+import {OverviewUsersComponent} from "./features/admin/overview-users/overview-users.component";
+import {UpdateUserComponent} from "./features/admin/update-user/update-user.component";
 
 const routes: Routes = [
   {
@@ -97,6 +99,14 @@ const routes: Routes = [
   {
     path:"userprofile/:username",
     component: UserProfileComponent
+  },
+  {
+    path: "admin/users",
+    component: OverviewUsersComponent
+  },
+  {
+    path: "admin/users/:id",
+    component: UpdateUserComponent
   }
 ];
 

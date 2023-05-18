@@ -36,6 +36,8 @@ import { AddStockComponent } from './features/stocks/components/add-stock/add-st
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
 import { UserProfileComponent } from './features/users/user-profile/user-profile.component';
+import { OverviewUsersComponent } from './features/admin/overview-users/overview-users.component';
+import { UpdateUserComponent } from './features/admin/update-user/update-user.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import { UserProfileComponent } from './features/users/user-profile/user-profile
     AddStockComponent,
     LoginComponent,
     RegisterComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    OverviewUsersComponent,
+    UpdateUserComponent
   ],
   imports: [
     BrowserModule,
