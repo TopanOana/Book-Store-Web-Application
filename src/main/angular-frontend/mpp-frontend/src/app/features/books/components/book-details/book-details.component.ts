@@ -30,6 +30,7 @@ export class BookDetailsComponent implements OnInit, AfterViewInit{
   pageFirst=true;
   pageLast=false;
   pageSize=5;
+  loggedIn:boolean;
 
   nrPagesPag=0;
   totalStocks: number;
@@ -37,6 +38,7 @@ export class BookDetailsComponent implements OnInit, AfterViewInit{
     // this.paginator = paginator;
     this.pageSize = 5;
     this.totalStocks =0;
+    this.loggedIn=false;
   }
 
   ngOnInit():void{
@@ -56,7 +58,8 @@ export class BookDetailsComponent implements OnInit, AfterViewInit{
 
   ngAfterViewInit() {
     this.getStocksPaged(this.pageIndex, this.pageSize)
-
+    if (this.service.token.length>0)
+      this.loggedIn=true;
   }
 
   getStocksPaged(page:number, size:number){

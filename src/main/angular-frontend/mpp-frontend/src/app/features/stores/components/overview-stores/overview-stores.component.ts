@@ -45,6 +45,8 @@ export class OverviewStoresComponent {
 
   ngAfterViewInit(){
     this.getStoresPaged(this.pageIndex, this.pageSize);
+    if(this.service.token.length>0)
+      this.loggedIn=true;
   }
 
 
@@ -90,7 +92,7 @@ export class OverviewStoresComponent {
   }
 
   goToStoreDetails(storerow: StoreDTO) {
-    let storeID = storerow.id;
+    let storeID = storerow.storeID;
     this.router.navigateByUrl(`stores/${storeID}`)
 
   }
@@ -98,6 +100,7 @@ export class OverviewStoresComponent {
   // nextPage(event:PageEvent){
   //   this.getStoresPaged(this.paginator.pageIndex, this.paginator.pageSize);
   // }
+  loggedIn=false;
 
   goToFirstPage() {
     this.pageIndex=0;

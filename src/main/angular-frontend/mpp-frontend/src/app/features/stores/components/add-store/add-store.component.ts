@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
 import {AddStoreDTO} from "../overview-stores/Models/store.models";
@@ -11,16 +11,23 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./add-store.component.css'],
   providers: [MatSnackBar]
 })
-export class AddStoreComponent {
+export class AddStoreComponent implements AfterViewInit{
   storeName?: string;
   address?: string;
   contactNumber?: string;
   openingHour?: number;
   closingHour?: number;
+  loggedIn:boolean;
 
   constructor(private service:ApiService, private router:Router, private snackBar:MatSnackBar){
-
+    this.loggedIn=false;
   }
+
+  ngAfterViewInit(): void {
+    if(this.service.token.length>0)
+      this.loggedIn=true;
+  }
+
   goBackToOverview() {
     this.router.navigateByUrl("/stores");
   }

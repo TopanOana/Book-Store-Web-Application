@@ -54,16 +54,16 @@ export class ApiService {
 
   updateBook(book:Book, bookID:number): Observable<Book>{
     console.log("update serv")
-    return this.http.put(`${this.baseURL}/books/${bookID}`, book) as Observable<Book>
+    return this.http.put(`${this.baseURL}/books/${bookID}`, book, {headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<Book>
   }
 
   removeBook(bookID:number): Observable<Book>{
     console.log("remove book service"+bookID)
-    return this.http.delete(`${this.baseURL}/books/${bookID}`) as Observable<Book>
+    return this.http.delete(`${this.baseURL}/books/${bookID}`, {headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<Book>
   }
 
   addBook(book: AddBookDTO): Observable<Book>{
-    return this.http.post(`${this.baseURL}/books`, book) as Observable<Book>
+    return this.http.post(`${this.baseURL}/books`, book, {headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<Book>
   }
 
 
@@ -79,12 +79,12 @@ export class ApiService {
   }
 
   updateEmployee(employee: UpdateEmployeeDTO, employeeID: number, storeID: number): Observable<Employee>{
-    return this.http.put(`${this.baseURL}/employees/${employeeID}?storeID=${storeID}`, employee) as Observable<Employee>
+    return this.http.put(`${this.baseURL}/employees/${employeeID}?storeID=${storeID}`, employee,{headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<Employee>
   }
 
   removeEmployee(employee:number): Observable<Employee>{
 
-    return this.http.delete(`${this.baseURL}/employees/${employee}`) as Observable<Employee>
+    return this.http.delete(`${this.baseURL}/employees/${employee}`,{headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<Employee>
   }
 
   getStores(page:number, size:number, input?:string, column?:string, order?:string): Observable<StoreTable>{
@@ -98,11 +98,11 @@ export class ApiService {
   }
 
   addEmployee(employee: AddEmployeeDTO, storeID:number): Observable<Employee>{
-    return this.http.post(`${this.baseURL}/employees?storeID=${storeID}`, employee) as Observable<Employee>
+    return this.http.post(`${this.baseURL}/employees?storeID=${storeID}`, employee,{headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<Employee>
   }
 
   addStore(store: AddStoreDTO): Observable<StoreDTO>{
-    return this.http.post(`${this.baseURL}/stores`, store) as Observable<StoreDTO>
+    return this.http.post(`${this.baseURL}/stores`, store,{headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<StoreDTO>
   }
 
   getStoreDetails(storeID:number): Observable<StoreDTO>{
@@ -110,11 +110,11 @@ export class ApiService {
   }
 
   updateStore(storeID:number, store:StoreDTO) : Observable<StoreDTO>{
-    return this.http.put(`${this.baseURL}/stores/${storeID}`, store) as Observable<StoreDTO>
+    return this.http.put(`${this.baseURL}/stores/${storeID}`, store,{headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<StoreDTO>
   }
 
   deleteStore(storeID:number): Observable<StoreDTO>{
-    return this.http.delete(`${this.baseURL}/stores/${storeID}`) as Observable<StoreDTO>
+    return this.http.delete(`${this.baseURL}/stores/${storeID}`,{headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<StoreDTO>
   }
 
 
@@ -130,11 +130,11 @@ export class ApiService {
     return this.http.get(`${this.baseURL}/stores/${storeID}/stock?page=${page}&size=${size}`) as Observable<StockTable>
   }
   deleteStockFromStore(storeID:number, stockID:number):Observable<StockDTO>{
-    return this.http.delete(`${this.baseURL}/stores/${storeID}/stock?stockID=${stockID}`) as Observable<StockDTO>;
+    return this.http.delete(`${this.baseURL}/stores/${storeID}/stock?stockID=${stockID}`,{headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<StockDTO>;
   }
 
   addStockToStore(storeID:number, stock:AddStockDTO):Observable<StockDTO>{
-    return this.http.post(`${this.baseURL}/stores/${storeID}/stock`, stock) as Observable<StockDTO>
+    return this.http.post(`${this.baseURL}/stores/${storeID}/stock`, stock,{headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<StockDTO>
   }
 
   getStockByID(stockID:number):Observable<StockDTO>{
@@ -142,7 +142,7 @@ export class ApiService {
   }
 
   updateStockFromStore(storeID:number, stockID:number, stock:UpdateStockDTO):Observable<StockDTO>{
-    return this.http.put(`${this.baseURL}/stores/${storeID}/stock/${stockID}`, stock) as Observable<StockDTO>
+    return this.http.put(`${this.baseURL}/stores/${storeID}/stock/${stockID}`, stock,{headers:{'Authorization' : `Bearer ${this.token}`}}) as Observable<StockDTO>
   }
 
   getStocksFromBook(bookID:number, page:number, size:number):Observable<StockTable>{

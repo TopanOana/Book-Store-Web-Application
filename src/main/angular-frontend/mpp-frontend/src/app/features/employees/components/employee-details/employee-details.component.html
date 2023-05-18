@@ -1,8 +1,8 @@
 <h2>Employee details</h2>
 <ng-container *ngIf="employee">
   <button mat-fab (click)="goBackToOverview()"><mat-icon>arrow_back</mat-icon></button>
-  <button mat-fab (click)="updateEmployee()"><mat-icon>update</mat-icon></button>
-  <button mat-fab (click)="deleteEmployee()"><mat-icon>delete</mat-icon></button>
+  <button *ngIf="loggedIn" mat-fab (click)="updateEmployee()"><mat-icon>update</mat-icon></button>
+  <button *ngIf="loggedIn" mat-fab (click)="deleteEmployee()"><mat-icon>delete</mat-icon></button>
 
   <form>
     <mat-form-field>

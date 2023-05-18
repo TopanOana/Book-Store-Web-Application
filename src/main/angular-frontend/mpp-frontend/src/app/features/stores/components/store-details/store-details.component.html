@@ -1,8 +1,8 @@
 <h2>Store details</h2>
 <ng-container *ngIf="store">
   <button mat-fab (click)="goBackToOverview()"><mat-icon>arrow_back</mat-icon></button>
-  <button mat-fab (click)="updateStore()"><mat-icon>update</mat-icon></button>
-  <button mat-fab (click)="deleteStore()"><mat-icon>delete</mat-icon></button>
+  <button *ngIf="loggedIn" mat-fab (click)="updateStore()"><mat-icon>update</mat-icon></button>
+  <button *ngIf="loggedIn" mat-fab (click)="deleteStore()"><mat-icon>delete</mat-icon></button>
 
   <form>
     <mat-form-field>
@@ -47,8 +47,8 @@
     <ng-container matColumnDef="buttons">
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let stock">
-        <button mat-mini-fab (click)="updateStock(stock.id)"><mat-icon>update</mat-icon></button>
-        <button mat-mini-fab (click)="deleteStock(stock.id)"><mat-icon>delete</mat-icon></button>
+        <button *ngIf="loggedIn" mat-mini-fab (click)="updateStock(stock.id)"><mat-icon>update</mat-icon></button>
+        <button *ngIf="loggedIn" mat-mini-fab (click)="deleteStock(stock.id)"><mat-icon>delete</mat-icon></button>
       </td>
     </ng-container>
 

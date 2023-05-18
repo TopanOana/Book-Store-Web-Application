@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {AddBookDTO, Book} from "../overview-books/Models/books.models";
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
@@ -10,15 +10,24 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./add-book.component.css'],
   providers: [MatSnackBar]
 })
-export class AddBookComponent {
+export class AddBookComponent implements AfterViewInit{
   title?:string
   author?:string
   nrPages?: number;
   rating?: number;
   genre?: string;
+  loggedIn:boolean;
 
   constructor(private service:ApiService, private router:Router, private snackBar:MatSnackBar){
+    this.loggedIn=false;
   }
+
+  ngAfterViewInit(): void {
+    if(this.service.token.length>0)
+      this.loggedIn=true;
+  }
+
+
 
   addBook() {
     console.log("aici")

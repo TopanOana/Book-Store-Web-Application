@@ -11,6 +11,10 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -82,6 +86,27 @@ public class UserService {
         return this.userInfoRepository.findAll();
     }
 
+    public Page<UserInfo> getAllUsers(int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return userInfoRepository.findAll(pageRequest);
+    }
+
+    public UserInfo updatedUser(String roles, Long id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        UserInfo userInfo = userInfoRepository.findByUsername(username).get();
+        if (userInfo.getRoles().equals("ADMIN")){
+            UserInfo toUpdate = userInfoRepository.findById(id).get();
+            if (roles.equals("ADMIN") || roles.equals("MODERATOR") || roles.equals("USER")){
+                toUpdate.setRoles(roles);
+                return userInfoRepository.save(toUpdate);
+            }
+            else
+                throw new RuntimeException("bad request: role doesn't exist");
+        }
+        else throw new RuntimeException("bad request: user cannot update other users' roles");
+    }
+
     public UserStatDTO getUserStats(String username){
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Long> userBooksCQ = criteriaBuilder.createQuery(Long.class);
@@ -118,9 +143,6 @@ public class UserService {
 
 
         UserStatDTO toReturn = new UserStatDTO(nrBooks,nrEmployees,nrStores,nrStocks);
-
-
         return toReturn;
-
     }
 }

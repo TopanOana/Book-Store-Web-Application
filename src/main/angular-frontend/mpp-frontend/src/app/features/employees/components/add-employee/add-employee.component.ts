@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ApiService} from "../../../../common/api.service";
 import {Router} from "@angular/router";
 import {AddEmployeeDTO, Employee, StoreDTO, StoreTable} from "../overview-employees/Models/employees.models";
@@ -13,7 +13,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./add-employee.component.css'],
   providers: [MatSnackBar]
 })
-export class AddEmployeeComponent implements OnInit {
+export class AddEmployeeComponent implements OnInit, AfterViewInit {
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
@@ -25,9 +25,16 @@ export class AddEmployeeComponent implements OnInit {
 
   store?: StoreDTO;
   formControl = new FormControl();
+  loggedIn:boolean;
 
   constructor(private service:ApiService, private router:Router, private snackBar:MatSnackBar){
+    this.loggedIn=false;
+  }
 
+  ngAfterViewInit(): void {
+    if(this.service.token.length>0){
+      this.loggedIn=true;
+    }
   }
 
   ngOnInit(){

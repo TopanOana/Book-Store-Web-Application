@@ -1,8 +1,8 @@
 <h2>Add book</h2>
 <button mat-fab (click)="goBackToOverview()"><mat-icon>arrow_back</mat-icon></button>
-
-<div class="formcomp">
-  <form (submit)="addBook()">
+<div *ngIf="loggedIn">
+  <div class="formcomp">
+    <form (submit)="addBook()">
 
       <mat-form-field>
         <mat-label>Title</mat-label>
@@ -25,6 +25,7 @@
         <input matInput id="genre" name="genre" [(ngModel)]="genre">
       </mat-form-field>
       <button mat-raised-button type="submit"><mat-icon>save</mat-icon></button>
-  </form>
+    </form>
+  </div>
 
 </div>

@@ -402,5 +402,17 @@ public class Controller {
         return userService.getUserStats(username);
     }
 
+    @GetMapping("/users/admin/getAll")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public Page<UserInfo> getAllUsersForAdmin(@RequestParam int page, @RequestParam int size, @RequestHeader("Authorization") String authorizationHeader){
+        return userService.getAllUsers(page, size);
+    }
+
+    @PutMapping("/users/admin/update")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public UserInfo updateRoleForUserByAdmin(@RequestParam Long id, @RequestParam String roles, @RequestHeader("Authorization") String authorizationHeader){
+        return userService.updatedUser(roles,id);
+    }
+
 }
 

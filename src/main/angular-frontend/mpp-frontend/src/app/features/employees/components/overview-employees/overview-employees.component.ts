@@ -29,6 +29,7 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
 
   column='';
   order='';
+  loggedIn:boolean;
 
 
   @ViewChild(MatSort) sort: MatSort;
@@ -38,6 +39,7 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
     // this.paginator = paginator;
     this.sort = sort;
     this.totalEmployees = 0;
+    this.loggedIn=false;
   }
 
   ngOnInit():void{
@@ -46,6 +48,8 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
 
   ngAfterViewInit() {
     this.getEmployeesPaged(this.pageIndex, this.pageSize);
+    if(this.service.token.length>0)
+      this.loggedIn=true;
   }
 
   getEmployeesPaged(page:number, size:number){
@@ -100,6 +104,7 @@ export class OverviewEmployeesComponent implements AfterViewInit, OnInit {
   // nextPage(event: PageEvent) {
   //   this.getEmployeesPaged(this.paginator.pageIndex, this.paginator.pageSize);
   // }
+
   previousPage() {
     if (this.pageIndex!=0){
         this.pageIndex-=1;

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Book, BookTable} from "../../../books/components/overview-books/Models/books.models";
 import {FormControl} from "@angular/forms";
 import {ApiService} from "../../../../common/api.service";
@@ -12,14 +12,16 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./add-stock.component.css'],
   providers: [MatSnackBar]
 })
-export class AddStockComponent implements OnInit{
+export class AddStockComponent implements OnInit, AfterViewInit{
   quantity?: number;
   storeID?: number;
   book?:Book;
   books?: Book[];
   formControl = new FormControl();
+  loggedIn:boolean;
 
   constructor(private service:ApiService, private router:Router, private activatedRoute: ActivatedRoute, private snackBar:MatSnackBar) {
+    this.loggedIn=false;
   }
 
 
@@ -36,6 +38,12 @@ export class AddStockComponent implements OnInit{
       // })
     })
   }
+
+  ngAfterViewInit(): void {
+    if(this.service.token.length>0)
+      this.loggedIn=true;
+  }
+
 
 
   displayBookTitle(book:Book){

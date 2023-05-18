@@ -60,15 +60,15 @@ public class Store {
         this.user = user;
     }
 
-    @JsonGetter
-    public int getnrBooks(){
-        return stocks.size();
-    }
-
-    @JsonGetter
-    public int getnrEmployees(){
-        return employees.size();
-    }
+//    @JsonGetter
+//    public int getnrBooks(){
+//        return stocks.size();
+//    }
+//
+//    @JsonGetter
+//    public int getnrEmployees(){
+//        return employees.size();
+//    }
 
     public Store(String storeName, String address, String contactNumber, int openingHour, int closingHour) {
         this.storeName = storeName;

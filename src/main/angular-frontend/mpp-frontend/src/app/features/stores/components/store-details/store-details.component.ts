@@ -34,10 +34,13 @@ export class StoreDetailsComponent implements OnInit, AfterViewInit{
   nrPages=0;
   totalStocks: number;
 
+  loggedIn:boolean;
+
   constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, /*paginator:MatPaginator,*/ private snackBar:MatSnackBar) {
     // this.paginator=paginator;
     this.pageSize = 5;
     this.totalStocks = 0;
+    this.loggedIn=false;
   }
   goBackToOverview() {
     this.router.navigateByUrl("/stores");
@@ -64,6 +67,8 @@ export class StoreDetailsComponent implements OnInit, AfterViewInit{
 
   ngAfterViewInit() {
     this.getStocksPaged(this.pageIndex,this.pageSize);
+    if(this.service.token.length>0)
+      this.loggedIn=true;
   }
 
   updateStore() {

@@ -27,6 +27,7 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   nrPages=0;
   column ='';
   order='';
+  loggedIn :boolean;
 
   @ViewChild(MatSort) sort: MatSort;
   // @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -36,6 +37,7 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
     // this.paginator = paginator;
     this.sort = sort;
     this.totalBooks = 0;
+    this.loggedIn=false;
   }
 
   ngOnInit(): void {
@@ -44,6 +46,8 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.getBooksPaged(this.pageIndex, this.pageSize);
+    if(this.service.token.length>0)
+      this.loggedIn=true;
   }
 
   private getBooksPaged(page: number, size: number) {
@@ -71,6 +75,7 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   //   this.getBooksPaged(this.pageIndex, this.pageSize);
   // }
 
+
   clearFilter() {
     this.rating_gt = 0;
     this.goToFilterBook();
@@ -83,7 +88,10 @@ export class OverviewBooksComponent implements AfterViewInit, OnInit {
   }
 
   goToBookDetails(bookrow: Book) {
-    let bookID = bookrow.id
+    console.log(bookrow)
+    let bookID = bookrow.bookID
+    // let rtes = bookrow.bookID;
+    // console.log(rtes)
     this.router.navigateByUrl(`books/${bookID}`)
   }
 

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {StockDTO} from "../../../stores/components/overview-stores/Models/store.models";
 import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -12,7 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./update-stock.component.css'],
   providers: [MatSnackBar]
 })
-export class UpdateStockComponent implements OnInit {
+export class UpdateStockComponent implements OnInit, AfterViewInit {
   stock?: StockDTO;
   quantity?: number;
   storeID?: number;
@@ -20,6 +20,7 @@ export class UpdateStockComponent implements OnInit {
 
   book?: Book;
   store?: StoreDTO;
+  loggedIn:boolean;
 
 
   ngOnInit() {
@@ -37,7 +38,14 @@ export class UpdateStockComponent implements OnInit {
     })
   }
 
+  ngAfterViewInit(): void {
+    if(this.service.token.length>0)
+      this.loggedIn=true;
+  }
+
+
   constructor(private service:ApiService, private router:Router, private activatedRoute: ActivatedRoute, private snackBar:MatSnackBar) {
+    this.loggedIn=false;
   }
   goBackToDetails() {
     this.router.navigateByUrl(`stores/${this.storeID}`)

@@ -33,7 +33,7 @@ export interface AddEmployeeDTO{
 
 
 export interface StoreDTO{
-  id:number;
+  storeID:number;
   storeName: string;
   address:string;
   contactNumber: string;

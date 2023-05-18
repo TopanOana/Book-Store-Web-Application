@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {ApiService} from "../../../../common/api.service";
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -12,7 +12,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./employee-details.component.css'],
   providers:[MatSnackBar]
 })
-export class EmployeeDetailsComponent {
+export class EmployeeDetailsComponent implements AfterViewInit, OnInit{
   employeeID? : number;
 
   employee?: Employee;
@@ -28,8 +28,15 @@ export class EmployeeDetailsComponent {
 
   store?: StoreDTO;
   stores?:StoreDTO[];
+  loggedIn:boolean;
 
   constructor(private service:ApiService, private activatedRoute: ActivatedRoute, private router:Router, private snackBar:MatSnackBar) {
+    this.loggedIn=false;
+  }
+
+  ngAfterViewInit(): void {
+    if (this.service.token.length>0)
+      this.loggedIn=true;
   }
 
 
@@ -95,7 +102,7 @@ export class EmployeeDetailsComponent {
       storeID = store.id;
     }
     else{
-      storeID = this.store!.id;
+      storeID = this.store!.storeID;
     }
       this.service.updateEmployee(employee, this.employeeID!, storeID).subscribe((employee:Employee)=>{
         this.router.navigateByUrl("employees");
