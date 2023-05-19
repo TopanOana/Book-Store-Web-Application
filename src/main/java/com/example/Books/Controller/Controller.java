@@ -38,8 +38,10 @@ public class Controller {
 
     @Autowired private  final AuthenticationManager authenticationManager;
 
+    @Autowired private final AdminService adminService;
 
-    public Controller(StoreService storeService, BookService bookService, EmployeeService employeeService, StockService stockService, StatService statService, UserService userService, JWTService jwtService, AuthenticationManager authenticationManager) {
+
+    public Controller(StoreService storeService, BookService bookService, EmployeeService employeeService, StockService stockService, StatService statService, UserService userService, JWTService jwtService, AuthenticationManager authenticationManager, AdminService adminService) {
         this.bookService = bookService;
         this.storeService = storeService;
         this.employeeService = employeeService;
@@ -48,6 +50,7 @@ public class Controller {
         this.userService = userService;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.adminService = adminService;
     }
 
     // Aggregate root
@@ -420,6 +423,43 @@ public class Controller {
         return "Admin";
     }
 
+    @DeleteMapping("/users/admin/bulkDelete")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String bulkDeleteFromDatabase(@RequestHeader("Authorization") String authorizationHeader){
+        try{
+            adminService.bulkDelete();
+            return "Delete successful";
+        }
+        catch(Exception ex){
+            throw new RuntimeException("bad request: "+ex.getMessage());
+        }
+    }
+
+    @GetMapping("/users/admin/insert")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public String insertIntoTableDatabase(@RequestParam String table, @RequestHeader("Authorization") String authorizationHeader){
+        try{
+            switch(table){
+                case "STOCK":
+                    adminService.populateStockDB();
+                    return "Stock data added";
+                case "EMPLOYEE":
+                    adminService.populateEmployeeDB();
+                    return "Employee data added";
+                case "STORE":
+                    adminService.populateStoreDB();
+                    return "Store data added";
+                case "BOOK":
+                    adminService.populateBookDB();
+                    return "Book data added";
+                default:
+                    throw new RuntimeException("table doesn't exist");
+            }
+        }
+        catch(Exception ex){
+            throw new RuntimeException(ex);
+        }
+    }
 
 }
 

@@ -29,8 +29,8 @@ import {UserDTO, UserTable} from "../features/admin/overview-users/UserModel";
 })
 export class ApiService {
 
-  baseURL='https://chicken-soup-for-the-books.chickenkiller.com/supaLaPlic/api';
-  // baseURL='http://localhost:8080/api'
+  // baseURL='https://chicken-soup-for-the-books.chickenkiller.com/supaLaPlic/api';
+  baseURL='http://localhost:8080/api'
 
   token="";
 
