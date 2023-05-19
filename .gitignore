@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ###scripts##
-sql_scripts
+sql_scripts/
 
 
 ##Database##
