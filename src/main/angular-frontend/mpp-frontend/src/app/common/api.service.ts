@@ -186,4 +186,12 @@ export class ApiService {
     return this.http.put(`${this.baseURL}/users/admin/update?id=${id}&roles=${roles}`, null,{headers:{'Authorization' : `Bearer ${this.token}`}} ) as Observable<UserDTO>
   }
 
+  bulkDelete():Observable<string>{
+    return this.http.delete(`${this.baseURL}/users/admin/bulkDelete`, {headers:{'Authorization' : `Bearer ${this.token}`}, responseType:'text'}) as Observable<string>
+  }
+
+  insertIntoTable(tableName:string):Observable<string>{
+    return this.http.get(`${this.baseURL}/users/admin/insert?table=${tableName}`, {headers:{'Authorization' : `Bearer ${this.token}`}, responseType:'text'}) as Observable<string>
+  }
+
 }

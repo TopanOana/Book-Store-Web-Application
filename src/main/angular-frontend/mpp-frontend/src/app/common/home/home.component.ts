@@ -26,4 +26,8 @@ export class HomeComponent implements AfterViewInit{
   goToAdminUsers() {
     this.router.navigateByUrl("admin/users")
   }
+
+  goToAdminSQLScripts() {
+    this.router.navigateByUrl("admin/sql_scripts");
+  }
 }

@@ -38,6 +38,7 @@ import { RegisterComponent } from './features/auth/register/register.component';
 import { UserProfileComponent } from './features/users/user-profile/user-profile.component';
 import { OverviewUsersComponent } from './features/admin/overview-users/overview-users.component';
 import { UpdateUserComponent } from './features/admin/update-user/update-user.component';
+import { SqlScriptsComponent } from './features/admin/sql-scripts/sql-scripts.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { UpdateUserComponent } from './features/admin/update-user/update-user.co
     RegisterComponent,
     UserProfileComponent,
     OverviewUsersComponent,
-    UpdateUserComponent
+    UpdateUserComponent,
+    SqlScriptsComponent
   ],
   imports: [
     BrowserModule,
