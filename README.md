@@ -33,7 +33,4 @@ This project is a **full-stack application** with a clear separation between the
   - Developed using AngularJS for a dynamic and interactive user experience.
   - Deployed using Netlify
 
----
-
-Feel free to explore, contribute, or provide feedback!
 
